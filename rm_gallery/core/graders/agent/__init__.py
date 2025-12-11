@@ -8,7 +8,9 @@ from .action.action_loop import ActionLoopDetectionGrader
 
 # Deep research graders
 from .deep_research.report_resolution import ReportResolutionGrader
-from .deep_research.trajectory_resolution import TrajectoryResolutionGrader
+
+# Trajectory graders
+from .trajectory.trajectory_comprehensive import TrajectoryComprehensiveGrader
 
 # Memory graders
 from .memory.memory_accuracy import MemoryAccuracyGrader
