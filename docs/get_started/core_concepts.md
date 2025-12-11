@@ -4,38 +4,44 @@ Understanding RM-Gallery's **core concepts** will help you effectively evaluate 
 
 Whether you're new to RM-Gallery or looking to build custom evaluation workflows, this guide covers everything you need to know about integrating RM-Gallery with your systems and extending it with custom components.
 
-## :card_file_box: Framework Overview
+> **Tip:** This guide provides a comprehensive overview of RM-Gallery's architecture and components.
 
-RM-Gallery provides a **modular architecture** for AI model evaluation with a centralized [GradingRunner](../../rm_gallery/core/runner/grading_runner.py) that orchestrates the evaluation process. You'll use this when you need to:
+## :card_file_box: What is RM-Gallery?
 
-- Evaluate multiple aspects of AI-generated content
-- Combine different evaluation criteria into unified scores
-- Generate training rewards for reinforcement learning
-- Analyze model performance across various dimensions
+RM-Gallery is a modular framework for evaluating AI models. Think of it as a toolkit that helps you measure how well your AI models perform on various tasks, like answering questions correctly, following instructions, or generating helpful responses.
 
-The framework supports two primary usage modes depending on your needs:
+### Why use RM-Gallery?
+
+You should consider using RM-Gallery when you need to:
+
+- **Evaluate AI Model Performance**: Measure how well your AI models answer questions, follow instructions, or perform specific tasks
+- **Compare Different Models**: Determine which model performs better on your specific use cases
+- **Generate Training Rewards**: Create reward signals for training better models through reinforcement learning
+- **Analyze Model Behavior**: Understand where your models excel and where they struggle
+
+## :rocket: How RM-Gallery Works
+
+At its core, RM-Gallery follows a simple flow:
 
 ```mermaid
 graph LR
-    A[Input Data] --> B[GradingRunner]
+    A[Your Data] --> B[GradingRunner]
     subgraph GradingRunner
         C[mapper + graders + aggregator]
     end
-    B --> D[Analyzer]
-    B --> E[Training Rewards]
-    D --> F[Reports]
+    B --> D[Analyzer or Training Rewards]
+    D --> E[Reports or Model Training]
 ```
 
-Here's how data flows through the system:
+Let's break down this flow:
 
-1. **Input Data**: You provide the data samples to be evaluated
-2. **GradingRunner**: The core engine that processes your data through three internal modules:
-   - **Mapper**: Transforms your data fields to match grader parameter names
-   - **Graders**: Execute evaluations on the transformed data
-   - **Aggregator**: Combines results from multiple graders into unified scores
-3. **Output**: Depending on your use case, the results can either:
-   - Flow to an **Analyzer** to generate detailed **Reports** for comprehensive evaluation
-   - Be used directly as **Training Rewards** for model training purposes
+1. **Your Data**: Provide the data you want to evaluate (questions, AI responses, reference answers, etc.)
+2. **GradingRunner**: The engine that evaluates your data using configurable components:
+   - **Mapper**: Adapts your data format to what graders expect
+   - **Graders**: Perform specific evaluations (accuracy, helpfulness, etc.)
+   - **Aggregator**: Combines multiple evaluations into unified scores
+3. **Analyzer or Training Rewards**: Use results for detailed analysis or as training signals
+4. **Reports or Model Training**: Generate insights or train better models
 
 Let's walk through a simple example to illustrate how this works in practice:
 
@@ -72,13 +78,13 @@ results = await runner.arun(data)
 # Results contain scores from all graders that you can use for analysis or training
 ```
 
-## :hammer: Core Components
+## :hammer: Core Components Deep Dive
 
 Now that we've seen the big picture, let's dive deeper into each component of the RM-Gallery framework.
 
 ### :inbox_tray: Input Data
 
-From a framework user's perspective, **input data** is typically a list of dictionaries where each dictionary represents a sample to be evaluated.
+Input data is simply the information you want to evaluate. It's typically a list of dictionaries where each dictionary represents a sample to be evaluated.
 
 The beauty of RM-Gallery is that your data can be in any format that suits your use case:
 
@@ -99,13 +105,15 @@ data = [
 
 The GradingRunner's **mapper** functionality allows you to transform your data fields to match the parameter names expected by your chosen graders, so you don't need to restructure your data to fit the framework's expectations.
 
-### :rocket: GradingRunner
+### :rocket: GradingRunner - The Engine
 
 [GradingRunner](../../rm_gallery/core/runner/grading_runner.py) is the central execution engine of RM-Gallery. As a framework user, you'll configure and use **GradingRunner** to orchestrate your entire evaluation workflow. It manages **graders**, **data mapping**, and **result aggregation** internally.
 
+Think of GradingRunner as the conductor of an orchestra - it coordinates all the different components to create a harmonious evaluation process.
+
 #### Configuration
 
-To use **GradingRunner**, you'll create a dictionary of grader configurations where keys are grader names and values are either **GraderConfig** instances, **BaseGrader** instances, tuples of (**BaseGrader**, mapper) or dictionaries with grader and mapper keys:
+To use **GradingRunner**, you'll create a dictionary of grader configurations where keys are grader names and values define what to evaluate and how to map your data:
 
 ```python
 grader_configs = {
@@ -131,7 +139,7 @@ runner = GradingRunner(
 
 The **GradingRunner** achieves its comprehensive evaluation capabilities through three core sub-modules working in sequence:
 
-##### Mapper
+##### Mapper - Connecting Your Data
 
 The **Mapper** module transforms your input data to match the parameter names expected by your graders. Since your input data may not have the exact field names that your graders expect, mappers provide a way to map between your data structure and the grader's expected inputs.
 
@@ -141,9 +149,11 @@ Types of mappers:
 
 Each grader can have its own mapper, allowing you to handle different data transformations for different evaluation criteria.
 
-##### Graders
+##### Graders - The Evaluators
 
 **Graders** are the core evaluation components that assess your model's outputs. The **GradingRunner** manages the execution of these graders on the mapped data.
+
+There are several types of graders:
 
 ###### BaseGrader
 [BaseGrader](../../rm_gallery/core/graders/base_grader.py) is the abstract base class that defines the interface for all graders. While you won't instantiate this directly, understanding its interface helps when working with any grader.
@@ -162,6 +172,15 @@ Use cases:
 - Mathematical computations
 - Rule-based assessments
 
+Example:
+```python
+# A simple function grader that checks if response contains reference answer
+def contains_reference(response, reference):
+    return float(reference.lower() in response.lower())
+
+contains_grader = FunctionGrader(contains_reference)
+```
+
 ###### LLMGrader
 [LLMGrader](../../rm_gallery/core/graders/llm_grader.py) uses large language models to perform sophisticated evaluations. These graders construct prompts with customizable templates and rubrics, send them to an LLM, and parse structured responses.
 
@@ -170,6 +189,12 @@ Use cases:
 - Evaluating helpfulness or relevance
 - Complex reasoning tasks
 - Subjective assessments
+
+Example:
+```python
+# An LLM grader that evaluates helpfulness of responses
+helpfulness_grader = HelpfulnessGrader(model=OpenAIChatModel("gpt-4"))
+```
 
 ###### Pre-built Graders
 
@@ -181,7 +206,7 @@ RM-Gallery includes many domain-specific graders organized in submodules:
 - **format/**: Format compliance checking (JSON validation, structure verification)
 - **multimodal/**: Multimodal content evaluation (image-text alignment, visual helpfulness)
 
-##### Aggregators
+##### Aggregators - Combining Results
 
 After running multiple graders, you might want to combine their results into a single score. **Aggregators** are components that take multiple grader results and combine them into a unified result.
 
@@ -193,7 +218,7 @@ After running multiple graders, you might want to combine their results into a s
 
 You configure aggregators when setting up your **GradingRunner**, and they automatically process the results from multiple graders.
 
-### :mag: Analyzers
+### :mag: Analyzers - Getting Insights
 
 **Analyzer** is an optional component in RM-Gallery. After running evaluations with the **GradingRunner**, you can use analyzers to process the results and gain deeper insights. For training scenarios, you can skip this step and directly use the **GradingRunner's** output.
 
@@ -203,7 +228,15 @@ Types of analyzers:
 - **Statistical Analyzers**: Compute statistics on evaluation results (e.g., DistributionAnalyzer)
 - **Validation Analyzers**: Compare evaluation results with reference labels (e.g., AccuracyAnalyzer, F1ScoreAnalyzer)
 
-## Extension Capabilities
+Example:
+```python
+# Analyze the distribution of scores
+analyzer = DistributionAnalyzer()
+report = analyzer.analyze(results)
+print(report.summary())
+```
+
+## :rocket: Extension Capabilities
 
 RM-Gallery is designed to be extensible, allowing you to customize and enhance its capabilities to meet your specific needs. The framework provides several extension points that enable you to add new functionality or modify existing behavior.
 

@@ -1,44 +1,57 @@
-# :hammer: Create Custom Graders
+# Create Custom Graders
 
-When the [built-in graders](../../built-in_graders/overview.md) don't cover your specific evaluation needs, you can create custom graders. This guide shows you how to build both LLM-based and rule-based graders that seamlessly integrate with RM-Gallery's ecosystem.
+When built-in evaluation tools don't meet your specific needs, custom graders allow you to define precisely how you want to evaluate AI model responses. This guide walks you through creating both LLM-based and rule-based graders that work seamlessly with RM-Gallery.
+
+## What You'll Learn
+
+In this guide, you will:
+- Understand the two main types of custom graders: LLM-based and rule-based
+- Learn when to use each type of grader
+- Implement both types with practical examples
+- Follow best practices for creating robust and reliable custom graders
 
 ## Understanding Custom Graders
 
-Custom graders in RM-Gallery fall into two main categories:
+Custom graders are evaluation tools you create to assess AI model responses based on your specific criteria. RM-Gallery offers two main approaches:
 
-1. **LLM-based graders**: For complex, subjective evaluations that require natural language understanding
-2. **Rule-based graders**: For deterministic assessments based on predefined criteria
+1. **LLM-based graders**: Use another AI model to evaluate responses - great for subjective assessments
+2. **Rule-based graders**: Use programmed rules to evaluate responses - ideal for objective measurements
 
-You'll want to create custom graders when you need to:
-- Evaluate domain-specific criteria (legal compliance, medical accuracy, etc.)
-- Implement unique business logic
-- Fine-tune evaluation parameters beyond what built-in graders offer
-- Create proprietary evaluation methods
+Let's explore each approach with practical examples.
 
-Let's dive into each approach with practical examples.
+## LLM-based Graders
 
-## :robot: LLM-based Graders
+LLM-based graders use another AI model (like GPT-4 or Qwen) to evaluate responses. They're excellent for assessing qualities that require language understanding, such as helpfulness, coherence, or domain expertise.
 
-Use LLM-based graders when you need nuanced evaluations that require language understanding. These are perfect for assessing qualities like helpfulness, coherence, or domain expertise.
+### When to Use LLM-based Graders
+
+Use LLM-based graders when you need to evaluate:
+- Subjective qualities that require human-like judgment
+- Complex language understanding tasks
+- Context-dependent assessments
+- Qualities that are difficult to define with explicit rules
+
+For example, determining if a response is "helpful" or "coherent" typically requires nuanced understanding that rule-based systems struggle with.
 
 ### Creating a Custom Helpfulness Grader
 
-Here's how to create a custom helpfulness grader step by step:
+Here's how to create a helpfulness grader step by step:
 
 ```python
 from rm_gallery.core.graders.llm_grader import LLMGrader
 from rm_gallery.core.models.openai_chat_model import OpenAIChatModel
 
 # First, select your model
+# You'll need an API key for the model you choose
 model = OpenAIChatModel(
-    model="gpt-4",
-    api_key="your-api-key"
+    model="gpt-4",  # or another model like "qwen3-32b"
+    api_key="your-api-key"  # stored in environment variables
 )
 
 # Then define your grader with a clear template
 helpfulness_grader = LLMGrader(
     name="helpfulness_evaluator",
-    mode="pointwise",
+    mode="pointwise",  # Evaluates one response at a time
     model=model,
     template="""
     You are an expert evaluator assessing the helpfulness of AI responses.
@@ -61,14 +74,14 @@ helpfulness_grader = LLMGrader(
     description="Evaluates how helpful a response is to the given query"
 )
 
-# Now you can use it with GradingRunner
+# Now you can use it with GradingRunner to evaluate model responses
 ```
 
 This approach gives you full control over the evaluation criteria and scoring methodology.
 
-### Handling LLM Responses
+### Processing LLM Responses
 
-When using LLM-based graders, the LLM generates a natural language response that needs to be parsed into a structured [GraderScore](file:///mnt3/huangsen.huang/codes/RM-Gallery/rm_gallery/core/graders/schema.py#L115-L161) or [GraderRank](file:///mnt3/huangsen.huang/codes/RM-Gallery/rm_gallery/core/graders/schema.py#L164-L202) object. RM-Gallery provides several methods for handling these responses:
+When using LLM-based graders, the AI model generates a natural language response that needs to be parsed into a structured format. RM-Gallery provides several methods for handling these responses:
 
 #### Method 1: Automatic JSON Parsing (Recommended)
 
@@ -208,7 +221,6 @@ grader = LLMGrader(
 )
 ```
 
-
 ### Multi-language Support
 
 LLM graders support multi-language templates:
@@ -254,9 +266,19 @@ grader = LLMGrader(
 )
 ```
 
-## :gear: Rule-based Graders
+## Rule-based Graders
 
-**Rule-based graders** implement evaluation logic using predefined rules and conditions. There are two approaches to implementing rule-based graders:
+Rule-based graders implement evaluation logic using predefined rules and conditions. They're ideal for objective assessments where you can define clear criteria, such as checking response length or verifying keyword presence.
+
+### When to Use Rule-based Graders
+
+Choose rule-based graders when you need to evaluate:
+- Objective criteria with clear pass/fail conditions
+- Quantifiable metrics (length, keyword presence, etc.)
+- Deterministic assessments that don't require judgment
+- Performance against well-defined standards
+
+For example, checking if a response contains an email address or meets a minimum character count.
 
 ### Approach 1: Simple Functions with FunctionGrader
 
@@ -271,7 +293,7 @@ from rm_gallery.core.graders.schema import GraderScore
 async def length_grader(query: str, answer: str) -> GraderScore:
     """Grade based on answer length."""
     length = len(answer)
-    # Normalize score to 0-1 range
+    # Normalize score to 0-1 range (up to 100 characters)
     score = min(length / 100.0, 1.0)
     return GraderScore(
         name="length_grader",
@@ -404,9 +426,11 @@ quality_grader = ContentQualityGrader(
 )
 ```
 
-## :clipboard: Best Practices
+## Best Practices for Custom Graders
 
-### Error Handling
+Follow these practices to ensure your custom graders are robust and reliable:
+
+### Handle Errors Gracefully
 
 Always handle potential errors in your grader implementations:
 
@@ -429,7 +453,7 @@ class RobustGrader(BaseGrader):
             )
 ```
 
-### Consistent Return Values
+### Maintain Consistent Scoring
 
 Ensure your graders return consistent score ranges:
 
@@ -437,7 +461,7 @@ Ensure your graders return consistent score ranges:
 - For graded evaluations: Use a consistent scale (e.g., 0-1 or 1-5)
 - For rankings: Use positive integers starting from 1
 
-### Clear Documentation
+### Document Your Graders Clearly
 
 Provide clear descriptions and examples for your graders:
 
@@ -449,9 +473,9 @@ helpfulness_grader = LLMGrader(
 )
 ```
 
-## :white_check_mark: Testing Your Custom Graders
+## Test Your Custom Graders
 
-Always test your custom graders with various inputs:
+Always test your custom graders with various inputs to ensure they work as expected:
 
 ```python
 import asyncio
@@ -474,7 +498,15 @@ async def test_grader():
 asyncio.run(test_grader())
 ```
 
-Creating custom graders opens up endless possibilities for evaluating AI model outputs according to your specific requirements. Once you've built your graders, you can:
+Test your graders with:
+- Typical inputs they'll encounter
+- Edge cases that might break them
+- Invalid or unexpected inputs
+- Boundary conditions for scoring
+
+## Next Steps
+
+Now that you've learned how to create custom graders, you can:
 
 - :rocket: [Run grading tasks](../../running_graders/run_grading_tasks.md) to evaluate your models at scale
 - :gear: [Generate graders from data](generate_graders_from_data.md) to automate creation of evaluation criteria

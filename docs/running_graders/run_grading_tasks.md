@@ -1,10 +1,12 @@
-# :rocket: Run Grading Tasks
+# Run Grading Tasks
 
-The [GradingRunner](../../rm_gallery/core/runner/grading_runner.py) is RM-Gallery's core execution engine, orchestrating the entire evaluation process. Whether you're evaluating a few samples or processing thousands, understanding how to effectively use the GradingRunner is key to getting the most out of RM-Gallery.
+The [GradingRunner](../../rm_gallery/core/runner/grading_runner.py) is RM-Gallery's core execution engine that orchestrates the entire evaluation process. Whether you're evaluating a few samples or processing thousands, understanding how to effectively use the GradingRunner is key to getting the most out of RM-Gallery.
+
+> **Tip:** Grading is the process of evaluating how good responses from an AI model are. Think of it like having different teachers grade student essays - each teacher focuses on a different aspect like grammar, content, or creativity.
 
 ## Getting Started with GradingRunner
 
-At its core, the GradingRunner takes your dataset and runs it through configured graders. But there's more to it than that. Let's start with a simple example and build up to more complex scenarios.
+Let's begin with a simple example to understand how GradingRunner works:
 
 ### Basic Evaluation Workflow
 
@@ -15,7 +17,7 @@ from rm_gallery.core.runner.grading_runner import GradingRunner
 from rm_gallery.core.graders.common.helpfulness import HelpfulnessGrader
 from rm_gallery.core.graders.common.accuracy import AccuracyGrader
 
-# Your evaluation data
+# Your evaluation data - a list of examples to evaluate
 dataset = [
     {
         "query": "What is the capital of France?",
@@ -28,6 +30,7 @@ dataset = [
 ]
 
 # Configure the graders you want to run
+# Graders are like specialized evaluators that measure different qualities
 grader_configs = {
     "helpfulness": HelpfulnessGrader(),
     "accuracy": AccuracyGrader()
@@ -48,7 +51,7 @@ for grader_name, grader_results in results.items():
 
 This basic workflow works well for straightforward evaluations, but real-world scenarios often require more sophisticated handling.
 
-## :twisted_rightwards_arrows: Bridging Data and Graders
+## Bridging Data and Graders
 
 One common challenge is that your data rarely matches exactly what graders expect. That's where data mappers come in handy.
 
@@ -57,7 +60,7 @@ One common challenge is that your data rarely matches exactly what graders expec
 When your field names don't align with grader expectations:
 
 ```python
-# Your data structure
+# Your data structure - notice the field names differ from what graders expect
 dataset = [
     {
         "question": "What is the capital of France?",
@@ -67,12 +70,13 @@ dataset = [
 ]
 
 # Map your fields to what graders expect
+# This tells the runner how to convert your data format to what graders need
 grader_configs = {
     "helpfulness": {
         "grader": HelpfulnessGrader(),
         "mapper": {
-            "query": "question",
-            "response": "answer"
+            "query": "question",      # Grader expects "query", your data has "question"
+            "response": "answer"      # Grader expects "response", your data has "answer"
         }
     },
     "relevance": {
@@ -80,7 +84,7 @@ grader_configs = {
         "mapper": {
             "query": "question",
             "response": "answer",
-            "reference": "reference_answer"
+            "reference": "reference_answer"  # Grader expects "reference", your data has "reference_answer"
         }
     }
 }
@@ -91,7 +95,7 @@ grader_configs = {
 For more complex data structures, custom mapper functions provide flexibility:
 
 ```python
-# Nested data structure
+# Nested data structure - more complex than what graders expect
 dataset = [
     {
         "input": {"question": "What is the capital of France?"},
@@ -99,7 +103,7 @@ dataset = [
     }
 ]
 
-# Custom transformation function
+# Custom transformation function to flatten the data
 def custom_mapper(sample):
     return {
         "query": sample["input"]["question"],
@@ -114,7 +118,7 @@ grader_configs = {
 }
 ```
 
-## :rocket: Optimizing Performance
+## Optimizing Performance
 
 When dealing with large datasets or resource-intensive graders, performance becomes critical.
 
@@ -124,15 +128,17 @@ Adjust concurrency based on your resources and constraints:
 
 ```python
 # For resource-intensive graders (e.g., LLM-based)
+# Lower concurrency to avoid overwhelming resources like GPU or API limits
 runner = GradingRunner(
     grader_configs=grader_configs,
-    max_concurrency=5  # Lower to avoid overwhelming resources
+    max_concurrency=5  # Process 5 samples at a time
 )
 
 # For fast, lightweight graders
+# Higher concurrency for faster processing
 runner = GradingRunner(
     grader_configs=grader_configs,
-    max_concurrency=32  # Higher for faster processing
+    max_concurrency=32  # Process 32 samples at a time
 )
 ```
 
@@ -144,10 +150,11 @@ Often you'll want to combine multiple grader results into unified scores:
 from rm_gallery.core.runner.aggregator.weighted_sum import WeightedSumAggregator
 
 # Combine multiple perspectives into a single quality score
+# Like calculating a final grade based on different subject scores
 aggregator = WeightedSumAggregator(
     weights={
-        "helpfulness": 0.6,
-        "relevance": 0.4
+        "helpfulness": 0.6,  # Weight helpfulness at 60%
+        "relevance": 0.4     # Weight relevance at 40%
     }
 )
 
@@ -157,13 +164,13 @@ runner = GradingRunner(
 )
 ```
 
-## :ambulance: Handling Real-World Challenges
+## Handling Real-World Challenges
 
 Production environments bring unique challenges that require careful consideration.
 
 ### Error Resilience
 
-Graders can fail for various reasons, but your pipeline shouldn't break:
+Graders can fail for various reasons (e.g., network issues, timeouts), but your pipeline shouldn't break:
 
 ```python
 results = await runner.arun(dataset)
@@ -187,13 +194,15 @@ Graders can work in different modes depending on your needs:
 from rm_gallery.core.graders.schema import GraderMode
 
 # Pointwise: Evaluate each sample independently
+# Like grading each student's essay separately
 pointwise_grader = LLMGrader(mode=GraderMode.POINTWISE, ...)
 
 # Listwise: Rank multiple samples together
+# Like comparing students' essays to determine who did best
 listwise_grader = LLMGrader(mode=GraderMode.LISTWISE, ...)
 ```
 
-## :zap: Best Practices for Large-Scale Evaluations
+## Best Practices for Large-Scale Evaluations
 
 When running large evaluations, keep these tips in mind:
 
@@ -203,7 +212,7 @@ When running large evaluations, keep these tips in mind:
 4. **Checkpointing**: Save intermediate results to recover from failures
 5. **Rate Limiting**: Respect API rate limits for external services
 
-## :tada: Putting It All Together
+## Putting It All Together
 
 A robust evaluation setup combines all these elements:
 

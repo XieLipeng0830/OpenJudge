@@ -475,9 +475,6 @@ pytest tests/ -v -m quality --run-live
 
 # 运行特定类型的测试（使用标记）
 pytest tests/ -m unit       # 运行单元测试
-pytest tests/ -m integration # 运行集成测试
-pytest tests/ -m regression  # 运行回归测试
-pytest tests/ -m performance # 运行性能测试
 pytest tests/ -m quality     # 运行质量测试
 ```
 
