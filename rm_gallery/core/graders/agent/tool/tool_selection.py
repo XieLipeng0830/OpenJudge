@@ -46,9 +46,9 @@ For your analysis:
 5. Consider alternatives: Are there better tool choices available?
 </Evaluation Criteria>
 
-<user_query>
-{user_query}
-</user_query>
+<query>
+{query}
+</query>
 
 <available_tools>
 {available_tools}
@@ -62,11 +62,11 @@ For your analysis:
 
 # Scoring Instructions
 Use a scale from 1 to 5:
-- 5: Perfect tool selection - highly relevant, complete, and efficient
-- 4: Good tool selection - relevant with minor inefficiencies
-- 3: Acceptable tool selection - partially addresses the query
-- 2: Poor tool selection - mostly irrelevant or incomplete
-- 1: Completely wrong tool selection - fails to address the query
+- 5: Optimal tool selection - Accurately identifies the task intent and selects the most direct, efficient, and semantically relevant tool from the available options.
+- 4: Reasonable tool selection - The selected tool can complete the task, but it is not the optimal choice, or a tool with overlapping but slightly redundant functionality is chosen.
+- 3: Acceptable tool selection - The selected tool is related to the task but not a direct match.
+- 2: Poor tool selection - The selected tool is clearly mismatched with the task and cannot directly support achieving the goal.
+- 1: Completely incorrect tool selection - No tool is selected and the answer is given without using any tools, or a completely irrelevant or non-existent tool is chosen.
 
 Provide your evaluation in the following structured JSON format:
 {{
@@ -104,27 +104,27 @@ TOOL_SELECTION_PROMPT_ZH = """
 5. 考虑替代方案：是否有更好的工具选择可用？
 </评估标准>
 
-<user_query>
-{user_query}
-</user_query>
+<查询>
+{query}
+</查询>
 
-<available_tools>
+<可用工具>
 {available_tools}
-</available_tools>
+</可用工具>
 
-<selected_tools>
+<选择工具>
 {selected_tools}
-</selected_tools>
+</选择工具>
 
 {context_section}
 
 # 评分指令
 使用 1 到 5 的评分标准：
-- 5：完美的工具选择 - 高度相关、完整且高效
-- 4：良好的工具选择 - 相关但有轻微的低效
-- 3：可接受的工具选择 - 部分解决了查询
-- 3：较差的工具选择 - 大多不相关或不完整
-- 1：完全错误的工具选择 - 无法解决查询
+- 5：最优的工具选择 - 精准识别任务意图，从可用工具中选出最直接、高效、语义匹配度最高的工具。
+- 4：合理的工具选择 - 所选工具能完成任务，但非最优，或选择了功能覆盖但略显冗余的工具。
+- 3：可接受的工具选择 - 所选工具与任务相关但不直接匹配。
+- 2：较差的工具选择 - 所选工具与任务明显不匹配，无法直接支持目标达成。
+- 1：完全错误的工具选择 - 选择工具为空，或选择完全无关或不存在的工具。
 
 请按以下结构化 JSON 格式提供你的评估：
 {{
@@ -184,7 +184,7 @@ class ToolSelectionGrader(LLMGrader):
         ... )
         >>>
         >>> result = await grader.aevaluate(
-        ...     user_query="Find all Python files modified in the last week",
+        ...     query="Find all Python files modified in the last week",
         ...     available_tools="search_files, list_directory, get_file_info, git_log",
         ...     selected_tools="search_files, git_log"
         ... )
@@ -253,24 +253,21 @@ class ToolSelectionGrader(LLMGrader):
 
         # Format query as string for the prompt
         if isinstance(query, list):
-            user_query = "\n".join(
+            query = "\n".join(
                 [f"{msg.get('role', 'user')}: {msg.get('content', '')}" for msg in query],
             )
         else:
-            user_query = str(query)
+            query = str(query)
 
         # Format available tools
-        available_tools = json.dumps(tool_definitions, indent=2)
+        available_tools = json.dumps(tool_definitions, indent=2, ensure_ascii=False)
 
-        # Format selected tools (extract tool names from tool_calls)
-        selected_tools = json.dumps(
-            [{"name": tc.get("name"), "arguments": tc.get("arguments", {})} for tc in tool_calls],
-            indent=2,
-        )
+        # Format selected tools
+        selected_tools = json.dumps(tool_calls, indent=2,  ensure_ascii=False)
 
         try:
             result = await super().aevaluate(
-                user_query=user_query,
+                query=query,
                 available_tools=available_tools,
                 selected_tools=selected_tools,
                 context_section="",
@@ -278,12 +275,8 @@ class ToolSelectionGrader(LLMGrader):
             score = result.score
             reason = result.reason
 
-            # Normalize score to [0, 1] range if needed
-            normalized_score = max(0.0, min(1.0, score))
-
         except Exception as e:
             logger.error(f"Error evaluating tool selection: {e}")
-            normalized_score = 0.0
             score = 0.0
             reason = f"Evaluation error: {str(e)}"
 
@@ -295,7 +288,7 @@ class ToolSelectionGrader(LLMGrader):
 
         return GraderScore(
             name=self.name,
-            score=normalized_score,
+            score=score,
             reason=reason,
             metadata=metadata,
         )

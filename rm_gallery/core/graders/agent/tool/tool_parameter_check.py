@@ -46,9 +46,9 @@ For your analysis:
 5. Assess overall correctness: Determine if the tool call is executable with correct parameters
 </Evaluation Criteria>
 
-<user_query>
-{user_query}
-</user_query>
+<query>
+{query}
+</query>
 
 <tool_definitions>
 {tool_definitions}
@@ -100,17 +100,17 @@ TOOL_PARAMETER_CHECK_PROMPT_ZH = """
 5. 评估整体正确性：确定工具调用是否可以用正确的参数执行
 </评估标准>
 
-<user_query>
-{user_query}
-</user_query>
+<查询>
+{query}
+</查询>
 
-<tool_definitions>
+<工具定义>
 {tool_definitions}
-</tool_definitions>
+</工具定义>
 
-<tool_calls>
+<工具调用>
 {tool_calls}
-</tool_calls>
+</工具调用>
 
 {context_section}
 
@@ -175,7 +175,7 @@ class ToolParameterCheckGrader(LLMGrader):
         ... )
         >>>
         >>> result = await grader.aevaluate(
-        ...     user_query="Search for Python files in the src directory",
+        ...     query="Search for Python files in the src directory",
         ...     tool_definition="search_files(pattern: str, directory: str)",
         ...     tool_calls='search_files(pattern="*.py", directory="src")'
         ... )
@@ -245,15 +245,15 @@ class ToolParameterCheckGrader(LLMGrader):
 
         # Format query as string for the prompt
         if isinstance(query, list):
-            user_query = "\n".join(
+            query = "\n".join(
                 [f"{msg.get('role', 'user')}: {msg.get('content', '')}" for msg in query],
             )
         else:
-            user_query = str(query)
+            query = str(query)
 
         try:
             result = await super().aevaluate(
-                user_query=user_query,
+                query=query,
                 tool_definitions=json.dumps(tool_definitions, indent=2),
                 tool_calls=json.dumps(tool_calls, indent=2),
                 context_section="",

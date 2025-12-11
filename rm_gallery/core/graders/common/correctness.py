@@ -74,77 +74,77 @@ Provide your evaluation in the following structured JSON format:
 }}
 
 Scoring Scale:
-- 5: Perfect match with reference response in all aspects
-- 4: Strong match with minor stylistic differences
-- 3: Partially matches reference response but with notable deviations
-- 2: Significant departures or misrepresentation of reference response
-- 1: Completely ignores or contradicts reference response
+- 5: The answer is completely consistent with the reference answer in terms of facts, key details, logic, and conclusions. Different wording is acceptable as long as the meaning is equivalent.
+- 4: The core conclusion of the answer is consistent with the reference answer, but there are non-critical omissions, vague statements, or minor errors that do not affect user understanding and use.
+- 3: The answer contains some correct information, but omits key points, contains verifiable errors, or significantly misinterprets the reference content.
+- 2: The core conclusion or key facts of the answer contradict the reference answer, containing only a few superficially related words, and are generally misleading.
+- 1: The answer is completely unrelated to or directly contradicts the reference answer.
 
 JSON:
 """
 
 # Chinese Prompt
 CORRECTNESS_PROMPT_ZH = """
-你是一名专业的数据标注员，负责评估模型输出是否与提供的正确回复（reference response）一致。你的任务是根据以下标准进行评分：
+你是一名专业的数据标注员，负责评估模型输出是否与提供的参考回答（reference response）一致。你的任务是根据以下标准进行评分：
 
 <评分标准>
-完美匹配 reference response 的回答应该：
-- 与 reference response 中的所有信息保持事实一致性。
-- 包含 reference response 中与输入问题相关的关键点。
-- 在适当时与 reference response 的风格、语气和格式相匹配。
-- 不与 reference response 中的信息矛盾、歪曲或扭曲。
-- 在 reference response 中正确地支撑声明，而不捏造细节。
-- 准确使用 reference response 信息，不脱离上下文。
-- 在遵循 reference response 和适当回答特定输入之间取得平衡。
+完美匹配参考回答的回答应该：
+- 与参考回答中的所有信息保持事实一致性。
+- 包含参考回答中与输入问题相关的关键点。
+- 在适当时与参考回答的风格、语气和格式相匹配。
+- 不与参考回答中的信息矛盾、歪曲或扭曲。
+- 在参考回答中正确地支撑声明，而不捏造细节。
+- 准确使用参考回答信息，不脱离上下文。
+- 在遵循参考回答和适当回答特定输入之间取得平衡。
 
 以下情况应扣分：
-- 与 reference response 的事实矛盾。
-- 遗漏 reference response 中存在的关键信息。
-- 歪曲或扭曲 reference response 信息。
-- 在需要支撑时添加 reference response 不支持的声明。
-- 在预期匹配时明显偏离 reference response 风格/格式。
-- 脱离上下文使用 reference response 信息。
-- 在需要原创综合时过度依赖 reference response。
+- 与参考回答的事实矛盾。
+- 遗漏参考回答中存在的关键信息。
+- 歪曲或扭曲参考回答信息。
+- 在需要支撑时添加参考回答不支持的声明。
+- 在预期匹配时明显偏离参考回答风格/格式。
+- 脱离上下文使用参考回答信息。
+- 在需要原创综合时过度依赖参考回答。
 </评分标准>
 
 <指导>
-- 仔细阅读 reference response 以理解其关键事实、风格和内容。
-- 将输出中的每个声明与 reference response 进行比较。
-- 检查输出是否适当地平衡使用 reference response 信息和回答特定问题。
-- 评估输出是否与 reference response 的细节水平和可信度相匹配。
-- 考虑输出是否正确地在 reference response 中归因或支撑信息。
+- 仔细阅读参考回答以理解其关键事实、风格和内容。
+- 将输出中的每个声明与参考回答进行比较。
+- 检查输出是否适当地平衡使用参考回答信息和回答特定问题。
+- 评估输出是否与参考回答的细节水平和可信度相匹配。
+- 考虑输出是否正确地在参考回答中归因或支撑信息。
 - 评估输出是否添加了适当的综合还是仅仅转述。
 </指导>
 
 <提醒>
-目标是评估与 reference response 的正确性，而不是一般质量。一个写得很好但与 reference response 矛盾的回答应该得分低。一个简单但准确反映并正确使用 reference response 的回答应该得分高。同时考虑准确性和 reference response 的适当应用。
+目标是评估与参考回答的正确性，而不是一般质量。一个写得很好但与参考回答矛盾的回答应该得分低。一个简单但准确反映并正确使用参考回答的回答应该得分高。同时考虑准确性和参考回答的适当应用。
 </提醒>
 
 {context_section}
 
-<query>
+<查询>
 {query}
-</query>
+</查询>
 
-<response>
+<回答>
 {response}
-</response>
+</回答>
 
 {reference_section}
 
 # 输出指令
 请按以下结构化 JSON 格式提供你的评估：
 {{
-    "score": <1到5之间的整数，其中5表示完美匹配 reference response，1表示完全偏离 reference response>,
-    "reason": "<对所给分数的简要解释，特别提到输出如何与 reference response 一致或偏离>"
+    "score": <1到5之间的整数，其中5表示完美匹配参考回答，1表示完全偏离参考回答>,
+    "reason": "<对所给分数的简要解释，特别提到输出如何与参考回答一致或偏离>"
 }}
 
 评分标尺：
-- 5: 在所有方面都完美匹配 reference response
-- 4: 强烈匹配，仅有轻微的风格差异
-- 3: 部分匹配 reference response，但有明显偏离
-- 2: 明显偏离或误述 reference response 内容
-- 1: 完全忽略或与 reference response 矛盾
+- 5: 回答在事实、关键细节、逻辑和结论上与参考回答完全一致，允许措辞不同但语义等价。
+- 4: 回答的核心结论与参考回答一致，但存在非关键性省略、模糊表述或微小误差，不影响用户理解与使用。
+- 3: 回答包含部分正确信息，但遗漏关键点、包含可验证错误，或对参考内容有明显曲解。
+- 2: 回答的核心结论或关键事实与参考回答矛盾，仅含少量表面相关词，整体具有误导性。
+- 1: 回答与参考回答完全无关或直接矛盾
 
 JSON:
 """
@@ -296,9 +296,9 @@ class CorrectnessGrader(LLMGrader):
         context_section = ""
         if context:
             if self.language == LanguageEnum.ZH:
-                context_section = f"""<context>
+                context_section = f"""<上下文>
 {context}
-</context>"""
+</上下文>"""
             else:
                 context_section = f"""<context>
 {context}
@@ -309,14 +309,14 @@ class CorrectnessGrader(LLMGrader):
         if reference_response:
             if self.language == LanguageEnum.ZH:
                 reference_section = f"""以下是正确的回复供你参考：
-<reference>
+<参考回答>
 {reference_response}
-</reference>"""
+</参考回答>"""
             else:
                 reference_section = f"""The following is the correct response for your reference:
-<reference>
+<reference_response>
 {reference_response}
-</reference>"""
+</reference_response>"""
 
         try:
             result = await super().aevaluate(
