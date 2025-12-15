@@ -211,7 +211,7 @@ class ToolCallSuccessGrader(LLMGrader):
 
     def __init__(
         self,
-        model: BaseChatModel | dict,
+        model: Union[BaseChatModel, Dict[str, Any]],
         template: Optional[PromptTemplate] = DEFAULT_TOOL_CALL_SUCCESS_TEMPLATE,
         language: LanguageEnum = LanguageEnum.EN,
     ):
@@ -232,7 +232,7 @@ class ToolCallSuccessGrader(LLMGrader):
             template=template,
             language=language,
         )
-        self.template = template if template is not None else DEFAULT_TOOL_CALL_SUCCESS_TEMPLATE
+        self.template = template or DEFAULT_TOOL_CALL_SUCCESS_TEMPLATE
 
     def _parse_tools_from_response(
         self,
@@ -305,7 +305,7 @@ class ToolCallSuccessGrader(LLMGrader):
                 tool_calls=json.dumps(tool_calls, indent=2),
                 tool_definitions=json.dumps(tool_definitions, indent=2),
             )
-            score = 1.0 if result.score >= 0.5 else 0.0
+            score = result.score
             reason = result.reason
         except Exception as e:
             logger.error(f"Error evaluating tool call success check: {e}")
