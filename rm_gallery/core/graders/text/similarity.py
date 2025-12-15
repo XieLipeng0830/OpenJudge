@@ -13,7 +13,7 @@ A unified grader for text similarity evaluation supporting multiple algorithms:
 from typing import Any, Dict
 
 from rm_gallery.core.graders.base_grader import BaseGrader, GraderMode, GraderScore
-from rm_gallery.core.graders.text.utils.compute import (
+from rm_gallery.core.graders.text._utils.compute import (
     compute_bleu_score,
     compute_chrf_score,
     compute_cosine_similarity,

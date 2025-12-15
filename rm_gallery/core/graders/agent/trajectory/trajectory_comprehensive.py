@@ -16,9 +16,9 @@ from pydantic import BaseModel, Field
 from rm_gallery.core.graders.base_grader import GraderMode, GraderScore
 from rm_gallery.core.graders.llm_grader import LLMGrader
 from rm_gallery.core.models.base_chat_model import BaseChatModel
-from rm_gallery.core.models.schema.response import ChatResponse
 from rm_gallery.core.models.schema.message import ChatMessage
 from rm_gallery.core.models.schema.prompt_template import LanguageEnum, PromptTemplate
+from rm_gallery.core.models.schema.response import ChatResponse
 
 # pylint: disable=line-too-long
 
@@ -224,17 +224,17 @@ DEFAULT_TRAJECTORY_COMPREHENSIVE_TEMPLATE = PromptTemplate(
 def _normalize_score(score: Union[int, float]) -> float:
     """
     Normalize a 1-5 integer score to 0-1 continuous scale.
-    
+
     Mapping:
     - 1 -> 0.0
     - 2 -> 0.25
     - 3 -> 0.5
     - 4 -> 0.75
     - 5 -> 1.0
-    
+
     Args:
         score: Integer score from 1 to 5
-        
+
     Returns:
         float: Normalized score from 0.0 to 1.0
     """
@@ -247,6 +247,7 @@ def _normalize_score(score: Union[int, float]) -> float:
 # Pydantic models for structured LLM output
 class StepEvaluation(BaseModel):
     """Single step evaluation from LLM."""
+
     step_index: int = Field(description="Step index starting from 0")
     step_reason: str = Field(default="", description="Detailed evaluation reasoning for this step")
     contribution_score: int = Field(ge=1, le=5, description="Contribution score (1-5)")
@@ -257,9 +258,10 @@ class StepEvaluation(BaseModel):
 
 class TrajectoryEvaluationOutput(BaseModel):
     """Structured output model for trajectory evaluation LLM response."""
+
     step_evaluations: List[StepEvaluation] = Field(
         default_factory=list,
-        description="List of step-level evaluations"
+        description="List of step-level evaluations",
     )
 
 
@@ -270,10 +272,10 @@ class TrajectoryComprehensiveGrader(LLMGrader):
     This grader evaluates agent trajectories by assessing each step independently:
     - Step-level evaluation: contribution, relevance, accuracy, efficiency (per step)
     - Overall score is computed by averaging all step scores (not from LLM output)
-    
-    The grader uses a 1-5 integer scoring system in prompts to avoid ambiguous boundary 
+
+    The grader uses a 1-5 integer scoring system in prompts to avoid ambiguous boundary
     definitions, then normalizes scores to 0-1 range (1->0.0, 2->0.25, 3->0.5, 4->0.75, 5->1.0).
-    
+
     The overall score is computed as:
     1. For each step: average of (contribution, relevance, accuracy, efficiency)
     2. Overall score: average of all step scores
@@ -308,36 +310,36 @@ class TrajectoryComprehensiveGrader(LLMGrader):
     ) -> Callable[[ChatResponse], Dict[str, Any]]:
         """
         Create a callback function to process step-level evaluations into final score and reason.
-        
+
         This callback:
         1. Extracts step_evaluations from ChatResponse.metadata (which contains the model_dump of TrajectoryEvaluationOutput)
         2. Calculates average raw scores (1-5) across all steps for each dimension
         3. Normalizes the final average to 0-1 scale (more efficient than normalizing each step)
         4. Generates aggregated reason from step evaluations
-        
+
         Args:
             language: Language for generating the aggregated reason
-            
+
         Returns:
             Callable that processes ChatResponse into metadata dict with score and reason
         """
+
         def callback(response: ChatResponse) -> Dict[str, Any]:
             # Extract step_evaluations from ChatResponse.metadata
             # metadata contains the model_dump() of TrajectoryEvaluationOutput
             metadata = response.metadata or {}
             step_evaluations_raw = metadata.get("step_evaluations", [])
-            
+
             # Convert dict representations to StepEvaluation objects
             # Note: structured_model ensures all items are dicts from model_dump()
             try:
                 step_evaluations: List[StepEvaluation] = [
-                    StepEvaluation(**s) if isinstance(s, dict) else s
-                    for s in step_evaluations_raw
+                    StepEvaluation(**s) if isinstance(s, dict) else s for s in step_evaluations_raw
                 ]
             except Exception as e:
                 logger.warning(f"Failed to parse step evaluations: {e}")
                 step_evaluations = []
-            
+
             if not step_evaluations:
                 return {
                     "score": 0.0,
@@ -348,15 +350,15 @@ class TrajectoryComprehensiveGrader(LLMGrader):
                     "avg_accuracy": 0.0,
                     "avg_efficiency": 0.0,
                 }
-            
+
             num_steps = len(step_evaluations)
-            
+
             # Calculate average raw scores (1-5) first - more efficient than normalizing each step
             total_contribution = sum(s.contribution_score for s in step_evaluations)
             total_relevance = sum(s.relevance_score for s in step_evaluations)
             total_accuracy = sum(s.accuracy_score for s in step_evaluations)
             total_efficiency = sum(s.efficiency_score for s in step_evaluations)
-            
+
             avg_contribution_raw = total_contribution / num_steps
             avg_relevance_raw = total_relevance / num_steps
             avg_accuracy_raw = total_accuracy / num_steps
@@ -367,15 +369,15 @@ class TrajectoryComprehensiveGrader(LLMGrader):
             avg_relevance = _normalize_score(avg_relevance_raw)
             avg_accuracy = _normalize_score(avg_accuracy_raw)
             avg_efficiency = _normalize_score(avg_efficiency_raw)
-            
+
             # Calculate overall average in raw scale, then normalize once
             overall_raw = (avg_contribution_raw + avg_relevance_raw + avg_accuracy_raw + avg_efficiency_raw) / 4.0
             score = _normalize_score(overall_raw)
             reason = "\n".join([f"Step {s.step_index}: {s.step_reason}" for s in step_evaluations])
-            
+
             # Convert step_evaluations to dicts for JSON serialization
             step_evaluations_dicts = [s.model_dump() for s in step_evaluations]
-            
+
             return {
                 "score": score,
                 "reason": reason,
@@ -385,7 +387,7 @@ class TrajectoryComprehensiveGrader(LLMGrader):
                 "avg_efficiency": avg_efficiency,
                 "step_evaluations": step_evaluations_dicts,
             }
-        
+
         return callback
 
     def __init__(
@@ -422,7 +424,7 @@ class TrajectoryComprehensiveGrader(LLMGrader):
             template=template,
             language=language,
             structured_model=TrajectoryEvaluationOutput,
-            callback=self._create_trajectory_callback(language=language)
+            callback=self._create_trajectory_callback(language=language),
         )
         self.resolution_threshold = resolution_threshold
 
@@ -497,14 +499,14 @@ class TrajectoryComprehensiveGrader(LLMGrader):
                     try:
                         args_dict = json.loads(tool_args)
                         tool_calls_formatted.append(
-                            f"  - {tool_name}({json.dumps(args_dict, ensure_ascii=False)})"
+                            f"  - {tool_name}({json.dumps(args_dict, ensure_ascii=False)})",
                         )
                     except json.JSONDecodeError:
                         tool_calls_formatted.append(f"  - {tool_name}({tool_args})")
 
                 trajectory_parts.append(
                     f"**{step_label} {step_index} - {assistant_label} {tool_calls_label}**:\n"
-                    + "\n".join(tool_calls_formatted)
+                    + "\n".join(tool_calls_formatted),
                 )
                 step_index += 1
 
@@ -531,13 +533,13 @@ class TrajectoryComprehensiveGrader(LLMGrader):
     ) -> GraderScore:
         """
         Evaluate complete agent trajectory comprehensively.
-        
+
         The evaluation uses 1-5 integer scores in LLM prompts for each step, then normalizes to 0-1 scale:
         - 1 -> 0.0, 2 -> 0.25, 3 -> 0.5, 4 -> 0.75, 5 -> 1.0
-        
+
         The overall score is computed as the average of all step scores (each step's score is the average
         of its four dimensions: contribution, relevance, accuracy, efficiency).
-        
+
         The callback function handles step-level to final score/reason conversion efficiently:
         - Calculates average raw scores (1-5) first
         - Then normalizes the final result (avoiding redundant per-step normalization for aggregation)
@@ -566,7 +568,8 @@ class TrajectoryComprehensiveGrader(LLMGrader):
         """
         # Extract trajectory from messages
         user_query, trajectory_messages, final_answer = self._extract_trajectory_from_messages(
-            messages, language=self.language
+            messages,
+            language=self.language,
         )
 
         if not user_query or not trajectory_messages:
@@ -595,7 +598,7 @@ class TrajectoryComprehensiveGrader(LLMGrader):
 
             # Determine resolution status using the specified threshold
             is_resolved = result.score >= self.resolution_threshold
-            
+
             # Add additional metadata
             metadata = result.metadata or {}
             metadata["is_resolved"] = is_resolved

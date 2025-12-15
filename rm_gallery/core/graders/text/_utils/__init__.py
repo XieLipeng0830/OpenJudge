@@ -5,7 +5,7 @@ Grader Utilities
 Evaluation grader utility functions, including text normalization, tokenization, and core computations.
 """
 
-from rm_gallery.core.graders.text.utils.compute import (
+from rm_gallery.core.graders.text._utils.compute import (
     compute_bleu_score,
     compute_chrf_score,
     compute_cosine_similarity,
@@ -19,11 +19,11 @@ from rm_gallery.core.graders.text.utils.compute import (
     compute_rouge_scores,
     compute_sentence_bleu,
 )
-from rm_gallery.core.graders.text.utils.normalization import (
+from rm_gallery.core.graders.text._utils.normalization import (
     normalize_text,
     normalize_text_advanced,
 )
-from rm_gallery.core.graders.text.utils.string_match_compute import (
+from rm_gallery.core.graders.text._utils.string_match_compute import (
     compute_char_overlap,
     compute_contains_all,
     compute_contains_any,
@@ -34,7 +34,7 @@ from rm_gallery.core.graders.text.utils.string_match_compute import (
     compute_suffix_match,
     compute_word_overlap,
 )
-from rm_gallery.core.graders.text.utils.tokenization import (
+from rm_gallery.core.graders.text._utils.tokenization import (
     simple_tokenize,
     word_tokenize,
 )

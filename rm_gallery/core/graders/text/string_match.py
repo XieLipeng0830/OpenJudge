@@ -12,7 +12,7 @@ A unified grader for string matching evaluation supporting multiple algorithms:
 from typing import Any, Dict
 
 from rm_gallery.core.graders.base_grader import BaseGrader, GraderMode, GraderScore
-from rm_gallery.core.graders.text.utils.string_match_compute import (
+from rm_gallery.core.graders.text._utils.string_match_compute import (
     compute_char_overlap,
     compute_contains_all,
     compute_contains_any,

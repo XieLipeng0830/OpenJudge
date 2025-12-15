@@ -47,7 +47,7 @@ class CodeExecutionGrader(BaseGrader):
         self.compute_score = compute_score
 
         try:
-            from rm_gallery.core.graders.code.prime_code import compute_score
+            from rm_gallery.core.graders.code._utils import compute_score
 
             self.compute_score = compute_score
             self.test_framework_available = True

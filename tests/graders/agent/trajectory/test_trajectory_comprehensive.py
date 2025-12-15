@@ -31,7 +31,9 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from rm_gallery.core.graders.agent.trajectory.trajectory_comprehensive import TrajectoryComprehensiveGrader
+from rm_gallery.core.graders.agent.trajectory.trajectory_comprehensive import (
+    TrajectoryComprehensiveGrader,
+)
 from rm_gallery.core.models.openai_chat_model import OpenAIChatModel
 from rm_gallery.core.models.schema.prompt_template import LanguageEnum
 
@@ -51,7 +53,7 @@ class TestTrajectoryComprehensiveGraderUnit:
 
         grader = TrajectoryComprehensiveGrader(
             model=mock_model,
-            resolution_threshold=0.75
+            resolution_threshold=0.75,
         )
         assert grader.resolution_threshold == 0.75
         assert grader.name == "trajectory_comprehensive"
@@ -68,7 +70,7 @@ class TestTrajectoryComprehensiveGraderUnit:
             "relevance_score": 5,
             "accuracy_score": 5,
             "efficiency_score": 4,
-            "step_reason": "Successfully retrieved weather data"
+            "step_reason": "Successfully retrieved weather data",
         }
 
         # Setup mock response for overall evaluation
@@ -76,7 +78,7 @@ class TestTrajectoryComprehensiveGraderUnit:
         mock_overall_response.metadata = {
             "score": 5,
             "reason": "Excellent problem solving with efficient tool usage",
-            "is_resolved": True
+            "is_resolved": True,
         }
 
         mock_model = AsyncMock()
@@ -98,20 +100,20 @@ class TestTrajectoryComprehensiveGraderUnit:
                         "type": "function",
                         "function": {
                             "name": "get_weather",
-                            "arguments": '{"city": "Beijing"}'
-                        }
-                    }
-                ]
+                            "arguments": '{"city": "Beijing"}',
+                        },
+                    },
+                ],
             },
             {
                 "role": "tool",
                 "name": "get_weather",
-                "content": "Sunny, 20°C"
+                "content": "Sunny, 20°C",
             },
             {
                 "role": "assistant",
-                "content": "The weather in Beijing is sunny with a temperature of 20°C."
-            }
+                "content": "The weather in Beijing is sunny with a temperature of 20°C.",
+            },
         ]
 
         result = await grader.aevaluate(messages=messages)
@@ -152,7 +154,7 @@ class TestTrajectoryComprehensiveGraderUnit:
         messages = [
             {"role": "system", "content": "You are a helpful assistant"},
             {"role": "user", "content": "What's 2+2?"},
-            {"role": "assistant", "content": "The answer is 4."}
+            {"role": "assistant", "content": "The answer is 4."},
         ]
 
         result = await grader.aevaluate(messages=messages)
@@ -166,7 +168,7 @@ class TestTrajectoryComprehensiveGraderUnit:
         # Setup mock to raise exception
         mock_model = AsyncMock()
         mock_model.achat = AsyncMock(side_effect=Exception("API Error: Connection timeout"))
-        
+
         # Create grader
         grader = TrajectoryComprehensiveGrader(model=mock_model)
 
@@ -176,10 +178,10 @@ class TestTrajectoryComprehensiveGraderUnit:
             {
                 "role": "assistant",
                 "tool_calls": [{"id": "1", "type": "function", "function": {"name": "test", "arguments": "{}"}}],
-                "content": ""
+                "content": "",
             },
             {"role": "tool", "name": "test", "content": "result"},
-            {"role": "assistant", "content": "Done"}
+            {"role": "assistant", "content": "Done"},
         ]
 
         result = await grader.aevaluate(messages=messages)
@@ -222,25 +224,26 @@ class TestTrajectoryComprehensiveGraderUnit:
                         "type": "function",
                         "function": {
                             "name": "get_weather",
-                            "arguments": '{"city": "Beijing"}'
-                        }
-                    }
-                ]
+                            "arguments": '{"city": "Beijing"}',
+                        },
+                    },
+                ],
             },
             {
                 "role": "tool",
                 "name": "get_weather",
-                "content": "Sunny, 20°C"
+                "content": "Sunny, 20°C",
             },
             {
                 "role": "assistant",
-                "content": "The weather in Beijing is sunny with a temperature of 20°C."
-            }
+                "content": "The weather in Beijing is sunny with a temperature of 20°C.",
+            },
         ]
 
         # Extract trajectory
         user_query, trajectory_messages, final_answer = grader._extract_trajectory_from_messages(
-            messages, language=LanguageEnum.EN
+            messages,
+            language=LanguageEnum.EN,
         )
 
         # Assertions
@@ -262,29 +265,30 @@ class TestTrajectoryComprehensiveGraderUnit:
             {"role": "user", "content": "First query"},
             {
                 "role": "assistant",
-                "tool_calls": [{"id": "1", "type": "function", "function": {"name": "tool1", "arguments": '{}'}}],
-                "content": ""
+                "tool_calls": [{"id": "1", "type": "function", "function": {"name": "tool1", "arguments": "{}"}}],
+                "content": "",
             },
             {"role": "tool", "name": "tool1", "content": "Result 1"},
             {"role": "assistant", "content": "Let me check more info."},
             {
                 "role": "assistant",
-                "tool_calls": [{"id": "2", "type": "function", "function": {"name": "tool2", "arguments": '{}'}}],
-                "content": ""
+                "tool_calls": [{"id": "2", "type": "function", "function": {"name": "tool2", "arguments": "{}"}}],
+                "content": "",
             },
             {"role": "tool", "name": "tool2", "content": "Result 2"},
             {"role": "user", "content": "Additional question"},
             {
                 "role": "assistant",
-                "tool_calls": [{"id": "3", "type": "function", "function": {"name": "tool3", "arguments": '{}'}}],
-                "content": ""
+                "tool_calls": [{"id": "3", "type": "function", "function": {"name": "tool3", "arguments": "{}"}}],
+                "content": "",
             },
             {"role": "tool", "name": "tool3", "content": "Result 3"},
-            {"role": "assistant", "content": "Final comprehensive answer here."}
+            {"role": "assistant", "content": "Final comprehensive answer here."},
         ]
-        
+
         user_query, trajectory, final_answer = grader._extract_trajectory_from_messages(
-            multi_turn_messages, language=LanguageEnum.EN
+            multi_turn_messages,
+            language=LanguageEnum.EN,
         )
 
         # Assertions
@@ -305,7 +309,8 @@ OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL")
 RUN_QUALITY_TESTS = bool(OPENAI_API_KEY and OPENAI_BASE_URL)
 
 pytestmark = pytest.mark.skipif(
-    not RUN_QUALITY_TESTS, reason="Requires API keys and base URL to run quality tests"
+    not RUN_QUALITY_TESTS,
+    reason="Requires API keys and base URL to run quality tests",
 )
 
 
@@ -348,20 +353,20 @@ class TestTrajectoryComprehensiveGraderQuality:
                         "type": "function",
                         "function": {
                             "name": "get_weather",
-                            "arguments": '{"city": "Beijing"}'
-                        }
-                    }
-                ]
+                            "arguments": '{"city": "Beijing"}',
+                        },
+                    },
+                ],
             },
             {
                 "role": "tool",
                 "name": "get_weather",
-                "content": '{"temperature": "20°C", "condition": "Sunny", "humidity": "45%"}'
+                "content": '{"temperature": "20°C", "condition": "Sunny", "humidity": "45%"}',
             },
             {
                 "role": "assistant",
-                "content": "The weather in Beijing is sunny with a temperature of 20°C and humidity at 45%."
-            }
+                "content": "The weather in Beijing is sunny with a temperature of 20°C and humidity at 45%.",
+            },
         ]
 
         # Execute evaluation with real model
@@ -395,9 +400,14 @@ class TestTrajectoryComprehensiveGraderQuality:
 
         # Test data - complex investment research scenario
         messages = [
-            {"role": "system", "content": "You are a professional financial analyst assistant with access to various financial data tools."},
-            {"role": "user", "content": "我想投资特斯拉，帮我做一个全面的投资分析，包括公司基本面、财务状况、行业竞争力和最新动态。"},
-            
+            {
+                "role": "system",
+                "content": "You are a professional financial analyst assistant with access to various financial data tools.",
+            },
+            {
+                "role": "user",
+                "content": "我想投资特斯拉，帮我做一个全面的投资分析，包括公司基本面、财务状况、行业竞争力和最新动态。",
+            },
             # Step 0: Get company basic info
             {
                 "role": "assistant",
@@ -408,17 +418,16 @@ class TestTrajectoryComprehensiveGraderQuality:
                         "type": "function",
                         "function": {
                             "name": "get_company_profile",
-                            "arguments": '{"ticker": "TSLA", "fields": ["name", "sector", "industry", "employees", "description"]}'
-                        }
-                    }
-                ]
+                            "arguments": '{"ticker": "TSLA", "fields": ["name", "sector", "industry", "employees", "description"]}',
+                        },
+                    },
+                ],
             },
             {
                 "role": "tool",
                 "name": "get_company_profile",
-                "content": '{"name": "Tesla Inc.", "ticker": "TSLA", "sector": "Consumer Cyclical", "industry": "Auto Manufacturers", "employees": 127855, "description": "Tesla designs, develops, manufactures, and sells electric vehicles and energy generation and storage systems."}'
+                "content": '{"name": "Tesla Inc.", "ticker": "TSLA", "sector": "Consumer Cyclical", "industry": "Auto Manufacturers", "employees": 127855, "description": "Tesla designs, develops, manufactures, and sells electric vehicles and energy generation and storage systems."}',
             },
-            
             # Step 1: Get financial data
             {
                 "role": "assistant",
@@ -429,17 +438,16 @@ class TestTrajectoryComprehensiveGraderQuality:
                         "type": "function",
                         "function": {
                             "name": "get_financial_metrics",
-                            "arguments": '{"ticker": "TSLA", "metrics": ["revenue", "net_income", "eps", "pe_ratio", "debt_to_equity"]}'
-                        }
-                    }
-                ]
+                            "arguments": '{"ticker": "TSLA", "metrics": ["revenue", "net_income", "eps", "pe_ratio", "debt_to_equity"]}',
+                        },
+                    },
+                ],
             },
             {
                 "role": "tool",
                 "name": "get_financial_metrics",
-                "content": '{"ticker": "TSLA", "revenue": "96.77B", "net_income": "14.95B", "eps": 4.73, "pe_ratio": 52.3, "debt_to_equity": 0.17, "period": "TTM"}'
+                "content": '{"ticker": "TSLA", "revenue": "96.77B", "net_income": "14.95B", "eps": 4.73, "pe_ratio": 52.3, "debt_to_equity": 0.17, "period": "TTM"}',
             },
-            
             # Step 2: Get competitors analysis
             {
                 "role": "assistant",
@@ -450,17 +458,16 @@ class TestTrajectoryComprehensiveGraderQuality:
                         "type": "function",
                         "function": {
                             "name": "get_competitors",
-                            "arguments": '{"ticker": "TSLA", "limit": 5}'
-                        }
-                    }
-                ]
+                            "arguments": '{"ticker": "TSLA", "limit": 5}',
+                        },
+                    },
+                ],
             },
             {
                 "role": "tool",
                 "name": "get_competitors",
-                "content": '{"competitors": [{"name": "BYD", "ticker": "BYDDY", "market_share": "18.2%"}, {"name": "Volkswagen", "ticker": "VWAGY", "market_share": "12.1%"}, {"name": "BMW", "ticker": "BMWYY", "market_share": "8.5%"}, {"name": "NIO", "ticker": "NIO", "market_share": "4.2%"}]}'
+                "content": '{"competitors": [{"name": "BYD", "ticker": "BYDDY", "market_share": "18.2%"}, {"name": "Volkswagen", "ticker": "VWAGY", "market_share": "12.1%"}, {"name": "BMW", "ticker": "BMWYY", "market_share": "8.5%"}, {"name": "NIO", "ticker": "NIO", "market_share": "4.2%"}]}',
             },
-            
             # Step 3: Get latest news
             {
                 "role": "assistant",
@@ -471,23 +478,21 @@ class TestTrajectoryComprehensiveGraderQuality:
                         "type": "function",
                         "function": {
                             "name": "get_company_news",
-                            "arguments": '{"ticker": "TSLA", "days": 7, "limit": 3}'
-                        }
-                    }
-                ]
+                            "arguments": '{"ticker": "TSLA", "days": 7, "limit": 3}',
+                        },
+                    },
+                ],
             },
             {
                 "role": "tool",
                 "name": "get_company_news",
-                "content": '{"news": [{"title": "Tesla Cybertruck production ramps up to 2000 units per week", "date": "2024-12-07", "sentiment": "positive"}, {"title": "Tesla expands Supercharger network in Europe", "date": "2024-12-05", "sentiment": "positive"}, {"title": "Musk announces new affordable EV model for 2025", "date": "2024-12-04", "sentiment": "positive"}]}'
+                "content": '{"news": [{"title": "Tesla Cybertruck production ramps up to 2000 units per week", "date": "2024-12-07", "sentiment": "positive"}, {"title": "Tesla expands Supercharger network in Europe", "date": "2024-12-05", "sentiment": "positive"}, {"title": "Musk announces new affordable EV model for 2025", "date": "2024-12-04", "sentiment": "positive"}]}',
             },
-            
             # Intermediate assistant thinking
             {
                 "role": "assistant",
-                "content": "我已经收集了特斯拉的基本信息、财务指标、竞争对手和最新动态。让我再查询一下股价走势和技术指标。"
+                "content": "我已经收集了特斯拉的基本信息、财务指标、竞争对手和最新动态。让我再查询一下股价走势和技术指标。",
             },
-            
             # Step 4: Get stock price trend
             {
                 "role": "assistant",
@@ -498,23 +503,21 @@ class TestTrajectoryComprehensiveGraderQuality:
                         "type": "function",
                         "function": {
                             "name": "get_stock_price",
-                            "arguments": '{"ticker": "TSLA", "period": "6M", "indicators": ["SMA50", "SMA200", "RSI"]}'
-                        }
-                    }
-                ]
+                            "arguments": '{"ticker": "TSLA", "period": "6M", "indicators": ["SMA50", "SMA200", "RSI"]}',
+                        },
+                    },
+                ],
             },
             {
                 "role": "tool",
                 "name": "get_stock_price",
-                "content": '{"current_price": 248.50, "change_percent": "+12.3%", "period": "6M", "high": 265.80, "low": 138.80, "SMA50": 235.20, "SMA200": 198.50, "RSI": 64.2}'
+                "content": '{"current_price": 248.50, "change_percent": "+12.3%", "period": "6M", "high": 265.80, "low": 138.80, "SMA50": 235.20, "SMA200": 198.50, "RSI": 64.2}',
             },
-            
             # User asks follow-up question
             {
                 "role": "user",
-                "content": "特斯拉的现金流情况怎么样？这对投资决策很重要。"
+                "content": "特斯拉的现金流情况怎么样？这对投资决策很重要。",
             },
-            
             # Step 5: Get cash flow data (multi-turn scenario)
             {
                 "role": "assistant",
@@ -525,17 +528,16 @@ class TestTrajectoryComprehensiveGraderQuality:
                         "type": "function",
                         "function": {
                             "name": "get_cash_flow",
-                            "arguments": '{"ticker": "TSLA", "statement_type": "operating_cash_flow", "periods": 4}'
-                        }
-                    }
-                ]
+                            "arguments": '{"ticker": "TSLA", "statement_type": "operating_cash_flow", "periods": 4}',
+                        },
+                    },
+                ],
             },
             {
                 "role": "tool",
                 "name": "get_cash_flow",
-                "content": '{"operating_cash_flow": [{"quarter": "Q3 2024", "value": "6.25B"}, {"quarter": "Q2 2024", "value": "5.93B"}, {"quarter": "Q1 2024", "value": "2.51B"}, {"quarter": "Q4 2023", "value": "4.37B"}], "free_cash_flow": "4.22B", "trend": "improving"}'
+                "content": '{"operating_cash_flow": [{"quarter": "Q3 2024", "value": "6.25B"}, {"quarter": "Q2 2024", "value": "5.93B"}, {"quarter": "Q1 2024", "value": "2.51B"}, {"quarter": "Q4 2023", "value": "4.37B"}], "free_cash_flow": "4.22B", "trend": "improving"}',
             },
-            
             # Step 6: Get analyst ratings
             {
                 "role": "assistant",
@@ -546,17 +548,16 @@ class TestTrajectoryComprehensiveGraderQuality:
                         "type": "function",
                         "function": {
                             "name": "get_analyst_ratings",
-                            "arguments": '{"ticker": "TSLA"}'
-                        }
-                    }
-                ]
+                            "arguments": '{"ticker": "TSLA"}',
+                        },
+                    },
+                ],
             },
             {
                 "role": "tool",
                 "name": "get_analyst_ratings",
-                "content": '{"consensus": "Hold", "buy": 18, "hold": 22, "sell": 8, "average_price_target": 255.00, "upside_potential": "2.6%"}'
+                "content": '{"consensus": "Hold", "buy": 18, "hold": 22, "sell": 8, "average_price_target": 255.00, "upside_potential": "2.6%"}',
             },
-            
             # Final comprehensive answer
             {
                 "role": "assistant",
@@ -589,8 +590,8 @@ class TestTrajectoryComprehensiveGraderQuality:
 3. 建议仓位控制在组合的5-10%
 4. 关注季度交付量数据和新车型进展
 
-风险提示：宏观经济波动、竞争加剧、估值回调风险。"""
-            }
+风险提示：宏观经济波动、竞争加剧、估值回调风险。""",
+            },
         ]
 
         # Execute evaluation with real model
@@ -643,15 +644,17 @@ class TestTrajectoryComprehensiveGraderQuality:
             {"role": "user", "content": "What's the capital of France?"},
             {
                 "role": "assistant",
-                "tool_calls": [{
-                    "id": "1",
-                    "type": "function",
-                    "function": {"name": "search_knowledge", "arguments": '{"query": "capital of France"}'}
-                }],
-                "content": ""
+                "tool_calls": [
+                    {
+                        "id": "1",
+                        "type": "function",
+                        "function": {"name": "search_knowledge", "arguments": '{"query": "capital of France"}'},
+                    },
+                ],
+                "content": "",
             },
             {"role": "tool", "name": "search_knowledge", "content": "Paris is the capital of France."},
-            {"role": "assistant", "content": "The capital of France is Paris."}
+            {"role": "assistant", "content": "The capital of France is Paris."},
         ]
 
         # Run evaluation twice
@@ -671,4 +674,3 @@ class TestTrajectoryComprehensiveGraderQuality:
         print(f"Run 1 Score: {result1.score:.2f}")
         print(f"Run 2 Score: {result2.score:.2f}")
         print(f"Score Difference: {score_diff:.2f}")
-
