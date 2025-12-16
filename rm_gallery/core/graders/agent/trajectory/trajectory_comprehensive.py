@@ -57,35 +57,35 @@ TRAJECTORY_COMPREHENSIVE_PROMPT_ZH = """# 任务描述
 
 ### 贡献度评分 (contribution_score)
 评估此步骤对解决用户问题的整体贡献程度：
-- **5分**: 关键贡献，解决问题必不可少，直接推动问题解决
-- **4分**: 重要贡献，提供关键信息或执行重要操作
-- **3分**: 中等贡献，有一定帮助但非核心步骤
-- **2分**: 轻微贡献，提供一些辅助信息但价值有限
-- **1分**: 无效贡献，不相关、冗余或对问题解决无帮助
+- **5分**: 关键贡献，解决用户问题不可或缺的核心步骤，若缺失则任务必然失败
+- **4分**: 重要贡献，显著推进问题解决，提供关键中间结果，虽非唯一路径，但极大提升成功率或准确性
+- **3分**: 一般贡献，对问题解决有辅助作用，但非关键，其信息可被省略或替代
+- **2分**: 轻微贡献，几乎不影响问题解决，属于冗余、重复或低价值操作，可安全移除
+- **1分**: 无效或负贡献，与用户问题完全无关，或者导致错误，阻碍问题解决
 
 ### 相关性评分 (relevance_score)
 评估此步骤与用户查询的相关程度：
-- **5分**: 高度相关，直接针对用户需求
-- **4分**: 较为相关，与用户需求密切关联
-- **3分**: 部分相关，与用户需求有一定关联
-- **2分**: 略微相关，与用户需求关联较弱
-- **1分**: 不相关，偏离用户需求或完全无关
+- **5分**: 高度相关，直接、必要地服务于用户查询的核心意图，不可或缺的关键步骤
+- **4分**: 较为相关，服务于用户查询的合理子目标，虽非最直接路径，但属于有效步骤
+- **3分**: 部分相关，与用户查询存在间接或边缘关联，但非必要
+- **2分**: 基本不相关，与用户查询无实质性关联，属于明显偏离或误判意图的行为
+- **1分**: 完全无关，与用户查询毫无逻辑联系
 
 ### 准确性评分 (accuracy_score)
 评估此步骤获取或处理信息的准确程度：
-- **5分**: 完全准确，信息可验证且无误
-- **4分**: 基本准确，信息可靠，可能有极小偏差
-- **3分**: 部分准确，信息大体正确但有一些不确定性
-- **2分**: 准确性存疑，包含可疑或未验证的信息
-- **1分**: 不准确，包含明显错误或误导性信息
+- **5分**: 完全准确，完整、精确、无失真地获取并保留了最终答案需要的关键信息
+- **4分**: 基本准确，核心信息准确，但存在非关键性省略或格式归一化，不影响信息本质
+- **3分**: 部分准确，存在关键遗漏或失真，信息包含正确部分，但遗漏关键限定条件、状态或字段，可能导致误解
+- **2分**: 基本错误，信息严重失真，关键信息被错误获取或颠倒，与最终答案明显矛盾
+- **1分**: 完全虚构，信息不真实或与最终答案不相关
 
 ### 效率评分 (efficiency_score)
 评估此步骤的执行效率和必要性：
-- **5分**: 高效必要，步骤精准且不可省略
-- **4分**: 较为高效，步骤合理且有明确目的
-- **3分**: 效率一般，步骤可接受但可能有更优方案
-- **2分**: 效率较低，步骤冗余或可以合并优化
-- **1分**: 低效或多余，步骤完全不必要或严重浪费资源
+- **5分**: 高效必要，步骤直接、精准且不可省略
+- **4分**: 较为高效，步骤必须执行，但存在轻微低效（如非最优工具调用，参数冗余等）
+- **3分**: 效率一般，步骤非任务所需，存在冗余，不影响结果
+- **2分**: 低效非必要，步骤存在冗余，可以优化或者移除
+- **1分**: 完全多余，步骤完全不必要或严重浪费资源，甚至导致任务失败
 
 # 重要说明
 
@@ -147,35 +147,36 @@ For each tool call step, please provide the following scores (integer from 1-5):
 
 ### Contribution Score (contribution_score)
 Evaluate how much this step contributes to solving the user's problem:
-- **5**: Critical contribution, essential for solving the problem, directly drives solution
-- **4**: Significant contribution, provides key information or performs important operations
-- **3**: Moderate contribution, somewhat helpful but not a core step
-- **2**: Minor contribution, provides auxiliary information with limited value
-- **1**: Ineffective contribution, irrelevant, redundant, or unhelpful for problem solving
+- **5**: Critical contribution, an indispensable core step in solving the user's problem, its absence would inevitably lead to task failure.
+- **4**: Significant contribution, significantly advancing problem-solving and providing crucial intermediate results, while not the only path, it greatly improves the success rate or accuracy.
+- **3**: Moderate contribution, providing auxiliary support to problem-solving, but not critical, the information can be omitted or replaced.
+- **2**: Minor contribution, having almost no impact on problem-solving, it is redundant, repetitive, or of low value, and can be safely removed.
+- **1**: Ineffective contribution or negative contribution, completely unrelated to the user's problem, or leading to errors and hindering problem-solving.
 
 ### Relevance Score (relevance_score)
 Evaluate how relevant this step is to the user query:
-- **5**: Highly relevant, directly addresses user needs
-- **4**: Fairly relevant, closely related to user needs
-- **3**: Partially relevant, has some connection to user needs
-- **2**: Slightly relevant, weakly connected to user needs
-- **1**: Not relevant, deviates from or completely unrelated to user needs
+- **5**: Highly relevant, directly and necessarily serves the core intent of the user's query, an indispensable key step.
+- **4**: Fairly relevant, serves a reasonable sub-goal of the user's query; although not the most direct path, it is an effective step.
+- **3**: Partially relevant, has an indirect or marginal connection to the user's query, but is not necessary.
+- **2**: Largely irrelevant, has no substantial connection to the user's query, representing a clear deviation or misinterpretation of intent.
+- **1**: Completely irrelevant, has no logical connection to the user's query.
 
 ### Accuracy Score (accuracy_score)
 Evaluate the accuracy of information obtained or processed in this step:
-- **5**: Completely accurate, information is verifiable and error-free
-- **4**: Mostly accurate, information is reliable with minimal deviation
-- **3**: Partially accurate, information is generally correct with some uncertainty
-- **2**: Questionable accuracy, contains suspicious or unverified information
-- **1**: Inaccurate, contains obvious errors or misleading information
+- **5**: Completely accurate, the key information needed for the final answer is acquired and preserved completely, accurately, and without distortion.
+- **4**: Mostly accurate, core information is accurate, but there are non-critical omissions or format inconsistencies that do not affect the essence of the information.
+- **3**: Partially accurate, there are critical omissions or distortions; the information contains correct parts, but omits key qualifying conditions, states, or fields, which may lead to misunderstanding.
+- **2**: Mostly incorrect, the information is severely distorted, key information is incorrectly acquired or reversed, and is clearly contradictory to the final answer.
+- **1**: Completely fabricated, the information is untrue or irrelevant to the final answer.
 
 ### Efficiency Score (efficiency_score)
 Evaluate the efficiency and necessity of this step:
-- **5**: Highly efficient and necessary, precise and indispensable step
-- **4**: Fairly efficient, reasonable step with clear purpose
-- **3**: Moderately efficient, acceptable but could potentially be optimized
-- **2**: Low efficiency, redundant or could be merged/optimized
-- **1**: Inefficient or unnecessary, completely redundant or wastes resources
+- **5**: Highly efficient and necessary, steps are direct, precise, and indispensable.
+- **4**: Fairly efficient, steps are necessary but slightly inefficient (e.g., non-optimal tool usage, redundant parameters, etc.).
+- **3**: Moderately efficient, steps are not required for the task, contain redundancy, but do not affect the result.
+- **2**: Inefficient and unnecessary, steps contain redundancy and can be optimized or removed.
+- **1**: Completely unnecessary, steps are entirely unnecessary or severely waste resources, potentially even leading to task failure.
+
 
 # Important Notes
 

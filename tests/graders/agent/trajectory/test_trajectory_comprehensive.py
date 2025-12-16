@@ -59,6 +59,7 @@ class TestTrajectoryComprehensiveGraderUnit:
         assert grader.name == "trajectory_comprehensive"
         assert grader.model == mock_model
 
+    @pytest.mark.asyncio
     async def test_successful_evaluation(self):
         """Test successful evaluation with valid inputs"""
         # Setup mock response for step evaluations
@@ -129,6 +130,7 @@ class TestTrajectoryComprehensiveGraderUnit:
         # Verify model was called
         assert mock_model.achat.call_count >= 1
 
+    @pytest.mark.asyncio
     async def test_empty_input_edge_case(self):
         """Test edge case with empty input"""
         mock_model = AsyncMock()
@@ -308,12 +310,11 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL")
 RUN_QUALITY_TESTS = bool(OPENAI_API_KEY and OPENAI_BASE_URL)
 
-pytestmark = pytest.mark.skipif(
+
+@pytest.mark.skipif(
     not RUN_QUALITY_TESTS,
     reason="Requires API keys and base URL to run quality tests",
 )
-
-
 @pytest.mark.quality
 class TestTrajectoryComprehensiveGraderQuality:
     """Quality tests for TrajectoryComprehensiveGrader - testing evaluation quality"""
