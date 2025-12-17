@@ -12,16 +12,18 @@ from loguru import logger
 
 from rm_gallery.core.graders.base_grader import BaseGrader, GraderMode, GraderScore
 
+# pylint: disable=line-too-long
+
 
 class ToolCallSequenceMatchGrader(BaseGrader):
     """
     Tool call sequence reference matching grader.
     This grader evaluates whether the model's tool call sequence matches the reference
     expected sequence by comparing predicted tool calls against reference tool calls.
-    **Strict mode**: Matches both tool name and parameters, using F1 score calculation.
-    **Loose mode**: Only matches tool name, checking whether model tool list is a subset of reference.
+    **Strict mode**: Matches both tool_call name and arguments, using F1 score calculation.
+    **Loose mode**: Only matches tool_call name, checking whether model tool list is a subset of reference.
     Attributes:
-        strict_mode: If True, matches both tool name and arguments; if False, only matches tool name
+        strict_mode: If True, matches both tool_call name and arguments; if False, only matches tool_call name
         use_jaccard_similarity: If True, use Jaccard similarity for loose mode (ignores step order)
     Example:
         >>> grader = ToolCallSequenceMatchGrader(strict_mode=True)
@@ -68,8 +70,9 @@ class ToolCallSequenceMatchGrader(BaseGrader):
                 step_tools[step_idx] = []
                 for chat_tool in tool_calls:
                     # Parse the tool call arguments
+                    chat_tool = chat_tool.get("tool_call", chat_tool)
                     function = chat_tool.get("function", {})
-                    raw_args = function.get("arguments", "")
+                    raw_args = function.get("arguments", "{}")
                     try:
                         params = json.loads(raw_args)
                     except json.JSONDecodeError:
@@ -77,7 +80,7 @@ class ToolCallSequenceMatchGrader(BaseGrader):
                     # Prepare the tool information
                     tool_info = {
                         "name": function.get("name", ""),
-                        "parameters": params,
+                        "arguments": params,
                     }
                     step_tools[step_idx].append(tool_info)
                 # Increment the step index for the next step
@@ -92,32 +95,30 @@ class ToolCallSequenceMatchGrader(BaseGrader):
         Extract reference tool call sequence from reference tool calls, organized by steps.
         Args:
             reference_tool_calls: Ground truth tool call list in format:
-                [
-                    {
-                        "step": 0,
-                        "tool": [
-                            {
-                                "name": "search",
-                                "parameters": {...}
-                            }
-                        ]
-                    }
-                ]
         Returns:
             Dictionary mapping step numbers to lists of tool calls within that step
         """
         step_tools = {}
+        step = 0
         for step_info in reference_tool_calls:
-            step = step_info.get("step", 0)
-            tools = step_info.get("tool", [])
+            tool_calls = step_info
             if step not in step_tools:
                 step_tools[step] = []
-            for tool in tools:
+            for tool_call in tool_calls:
+                tool_call = tool_call.get("tool_call", tool_call)
+                function = tool_call.get("function", tool_call)
+                raw_args = function.get("arguments", "{}")
+                try:
+                    params = json.loads(raw_args)
+                except json.JSONDecodeError:
+                    params = {}
+
                 tool_info = {
-                    "name": tool.get("name", ""),
-                    "parameters": tool.get("parameters", {}),
+                    "name": function.get("name", ""),
+                    "arguments": params,
                 }
                 step_tools[step].append(tool_info)
+            step += 1
         return step_tools
 
     def create_tool_elements(self, tool: Dict[str, Any]) -> Set[str]:
@@ -129,8 +130,8 @@ class ToolCallSequenceMatchGrader(BaseGrader):
             Set of elements representing the tool
         """
         elements = set()
-        # Add flattened parameters
-        params = tool.get("parameters", {})
+        # Add flattened arguments
+        params = tool.get("arguments", {})
         for key, value in params.items():
             elements.add(str(key))
             elements.add(str(value))
@@ -281,13 +282,13 @@ class ToolCallSequenceMatchGrader(BaseGrader):
             for tools in predicted_tool_steps.values():
                 for tool in tools:
                     predicted_tool_names.add(
-                        f"{tool.get('name', '')}: {tool.get('parameters', {})}",
+                        f"{tool.get('name', '')}: {tool.get('arguments', {})}",
                     )
             reference_tool_names = set()
             for tools in reference_tool_steps.values():
                 for tool in tools:
                     reference_tool_names.add(
-                        f"{tool.get('name', '')}: {tool.get('parameters', {})}",
+                        f"{tool.get('name', '')}: {tool.get('arguments', {})}",
                     )
         else:
             # Extract all tool names from predicted steps
@@ -314,18 +315,57 @@ class ToolCallSequenceMatchGrader(BaseGrader):
     async def aevaluate(
         self,
         messages: List[Dict[str, Any]],
-        reference_tool_calls: List[Dict[str, Any]],
-        **kwargs: Any,
+        reference_tool_calls: List[List[Dict[str, Any]]],
     ) -> GraderScore:
         """
         Evaluate tool call sequence matching against reference.
         Args:
             messages: List of message dicts containing model's predicted tool calls
-            reference_tool_calls: Ground truth reference tool call sequence
-            **kwargs: Additional evaluation parameters
+                "message" key for message, and "tool_call" key for tool call is optional.
+                example without "message" and "tool_call"
+                ```
+                [
+                  {"role": "system", "content": "..."},
+                  {"role": "user", "content": "Plan travel from Shanghai to Hangzhou."},
+                  {"role": "assistant", "tool_calls": [{"function": {"arguments": "{\"city\": \"Hangzhou\"}","name": "weather"}}]}
+                ]
+                ```
+                or with "message" and "tool_call"
+                ```
+                [
+                  {"message":{"role": "system", "content": "..."}},
+                  {"message":{"role": "user", "content": "Plan travel from Shanghai to Hangzhou."}},
+                  {"message":{"role": "assistant", "tool_calls": [{"tool_call":{"function": {"arguments": "{\"city\": \"Hangzhou\"}","name": "weather"}}}]}}
+                ]
+                ```
+            reference_tool_calls: Ground truth reference tool call sequence by steps
+                one step can contains a list of tool calls array.
+                "tool_call" and "function" key for tool calls is optional.
+                ```
+                [
+                    [
+                        {
+                            "tool_call": {"function": {"name": "search", "arguments": {...}}}
+                        },
+                        {
+                            "tool_call": {"function": {"name": "search", "arguments": {...}}}
+                        }
+                    ]
+                ]
+                ```
+                or, skip "tool_call" and "function"
+                ```
+                [
+                    [
+                        {"name": "search", "arguments": {...}},
+                        {"name": "search", "arguments": {...}}
+                    ]
+                ]
+                ```
         Returns:
             GraderScore: Tool call sequence matching score and details
         """
+        messages = [msg.get("message", msg) for msg in messages]
         # Extract sequences
         try:
             predicted_tool_steps = self.extract_predicted_tool_sequence(messages)

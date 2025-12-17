@@ -61,7 +61,7 @@ async def test_tool_call_sequence_match_grader_exact_match():
     ]
 
     reference_tool_calls = [
-        {"step": 0, "tool": [{"name": "search", "parameters": {"query": "test"}}]},
+        [{"name": "search", "arguments": {"query": "test"}}],
     ]
 
     result = await grader.aevaluate(
@@ -128,7 +128,7 @@ async def test_tool_call_sequence_match_grader_loose_mode_matching():
     ]
 
     reference_tool_calls = [
-        {"step": 0, "tool": [{"name": "search", "parameters": {"query": "test"}}]},
+        [{"name": "search", "arguments": {"query": "test"}}],
     ]
 
     result = await grader.aevaluate(
