@@ -61,6 +61,15 @@ from rm_gallery.core.runner.grading_runner import GraderConfig, GradingRunner
 class TestLLMGraderUnit:
     """Unit tests for LLMGrader - testing isolated functionality"""
 
+    def test_initialization_failure_without_template(self):
+        """Test initialization failure without template"""
+        with pytest.raises(ValueError) as error_obj:
+            LLMGrader(
+                model=AsyncMock(),
+                name="foo",
+            )
+        assert 'Template must be a str, dict or PromptTemplate object' in str(error_obj.value)
+
     def test_initialization_with_string_template(self):
         """Test successful initialization with string template"""
         mock_model = AsyncMock()
@@ -121,6 +130,15 @@ class TestLLMGraderUnit:
 
         assert grader.name == "test_llm_grader"
         assert grader.model == mock_model
+
+    def test_get_metadata(self):
+        meta = LLMGrader.get_metadata()
+        assert len(meta) == 2
+        assert 'aevaluate' in meta
+        assert 'Evaluate using LLM.' in meta['aevaluate']
+        assert 'Performs evaluation using a large language model' in meta['aevaluate']
+        assert 'prompt' in meta
+        assert not meta['prompt']
 
     def test_initialization_with_model_dict(self):
         """Test initialization with model configuration dict"""

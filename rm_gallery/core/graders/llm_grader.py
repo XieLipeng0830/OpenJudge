@@ -16,7 +16,7 @@ Classes:
 
 import os
 import textwrap
-from typing import Any, Callable, Type
+from typing import Any, Callable, Type, Dict
 
 from pydantic import BaseModel
 
@@ -94,7 +94,7 @@ class LLMGrader(BaseGrader):
         super().__init__(name=name, mode=mode, description=description, **kwargs)
 
         # Handle language parameter
-        if language is None:
+        if not language:
             language = os.environ.get("LANGUAGE", "en")
 
         if isinstance(language, str):
@@ -149,13 +149,13 @@ class LLMGrader(BaseGrader):
         self.callback = callback
 
         # Set default structured_model if not provided
-        if self.structured_model is None:
+        if not self.structured_model:
             if self.mode == GraderMode.LISTWISE:
                 self.structured_model = GraderRankCallback
             else:
                 self.structured_model = GraderScoreCallback
 
-        assert self.template is not None and self.model is not None
+        assert self.language and self.template and self.model
 
     def to_dict(self) -> dict:
         """Convert the LLMGrader to a dictionary representation.
@@ -328,3 +328,9 @@ class LLMGrader(BaseGrader):
         else:
             raise ValueError(f"Unsupported grader mode: {self.mode}")
         return result
+
+    @staticmethod
+    def get_metadata() -> Dict[str, Any]:
+        """Return the docstring of the aevaluate method to explain how LLMGrader works with LLM.
+        """
+        return {'aevaluate': LLMGrader.aevaluate.__doc__, 'prompt':{}}

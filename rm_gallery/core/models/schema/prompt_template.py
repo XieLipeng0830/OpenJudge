@@ -6,6 +6,7 @@ in various formats and languages. It supports both monolingual and multilingual
 templates with easy formatting capabilities.
 """
 
+import json
 from enum import Enum
 from typing import Any, Dict, List, TypedDict, Union
 
@@ -23,16 +24,20 @@ class LanguageEnum(str, Enum):
     Attributes:
         EN: English language code.
         ZH: Chinese language code.
+        ANY: Any language code.
 
     Example:
         >>> print(LanguageEnum.EN)
         en
         >>> print(LanguageEnum.ZH)
         zh
+        >>> print(LanguageEnum.ANY)
+        any
     """
 
     EN = "en"
     ZH = "zh"
+    ANY = "any"
 
 
 class PromptDict(TypedDict, total=False):
@@ -275,3 +280,30 @@ class PromptTemplate(BaseModel):
         messages = [ChatMessage(**message) if not isinstance(message, ChatMessage) else message for message in messages]
         messages = [message.format(**kwargs).to_dict() for message in messages]
         return messages
+
+    def get_prompt(self, language: LanguageEnum = None) -> Dict[str, List[Dict[str, str]]]:
+        """Return the core prompts (role, content) information of the messages,
+        in a {language: list[{'role': txt, 'content': txt}]} dictionary.
+        """
+        # Only one list of messages without language label
+        if isinstance(self.messages, list):
+            prompt = []
+            for msg in self.messages:
+                part = {'role': msg.role, 'content': msg.content}
+                prompt.append(part)
+            return {LanguageEnum.ANY.value: prompt}
+
+        # return data of specified language, or all data if no language restriction
+        if isinstance(self.messages, dict):
+            language_prompts = {}
+            for lang, msgs in self.messages.items():
+                if language and language != LanguageEnum.ANY and language != lang:
+                    continue
+                prompt = []
+                for msg in msgs:
+                    part = {'role': msg.role, 'content': msg.content}
+                    prompt.append(part)
+                language_prompts[lang.value] = prompt
+            return language_prompts
+
+        raise ValueError("Cannot get prompts because of invalid messages")

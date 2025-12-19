@@ -11,6 +11,7 @@ conventions (snake_case for functions and variables).
 """
 
 import re
+from typing import Any, Dict
 
 from rm_gallery.core.graders.base_grader import BaseGrader
 from rm_gallery.core.graders.schema import GraderMode, GraderScore
@@ -163,3 +164,9 @@ class CodeStyleGrader(BaseGrader):
                 "details": details,
             },
         )
+
+    @staticmethod
+    def get_metadata() -> Dict[str, Any]:
+        """Return the docstring of the aevaluate method.
+        """
+        return {'aevaluate': CodeStyleGrader.aevaluate.__doc__}

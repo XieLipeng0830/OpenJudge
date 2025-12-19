@@ -8,7 +8,7 @@ either scores or rankings.
 
 # import inspect
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Dict
 
 from rm_gallery.core.graders.schema import (
     GraderError,
@@ -143,6 +143,25 @@ class BaseGrader(ABC):
             ...
             >>> # Implementation would rank answers by relevance
         """
+
+    @staticmethod
+    @abstractmethod
+    def get_metadata() -> Dict[str, Any]:
+        """Return the information about the grader's evaluation process.
+
+        Such information helps callers understand how a grader works and the meaning of its evaluation result.
+
+        Such information could be, but not limited to,
+        1. The mechanism how the evaluation process works.
+        2. The meaning of the score in a GraderScore return value.
+        3. The meaning of the ranking in a GraderRank return value.
+        4. The content of the template/prompt for LLM calls, if applicable, used by the evaluation logic.
+
+        Define this as a static method, because the explanation belongs to the class level, not the instance level.
+
+        Each subclass must implement its own, otherwise calling this method of a subclass will return the result of its parent class' method.
+        """
+
 
     @classmethod
     def from_config(

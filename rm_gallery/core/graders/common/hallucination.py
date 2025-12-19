@@ -7,7 +7,7 @@ supported by the context).
 """
 
 import textwrap
-from typing import Optional
+from typing import Optional, Any, Dict
 
 from loguru import logger
 
@@ -353,5 +353,13 @@ class HallucinationGrader(LLMGrader):
             metadata=metadata,
         )
 
+
+    @staticmethod
+    def get_metadata() -> Dict[str, Any]:
+        prompt = DEFAULT_HALLUCINATION_TEMPLATE.get_prompt()
+        return {
+            'aevaluate': HallucinationGrader.aevaluate.__doc__,
+            'prompt': prompt
+            }
 
 __all__ = ["HallucinationGrader", "DEFAULT_HALLUCINATION_TEMPLATE"]
