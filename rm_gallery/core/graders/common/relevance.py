@@ -213,8 +213,6 @@ class RelevanceGrader(LLMGrader):
 
     Args:
         model: BaseChatModel instance or dict config for OpenAIChatModel
-        threshold: Minimum relevance score threshold for passing evaluation (default: 0.7).
-                   Note: Score range is [1, 5]; threshold typically normalized to [0, 1]
         template: Custom evaluation template (default: DEFAULT_RELEVANCE_TEMPLATE)
         language: Prompt language - EN or ZH (default: LanguageEnum.EN)
 
@@ -222,7 +220,7 @@ class RelevanceGrader(LLMGrader):
         GraderScore object with:
             - score: Score [1, 5] where 5 = highly relevant, 1 = irrelevant
             - reason: Explanation of relevance assessment
-            - metadata: Threshold and evaluation details
+            - metadata: Evaluation details
 
     Example:
         >>> from rm_gallery.core.models.openai_chat_model import OpenAIChatModel
@@ -230,7 +228,7 @@ class RelevanceGrader(LLMGrader):
         >>>
         >>> # Initialize grader
         >>> model = OpenAIChatModel(api_key="sk-...", model="gpt-4")
-        >>> grader = RelevanceGrader(model=model, threshold=0.7)
+        >>> grader = RelevanceGrader(model=model)
         >>>
         >>> # Relevant response
         >>> result = await grader.aevaluate(
@@ -258,7 +256,6 @@ class RelevanceGrader(LLMGrader):
     def __init__(
         self,
         model: BaseChatModel | dict,
-        threshold: float = 0.7,
         template: Optional[PromptTemplate] = DEFAULT_RELEVANCE_TEMPLATE,
         language: LanguageEnum = LanguageEnum.EN,
     ):
@@ -267,8 +264,6 @@ class RelevanceGrader(LLMGrader):
 
         Args:
             model: BaseChatModel instance or dict config for OpenAIChatModel
-            threshold: Relevance threshold for passing evaluation (default: 0.7).
-                      Note: Score range is [1, 5]; threshold is stored for reference
             template: PromptTemplate for evaluation prompts (default: DEFAULT_RELEVANCE_TEMPLATE)
             language: Language for prompts (default: LanguageEnum.EN)
         """
@@ -280,9 +275,6 @@ class RelevanceGrader(LLMGrader):
             template=template,
             language=language,
         )
-        # Note: threshold is stored for metadata but not actively used in evaluation
-        # Score normalization (1-5 to 0-1) can be done by caller if needed
-        self.threshold = threshold
 
     async def aevaluate(
         self,
@@ -328,16 +320,10 @@ class RelevanceGrader(LLMGrader):
                 error=f"Evaluation error: {str(e)}",
             )
 
-        # Prepare metadata
-        metadata = {
-            "threshold": self.threshold,
-        }
-
         return GraderScore(
             name=self.name,
             score=score,
             reason=reason,
-            metadata=metadata,
         )
 
 

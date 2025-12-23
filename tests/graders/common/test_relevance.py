@@ -12,17 +12,17 @@ using RelevanceGrader as an example of LLMGrader:
 Example:
     Run all tests:
     ```bash
-    pytest tests/graders/common/test_relevance_new.py -v
+    pytest tests/graders/common/test_relevance.py -v
     ```
 
     Run only unit tests:
     ```bash
-    pytest tests/graders/common/test_relevance_new.py -m unit
+    pytest tests/graders/common/test_relevance.py -m unit
     ```
 
     Run quality tests (only if API keys are configured):
     ```bash
-    pytest tests/graders/common/test_relevance_new.py -m quality
+    pytest tests/graders/common/test_relevance.py -m quality
     ```
 """
 
@@ -33,7 +33,6 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from rm_gallery.core.analyzer.validation import (
-    AccuracyAnalyzer,
     ConsistencyAnalyzer,
     FalseNegativeAnalyzer,
     FalsePositiveAnalyzer,
