@@ -41,15 +41,15 @@ TRAJECTORY_COMPREHENSIVE_PROMPT_ZH = """# 任务描述
 
 # 用户查询
 
-{user_query}
+{query}
 
 # 完整轨迹
 
-{trajectory_messages}
+{messages}
 
 # 最终答案
 
-{final_answer}
+{response}
 
 # 评估指南
 
@@ -131,15 +131,15 @@ For each tool call step, please provide the following scores (integer from 1-5):
 
 # User Query
 
-{user_query}
+{query}
 
 # Complete Trajectory
 
-{trajectory_messages}
+{messages}
 
 # Final Answer
 
-{final_answer}
+{response}
 
 # Evaluation Guidelines
 
@@ -530,6 +530,8 @@ class TrajectoryComprehensiveGrader(LLMGrader):
     async def aevaluate(
         self,
         messages: List[Dict[str, Any]],
+        query: Optional[str] = None,
+        response: Optional[str | Dict[str, Any]] = None,
     ) -> GraderScore | GraderError:
         """
         Evaluate complete agent trajectory comprehensively.
@@ -563,6 +565,8 @@ class TrajectoryComprehensiveGrader(LLMGrader):
                   {"role": "assistant", "tool_calls": [{"tool_call":{"function": {"arguments": "{\"city\": \"Hangzhou\"}","name": "weather"}}}]}
                 ]
                 ```
+            query:    optional, user query, will use the first message with role=user as query if not provided.
+            response: optional, final response, will use the last non-emptry message 'content' with role=assistant if not provided.
 
         Returns:
             GraderScore: Comprehensive evaluation score for the trajectory (normalized 0.0-1.0)
@@ -587,6 +591,8 @@ class TrajectoryComprehensiveGrader(LLMGrader):
             messages,
             language=self.language,
         )
+        user_query = query or user_query
+        final_answer = response or final_answer
 
         if not user_query or not trajectory_messages:
             logger.warning("Empty user query or trajectory, returning zero score")
@@ -606,9 +612,9 @@ class TrajectoryComprehensiveGrader(LLMGrader):
             # Call parent evaluation with formatted parameters
             # The callback handles step-level to final score/reason conversion
             result = await super().aevaluate(
-                user_query=user_query,
-                trajectory_messages=trajectory_messages,
-                final_answer=final_answer,
+                query=user_query,
+                messages=trajectory_messages,
+                response=final_answer,
             )
 
             # Determine resolution status using the specified threshold
