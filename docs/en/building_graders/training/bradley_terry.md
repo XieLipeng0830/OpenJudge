@@ -55,11 +55,10 @@ TRAIN_FILE=hendrydong/preference_700K/train.parquet
 VAL_FILE=hendrydong/preference_700K/test.parquet
 ```
 
-**Option 2: Convert from OpenJudge evaluation data**
+**Option 2: Convert from evaluation data**
 
 ```python
 import pandas as pd
-from open_judge.generator import export_data
 
 # Create preference pairs from scored data
 def create_preference_pairs(eval_cases):
@@ -78,7 +77,7 @@ def create_preference_pairs(eval_cases):
             })
     return pairs
 
-# Export to parquet
+# Save to parquet
 df_train = pd.DataFrame(create_preference_pairs(train_data))
 df_train.to_parquet('./data/bt_train.parquet')
 
@@ -135,7 +134,7 @@ trainer:
 **Single-node, multi-GPU:**
 
 ```bash
-cd tutorials/cookbooks/training_reward_model/bradley_terry
+cd tutorials/cookbooks/training_reward_model/bradley-terry
 
 # Edit run_bt.sh with your configuration
 export N_GPUS_PER_NODE=8

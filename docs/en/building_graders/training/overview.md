@@ -99,18 +99,18 @@ All training approaches use **Parquet files** with specific column structures:
 
 ### Data Preparation
 
-Use OpenJudge's data export utilities to convert your evaluation data:
+You can prepare your data using pandas:
 
 ```python
-from open_judge.generator import export_data
+import pandas as pd
 
-# Export from evaluation cases
-export_data(
-    eval_cases=your_evaluation_data,
-    output_dir="./training_data",
-    formats=["parquet"],
-    split_ratio={"train": 0.8, "test": 0.2}
-)
+# Convert your data to the required format
+train_data = [...]  # Your training examples
+test_data = [...]   # Your test examples
+
+# Save as parquet files
+pd.DataFrame(train_data).to_parquet("./training_data/train.parquet")
+pd.DataFrame(test_data).to_parquet("./training_data/test.parquet")
 ```
 
 
@@ -146,7 +146,7 @@ Select based on your data and requirements:
 
 ```bash
 # Option 1: Bradley-Terry (simplest, binary preferences)
-cd tutorials/cookbooks/training_reward_model/bradley_terry
+cd tutorials/cookbooks/training_reward_model/bradley-terry
 bash run_bt.sh
 
 # Option 2: Generative Pointwise (absolute scores)

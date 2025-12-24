@@ -98,6 +98,7 @@ dataset, model_names = prepare_comparison_data(
 ```python
 from tutorials.cookbooks.evaluation_cases.pairwise_evaluation import run_pairwise_evaluation
 
+# Returns List[GraderResult] with scores for each comparison
 grader_results = await run_pairwise_evaluation(dataset, max_concurrency=10)
 ```
 
@@ -110,27 +111,29 @@ grader_results = await run_pairwise_evaluation(dataset, max_concurrency=10)
 ```python
 from tutorials.cookbooks.evaluation_cases.pairwise_evaluation import analyze_and_rank_models
 
+# Returns PairwiseAnalysisResult with rankings and statistics
 analysis = analyze_and_rank_models(dataset, grader_results, model_names)
 
-# View results
+# Access key results
 print(f"Best: {analysis.best_model}")
 for model, rate in analysis.win_rates.items():
     print(f"{model}: {rate:.1%}")
 ```
 
+The `analysis` object is a `PairwiseAnalysisResult` containing comprehensive ranking statistics and win rate metrics for all models.
 
 ## Understanding Results
 
-The `PairwiseAnalysisResult` contains:
+The `PairwiseAnalysisResult` provides the following fields:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `rankings` | `List[Tuple]` | Models sorted by win rate (best first) |
+| `rankings` | `List[Tuple[str, float]]` | Models sorted by win rate (best first) |
 | `win_rates` | `Dict[str, float]` | Win rate for each model (0.0-1.0) |
-| `win_matrix` | `Dict[str, Dict]` | Head-to-head win rates |
+| `win_matrix` | `Dict[str, Dict[str, float]]` | Head-to-head win rates between models |
 | `best_model` | `str` | Model with highest win rate |
 | `worst_model` | `str` | Model with lowest win rate |
-| `total_comparisons` | `int` | Number of pairwise comparisons |
+| `total_comparisons` | `int` | Total number of pairwise comparisons |
 
 !!! example "Win Matrix Interpretation"
     ```

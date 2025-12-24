@@ -423,7 +423,7 @@ cd sft
 bash sft_rm.sh
 
 # Step 2: Use SFT checkpoint for Bradley-Terry
-cd ../bradley_terry
+cd ../bradley-terry
 MODEL_PATH=../sft/checkpoints/qwen-sft-final
 bash run_bt.sh
 
@@ -522,7 +522,7 @@ python prepare_reward_data.py \
     --output ./reward_data
 
 # 4. Bradley-Terry training (using SFT checkpoint)
-cd ../bradley_terry
+cd ../bradley-terry
 MODEL_PATH=../sft/checkpoints/sft-final
 bash run_bt.sh
 

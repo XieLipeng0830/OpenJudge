@@ -258,7 +258,7 @@ result = await grader.aevaluate(query="...", response="...")
 cd sft && bash sft_rm.sh
 
 # Step 2: Continue with reward training
-cd ../bradley_terry
+cd ../bradley-terry
 MODEL_PATH=../sft/checkpoints/qwen-sft-final
 bash run_bt.sh
 ```
@@ -289,7 +289,7 @@ bash sft_rm.sh
 python prepare_reward_data.py --source helpsteer2 --output ./reward_data
 
 # 4. Reward training (using SFT checkpoint)
-cd ../bradley_terry
+cd ../bradley-terry
 MODEL_PATH=../sft/checkpoints/sft-final bash run_bt.sh
 ```
 

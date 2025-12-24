@@ -68,7 +68,7 @@ pip install verl torch transformers datasets ray
 # Each row: {"chosen": "better response", "rejected": "worse response"}
 
 # 3. Run training
-cd tutorials/cookbooks/training_reward_model/bradley_terry
+cd tutorials/cookbooks/training_reward_model/bradley-terry
 bash run_bt.sh
 ```
 
@@ -91,17 +91,18 @@ result = await grader.aevaluate(query="...", response="...")
 
 ## Data Requirements
 
-All training approaches require data in **Parquet format**. Export your evaluation data using OpenJudge utilities:
+All training approaches require data in **Parquet format**. You can prepare your data using pandas:
 
 ```python
-from open_judge.generator import export_data
+import pandas as pd
 
-export_data(
-    eval_cases=your_data,
-    output_dir="./training_data",
-    formats=["parquet"],
-    split_ratio={"train": 0.8, "test": 0.2}
-)
+# Convert your data to the required format
+train_data = [...]  # Your training examples
+test_data = [...]   # Your test examples
+
+# Save as parquet files
+pd.DataFrame(train_data).to_parquet("./training_data/train.parquet")
+pd.DataFrame(test_data).to_parquet("./training_data/test.parquet")
 ```
 
 **Required columns vary by training method:**
