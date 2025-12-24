@@ -511,5 +511,5 @@ async def scheduled_eval_worker(interval_minutes=10):
 
 ## Related Resources
 
-- [RM-Gallery Runner Documentation](../../../running_graders/run-tasks.md)
+- [RM-Gallery Runner Documentation](../running_graders/run_tasks.md)
 - [Langfuse Official Documentation](https://langfuse.com/docs)

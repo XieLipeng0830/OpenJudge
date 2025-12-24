@@ -2,7 +2,6 @@
 
 Specialized graders for evaluating code generation and mathematical problem-solving capabilities. These graders assess syntax correctness, execution results, code style, and mathematical expression accuracy.
 
----
 
 ## Overview
 
@@ -14,7 +13,6 @@ Specialized graders for evaluating code generation and mathematical problem-solv
 | `PatchSimilarityGrader` | Measures patch similarity | Code modification, bug fixes |
 | `MathExpressionVerifyGrader` | Verifies math expressions | Math problem solving, symbolic verification |
 
----
 
 ## Code Graders
 
@@ -105,7 +103,6 @@ Executes generated code against test cases to verify functional correctness. Eva
     asyncio.run(main())
     ```
 
----
 
 ### SyntaxCheckGrader
 
@@ -182,7 +179,6 @@ Validates Python code syntax using Abstract Syntax Tree (AST) parsing. Extracts 
 !!! tip "Syntax Validation Best Practice"
     Use `SyntaxCheckGrader` as a fast pre-filter before running more expensive execution graders. This saves computation time by catching obvious errors early.
 
----
 
 ### CodeStyleGrader
 
@@ -273,7 +269,6 @@ Evaluates code style including indentation consistency and naming conventions. C
     - **Indentation**: Consistent use of spaces (4 spaces per level recommended)
     - **Consistency**: Overall adherence to Python style conventions
 
----
 
 ### PatchSimilarityGrader
 
@@ -331,7 +326,6 @@ def calculate_area(r):
 asyncio.run(main())
 ```
 
----
 
 ## Math Graders
 
@@ -452,7 +446,6 @@ Verifies mathematical expressions for correctness using symbolic mathematics. Su
     **Default behavior** (`timeout_score=1.0`): Gives benefit of doubt on parsing errors  
     **Strict mode** (`timeout_score=0.0`): Penalizes any errors or timeouts
 
----
 
 ## Best Practices
 
@@ -474,7 +467,6 @@ Verifies mathematical expressions for correctness using symbolic mathematics. Su
 - Combine code style with correctness for educational applications
 - Cache evaluation results for repeated assessments
 
----
 
 ## Next Steps
 

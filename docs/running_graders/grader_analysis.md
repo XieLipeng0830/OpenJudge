@@ -1,6 +1,6 @@
 
 # Grader Analysis
-After successfully [running grading tasks](run_grading_tasks.md) on your dataset, the next crucial step is to analyze the grader results to understand how well your AI models or agents are performing. Grader analysis helps you gain insights from the evaluation results and generate comprehensive reports about model or agent performance.
+After successfully [running grading tasks](run_tasks.md) on your dataset, the next crucial step is to analyze the grader results to understand how well your AI models or agents are performing. Grader analysis helps you gain insights from the evaluation results and generate comprehensive reports about model or agent performance.
 
 ## Why Grader Analysis Matters
 Grader analysis is essential because it transforms raw evaluation scores into actionable insights about your AI models or agents. While running graders provides individual scores or rankings, analysis provides critical context to understand what these results mean for your model's real-world performance.
@@ -31,7 +31,7 @@ Here's an example to analyzing your model's performance distribution:
 from rm_gallery.core.analyzer.statistical.distribution_analyzer import DistributionAnalyzer
 from rm_gallery.core.runner.grading_runner import GradingRunner
 
-# After running your graders on a dataset (as described in run_grading_tasks.md)
+# After running your graders on a dataset (as described in run_tasks.md)
 runner = GradingRunner(grader_configs=grader_configs)
 results = await runner.arun(dataset)
 
@@ -102,4 +102,4 @@ RM-Gallery provides several built-in comparative analysis for examining model pe
 | [ConsistencyAnalyzer](../../rm_gallery/core/analyzer/validation/consistency_analyzer.py#L23-L84) | Evaluates how consistently your model performs when presented with similar inputs or when the same input is evaluated multiple times |
 
 ## Next Steps
-After analyzing your grader results, you can confidently [refine data quality](../applications/refine_data_quality.md) based on the insights gained from your analysis or [create custom graders](../building_graders/create_custom_graders.md) to address specific evaluation needs identified during analysis.
+After analyzing your grader results, you can confidently [refine data quality](../applications/data_refinement.md) based on the insights gained from your analysis or [create custom graders](../building_graders/create_custom_graders.md) to address specific evaluation needs identified during analysis.

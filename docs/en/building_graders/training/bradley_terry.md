@@ -2,7 +2,6 @@
 
 Train reward models using Bradley-Terry loss on preference pairs. This approach learns to rank responses by modeling the probability that one response is preferred over another.
 
----
 
 ## Overview
 
@@ -24,7 +23,6 @@ The model learns to maximize:
 
 Where \( r \) is the reward score and \( \sigma \) is the sigmoid function.
 
----
 
 ## Data Format
 
@@ -88,7 +86,6 @@ df_val = pd.DataFrame(create_preference_pairs(val_data))
 df_val.to_parquet('./data/bt_val.parquet')
 ```
 
----
 
 ## Training Setup
 
@@ -168,7 +165,6 @@ export N_GPUS_PER_NODE=8
 bash run_bt.sh
 ```
 
----
 
 ## Script Configuration
 
@@ -231,7 +227,6 @@ python -m torch.distributed.run \
 | `optim.lr` | Learning rate | 5e-7 to 1e-6 |
 | `trainer.total_epochs` | Training epochs | 2-3 (more may overfit) |
 
----
 
 ## Custom Dataset
 
@@ -283,7 +278,6 @@ data:
     name: CustomBTDataset
 ```
 
----
 
 ## Monitoring Training
 
@@ -316,7 +310,6 @@ trainer.project_name=my-reward-model
 trainer.experiment_name=qwen-bt-run1
 ```
 
----
 
 ## Using Trained Models
 
@@ -360,7 +353,6 @@ runner = GradingRunner(
 results = await runner.arun(your_dataset)
 ```
 
----
 
 ## Advanced Configuration
 
@@ -401,7 +393,6 @@ optim:
   warmup_steps_ratio: 0.05
 ```
 
----
 
 
 ## Next Steps

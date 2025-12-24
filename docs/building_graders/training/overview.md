@@ -2,7 +2,6 @@
 
 Train custom reward models and graders to better align with your specific evaluation needs. This guide covers different training approaches for building effective reward models.
 
----
 
 ## Why Train Custom Graders?
 
@@ -14,7 +13,6 @@ Pre-built graders work well for general tasks, but custom training enables:
     - **Cost Reduction**: Replace expensive API-based judges with self-hosted models
     - **Consistency**: Maintain stable evaluation criteria across your application
 
----
 
 ## Training Approaches
 
@@ -33,7 +31,6 @@ RM-Gallery supports multiple training paradigms through the VERL framework. Choo
     - **Have comparison labels?** → Use [Generative Pairwise](generative_pairwise.md) (e.g., "A is better than B")
     - **Starting from scratch?** → Use [SFT](sft.md) first, then fine-tune with another method
 
----
 
 ## Training Architecture
 
@@ -71,7 +68,6 @@ All training methods use the **VERL** (Versatile Efficient Reinforcement Learnin
 
 > **Note:** Training code (`tutorials/cookbooks/training_reward_model/`) is independent from the core evaluation framework (`rm_gallery.core`). Train models separately, then integrate them as graders.
 
----
 
 ## Data Requirements & Preparation
 
@@ -127,7 +123,6 @@ export_data(
 )
 ```
 
----
 
 ## Quick Start
 
@@ -213,7 +208,6 @@ result = await grader.aevaluate(
 )
 ```
 
----
 
 ## Next Steps
 

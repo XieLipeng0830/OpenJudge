@@ -4,7 +4,6 @@ Build comprehensive reward signals for RLHF and post-training by combining multi
 
 A single grader evaluates one aspect (e.g., helpfulness). For training, you typically need a **composite reward** that balances safety, relevance, accuracy, and other criteria.
 
----
 
 ## Environment Setup
 
@@ -37,7 +36,6 @@ assert os.getenv("OPENAI_API_KEY"), "OPENAI_API_KEY not set"
 
 > **Note:** Different model providers require different environment variables. See [Model Configuration](../integrations/models.md) for details.
 
----
 
 ## Data Preparation
 
@@ -81,7 +79,6 @@ dataset_with_references = [
 
 > **Tip:** Structure your data as a list of dictionaries. Most graders (HarmfulnessGrader, RelevanceGrader) only need `query` and `response`. For graders requiring additional fields (like CorrectnessGrader needing `reference_response`), use GraderConfig's mapper feature to transform your data fields.
 
----
 
 ## Build Graders
 
@@ -147,7 +144,6 @@ async def main():
 
 > **Tip:** Start with 2-3 graders for initial experiments. Add more as you refine your reward signal.
 
----
 
 ## Run GradingRunner
 
@@ -216,7 +212,6 @@ results = await runner.arun(large_dataset)
 
 > **Warning:** Set `max_concurrency` below your API provider's rate limit to avoid throttling errors.
 
----
 
 ## Aggregate Scores
 
@@ -295,7 +290,6 @@ runner = GradingRunner(
 
 > **Tip:** For safety-critical applications, assign higher weights to `harmfulness`. For knowledge-intensive tasks, prioritize `correctness`.
 
----
 
 ## Complete Workflow Example
 
@@ -378,11 +372,10 @@ print(f"Training rewards: {rewards}")
 Training rewards: [0.87, 0.95]
 ```
 
----
 
 ## Next Steps
 
-- [Run Grading Tasks](../running-graders/run-tasks.md) — Learn more about GradingRunner options
-- [Built-in Graders](../graders/overview.md) — Explore all available graders
-- [Create Custom Graders](../building-graders/custom-graders.md) — Build domain-specific evaluators
+- [Run Grading Tasks](../running_graders/run_tasks.md) — Learn more about GradingRunner options
+- [Built-in Graders](../built_in_graders/overview.md) — Explore all available graders
+- [Create Custom Graders](../building_graders/create_custom_graders.md) — Build domain-specific evaluators
 - [Integrate with VERL](../integrations/rewards/verl.md) — Connect rewards to RLHF training

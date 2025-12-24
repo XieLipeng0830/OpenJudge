@@ -2,7 +2,6 @@
 
 Initialize reward models through supervised fine-tuning (SFT) on multi-turn conversation data. This provides a strong foundation before applying preference learning methods.
 
----
 
 ## Overview
 
@@ -30,7 +29,6 @@ Standard next-token prediction with masking on user inputs:
 
 Where \( y \) are assistant responses and \( x \) is the conversation context.
 
----
 
 ## Data Format
 
@@ -75,7 +73,6 @@ Standard conversation roles:
 - **assistant**: Model responses (training targets)
 - **system**: Optional system instructions
 
----
 
 ## Data Preparation
 
@@ -171,7 +168,6 @@ medical_sft = [
 ]
 ```
 
----
 
 ## Training Setup
 
@@ -228,7 +224,6 @@ ulysses_sequence_parallel_size: 8  # Sequence parallelism
 use_remove_padding: true  # Efficient attention
 ```
 
----
 
 ## Launch Training
 
@@ -309,7 +304,6 @@ export NODE_RANK=0  # Change per node
 bash sft_rm.sh
 ```
 
----
 
 ## Key Parameters
 
@@ -323,7 +317,6 @@ bash sft_rm.sh
 | `trainer.total_epochs` | Training epochs | 1-2 |
 | `ulysses_sequence_parallel_size` | Sequence parallelism | 8 |
 
----
 
 ## Advanced Features
 
@@ -362,7 +355,6 @@ Optimized kernel for faster training:
 model.use_liger=true
 ```
 
----
 
 ## Monitoring
 
@@ -399,7 +391,6 @@ trainer.logger=['console','wandb']
 trainer.logger=['console','swanlab']
 ```
 
----
 
 ## Using SFT Models
 
@@ -466,7 +457,6 @@ response = tokenizer.decode(outputs[0])
 print(response)
 ```
 
----
 
 ## Best Practices
 
@@ -511,7 +501,6 @@ trainer.test_freq=500  # Validate every 500 steps
 
 Stop training if validation loss plateaus or increases.
 
----
 
 ## SFT + Reward Model Training Pipeline
 
@@ -549,7 +538,6 @@ python evaluate_pipeline.py \
 2. **Reward Training**: Specializes model for evaluation/ranking
 3. **Result**: High-quality evaluator with strong baseline capabilities
 
----
 
 ## Comparison with Other Methods
 
@@ -563,7 +551,6 @@ python evaluate_pipeline.py \
 
 **Recommendation:** Use SFT as initialization, then apply specialized reward training.
 
----
 
 ## Next Steps
 

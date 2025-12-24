@@ -554,6 +554,6 @@ async def custom_evaluation_with_batch_processing(spans_df):
 
 ## Related Resources
 
-- [RM-Gallery Grader Development Guide](../../../building-graders/overview.md)
+- [RM-Gallery Grader Development Guide](../building_graders/overview.md)
 - [Arize Phoenix Official Documentation](https://docs.arize.com/phoenix)
 - [OpenInference Specification](https://github.com/Arize-ai/openinference)

@@ -10,7 +10,6 @@ Welcome! RM-Gallery is an open-source reward model platform. Your contributions 
     - **Documentation**: Improve guides and examples
     - **Examples**: Share practical use cases and tutorials
 
----
 
 ## Set Up Development Environment
 
@@ -33,7 +32,6 @@ Welcome! RM-Gallery is an open-source reward model platform. Your contributions 
     python -c "from rm_gallery.core.graders.common import RelevanceGrader; print('✓ Installation successful')"
     ```
 
----
 
 ## Follow Code Standards
 
@@ -50,7 +48,6 @@ Welcome! RM-Gallery is an open-source reward model platform. Your contributions 
     - Validate inputs early
     - Optimize for readability
 
----
 
 ## Testing Your Changes
 
@@ -69,7 +66,6 @@ pytest tests/ -v
     - **Automated tests** — We'll help you add tests during PR review if needed
     - **Focus on functionality** — Make sure your code works for your use case
 
----
 
 ## Contributing Graders
 
@@ -132,7 +128,6 @@ class MyGrader(BaseGrader):
         return GraderScore(name=self.name, score=score, reason=reason)
 ```
 
----
 
 ## Submit Your Contribution
 
@@ -184,7 +179,6 @@ Open a Pull Request on GitHub with:
 </div>
 </div>
 
----
 
 ## Contribute Documentation
 
@@ -195,7 +189,6 @@ Open a Pull Request on GitHub with:
     - Include complete examples with `qwen3-32b` as model
     - See [Documentation Style Guide](style-guide.md) for formatting details
 
----
 
 ## Get Help
 
@@ -210,7 +203,6 @@ Need assistance? Here's how to reach us:
 !!! warning "Before Starting Major Work"
     Before starting major work, open an issue to discuss your approach. This prevents duplicate efforts and ensures alignment with project goals.
 
----
 
 Thank you for contributing to RM-Gallery!
 

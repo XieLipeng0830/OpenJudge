@@ -62,7 +62,7 @@ Suppose you have a dataset of query-response pairs with quality labels (scores o
 !!! warning "Don't Use When"
     - You have no labeled data
     - Your criteria are already well-defined and documented
-    - Simple rule-based evaluation is sufficient
+    - Simple Code-Based evaluation is sufficient
 
 
 ## Choose Your Evaluation Mode

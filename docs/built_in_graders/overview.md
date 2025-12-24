@@ -2,14 +2,7 @@
 
 RM-Gallery provides **50+ pre-built graders** for evaluating AI responses across quality dimensions, agent behaviors, formats, and modalities. All graders are **rigorously evaluated** on benchmark datasets to ensure reliability and accuracy.
 
-**Key Features:**
 
-- **Validated Quality**: Every grader is tested against human-annotated preference data
-- **Reproducible Results**: Evaluation data available on [OpenJudge dataset](https://huggingface.co/datasets/agentscope-ai/OpenJudge)
-- **Performance Metrics**: Each grader page includes benchmark scores (Preference Accuracy, Score Diff)
-- **Ready to Use**: Deploy out-of-the-box or customize for your specific needs
-
----
 
 ## Quick Start
 
@@ -42,7 +35,8 @@ asyncio.run(main())
 !!! tip "Understanding Results"
     All graders return a result object with `score`, `reason`, and `metadata` fields. Score ranges vary by grader category (see table below).
 
----
+For detailed installation and environment setup, see the [Quick Start Guide](../get_started/quickstart.md).
+
 
 ## Available Graders
 
@@ -70,50 +64,6 @@ Choose the right grader for your evaluation needs. RM-Gallery organizes graders 
     - **LLM-Based** graders (General, Agent, Multimodal): Nuanced quality assessment using LLM judges
     - **Code-Based** graders (Text, Code, Format): Fast, deterministic, zero-cost evaluation using algorithms
 
-
----
-
-## Batch Evaluation
-
-For production use cases, `GradingRunner` enables efficient evaluation at scale. It supports:
-
-- **Multi-Sample Evaluation**: Process entire datasets in parallel with automatic concurrency management
-- **Multi-Grader Evaluation**: Apply multiple graders simultaneously to each sample
-- **Result Aggregation**: Get organized results with grader names as keys
-
-**When to use:**
-
-- Evaluating datasets with 10+ samples
-- Comparing multiple quality dimensions (e.g., relevance + safety)
-- Production monitoring and continuous evaluation
-- Benchmark testing and model comparison
-
-**Example:**
-
-```python
-from rm_gallery.core.runner import GradingRunner, GraderConfig
-from rm_gallery.core.graders.common import RelevanceGrader, HallucinationGrader
-from rm_gallery.core.models import OpenAIChatModel
-
-model = OpenAIChatModel(model="qwen3-32b")
-runner = GradingRunner(
-    grader_configs={
-        "relevance": GraderConfig(grader=RelevanceGrader(model=model)),
-        "hallucination": GraderConfig(grader=HallucinationGrader(model=model))
-    }
-)
-
-dataset = [
-    {"query": "What is AI?", "response": "AI stands for..."},
-    {"query": "Explain ML", "response": "Machine learning..."}
-]
-
-results = await runner.arun(dataset)
-# Returns: {"relevance": [score1, score2], "hallucination": [score1, score2]}
-```
-
-
----
 
 ## Next Steps
 

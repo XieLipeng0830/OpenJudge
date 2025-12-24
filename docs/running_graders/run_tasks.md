@@ -180,7 +180,7 @@ Concurrency control enables efficient processing of large datasets while maintai
 Adjust concurrency based on your resources and constraints:
 
 ```python
-# For resource-intensive graders (e.g., LLM-based)
+# For resource-intensive graders (e.g., LLM-Based)
 # Lower concurrency to avoid overwhelming resources like GPU or API limits
 runner = GradingRunner(
     grader_configs=grader_configs,
@@ -200,5 +200,5 @@ Performance optimization is especially important when working with large languag
 Finding the optimal concurrency level depends on your hardware resources, the types of graders you're using, and any external rate limits (like API quotas). Experimentation is often needed to find the sweet spot for your specific use case.
 
 ## Next Steps
-Once you've mastered running grading tasks, you'll want to [generate validation reports](../validating_graders/generate_validation_reports.md) to assess the quality of your evaluations or [refine data quality](../applications/refine_data_quality.md) using your evaluation insights.
+Once you've mastered running grading tasks, you'll want to [validate your graders](../validating_graders/overview.md) to assess the quality of your evaluations or [refine data quality](../applications/data_refinement.md) using your evaluation insights.
 

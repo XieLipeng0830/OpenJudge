@@ -2,7 +2,6 @@
 
 This page demonstrates all the visual enhancements and animations implemented in Phase 3.
 
----
 
 ## 🎬 Keyframe Animations
 
@@ -44,7 +43,6 @@ This page demonstrates all the visual enhancements and animations implemented in
 💓 <strong>pulse:</strong> Pulsing animation
 </div>
 
----
 
 ## 🔗 Interactive Link Effects
 
@@ -54,7 +52,6 @@ Hover over these links to see the animated underline effect:
 - [External link with icon animation](https://example.com)
 - Link with code inside: [`rm_gallery.graders`](../built_in_graders/overview.md)
 
----
 
 ## 💻 Code Block Enhancements
 
@@ -112,7 +109,6 @@ print(f"Results: {results}")
     greet "RM-Gallery"
     ```
 
----
 
 ## 📦 Card & Container Effects
 
@@ -130,7 +126,6 @@ Hover over these admonitions to see the lift effect:
 !!! danger "Critical Alert"
     Even danger alerts have the smooth hover animation, maintaining visual consistency.
 
----
 
 ## 📋 Collapsible Sections
 
@@ -154,7 +149,6 @@ Click to expand these collapsible sections and watch the smooth animation:
 
     The animation system uses CSS transitions and keyframes for optimal performance.
 
----
 
 ## 🖼️ Image Effects
 
@@ -164,7 +158,6 @@ Hover over images to see the zoom and shadow effect:
 
 *Note: Images also have lazy loading with shimmer animation while loading*
 
----
 
 ## 📊 Table Hover Effects
 
@@ -177,7 +170,6 @@ Hover over table rows to see the highlight effect:
 | Text Grader | Transform | Slight lift effect |
 | Agent Grader | Combined | Multiple effects working together |
 
----
 
 ## 🔄 Workflow Step Animations
 
@@ -207,7 +199,6 @@ All animations respect the user's reduced motion preferences.</li>
 </div>
 </div>
 
----
 
 ## 🎨 Loading States
 
@@ -221,7 +212,6 @@ All animations respect the user's reduced motion preferences.</li>
 <div class="skeleton" style="width: 80%; height: 40px; margin: 1rem 0;"></div>
 <div class="skeleton" style="width: 90%; height: 40px;"></div>
 
----
 
 ## ✨ Special Effects
 
@@ -237,11 +227,9 @@ Content below divider
 
 Standard content
 
----
 
 More content with standard divider
 
----
 
 ## 🎯 Scroll-Triggered Animations
 
@@ -265,7 +253,6 @@ This section slides in from the left side of the screen.
 This section slides in from the right side of the screen.
 </div>
 
----
 
 ## 🔔 Notification Styles
 
@@ -281,7 +268,6 @@ This section slides in from the right side of the screen.
 ✗ <strong>Error!</strong> Something went wrong. Please try again.
 </div>
 
----
 
 ## ⚙️ Animation Utilities
 
@@ -304,7 +290,6 @@ You can use these utility classes in your Markdown:
 This element fades in and slides up with a 300ms delay and slow duration.
 </div>
 
----
 
 ## 🎛️ Accessibility
 
@@ -317,7 +302,6 @@ All animations respect the user's motion preferences:
 
 To test: Enable "Reduce Motion" in your system preferences and reload this page.
 
----
 
 ## 🏗️ Performance Notes
 
@@ -330,7 +314,6 @@ All animations are optimized for performance:
 - ✅ Intersection Observer for scroll animations
 - ✅ Minimal repaints and reflows
 
----
 
 ## 📚 Implementation Details
 
@@ -346,7 +329,6 @@ All code is located in:
 - `/docs/stylesheets/animations.css` - All CSS animations
 - `/docs/javascripts/animations.js` - JavaScript enhancements
 
----
 
 ## 🎨 Customization
 
@@ -361,7 +343,6 @@ You can customize animations by modifying CSS variables:
 }
 ```
 
----
 
 <div style="text-align: center; margin: 3rem 0;">
 <div class="animate-pulse">

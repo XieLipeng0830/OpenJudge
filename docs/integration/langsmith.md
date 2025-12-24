@@ -365,5 +365,5 @@ class AggregatedLangSmithEvaluator:
 
 ## Related Resources
 
-- [RM-Gallery Runner Documentation](../../../running_graders/run-tasks.md)
+- [RM-Gallery Runner Documentation](../running_graders/run_tasks.md)
 - [LangSmith Official Documentation](https://docs.smith.langchain.com/)

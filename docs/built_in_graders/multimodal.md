@@ -2,7 +2,6 @@
 
 Vision-language graders for evaluating AI responses involving images. These graders assess image-text coherence, image helpfulness, and text-to-image generation quality.
 
----
 
 ## Overview
 
@@ -25,7 +24,6 @@ Benchmark results using `qwen-vl-max` as the judge model:
 !!! note "Performance Metrics"
     Preference Accuracy measures alignment with human-annotated preference labels. Higher is better.
 
----
 
 ## MLLMImage
 
@@ -41,7 +39,6 @@ image = MLLMImage(url="https://example.com/image.jpg")
 image = MLLMImage(base64="iVBORw0KGgoAAAANS...", format="png")
 ```
 
----
 
 ## ImageCoherenceGrader
 
@@ -100,7 +97,6 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
 ## ImageHelpfulnessGrader
 
@@ -161,7 +157,6 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
 ## TextToImageGrader
 
@@ -221,7 +216,6 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
 ## Next Steps
 

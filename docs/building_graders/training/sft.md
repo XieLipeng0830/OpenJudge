@@ -5,7 +5,6 @@ Train models on multi-turn conversation data to establish strong baseline capabi
 !!! note
     For an overview of when to use SFT vs. other methods, see [Training Overview](overview.md).
 
----
 
 ## Data Format
 
@@ -25,7 +24,6 @@ SFT training expects **Parquet files** with a `messages` column containing multi
 !!! info "Supported Roles"
     `user`, `assistant`, `system` (optional)
 
----
 
 ## Prepare Your Data
 
@@ -69,7 +67,6 @@ SFT training expects **Parquet files** with a `messages` column containing multi
     pd.DataFrame(conversations).to_parquet("./data/eval_sft.parquet")
     ```
 
----
 
 ## Training Configuration
 
@@ -118,7 +115,6 @@ ulysses_sequence_parallel_size: 8
 use_remove_padding: true
 ```
 
----
 
 ## Run Training
 
@@ -198,7 +194,6 @@ export NODE_RANK=0  # Set 0,1,2,3 on each node
 bash sft_rm.sh
 ```
 
----
 
 ## Optimization Options
 
@@ -222,7 +217,6 @@ bash sft_rm.sh
     model.use_liger=true  # Use optimized Liger kernel
     ```
 
----
 
 ## Monitor Training
 
@@ -239,7 +233,6 @@ trainer.logger=['console','wandb']      # Add WandB
 trainer.logger=['console','swanlab']    # Add SwanLab
 ```
 
----
 
 ## Use Trained Models
 
@@ -270,7 +263,6 @@ MODEL_PATH=../sft/checkpoints/qwen-sft-final
 bash run_bt.sh
 ```
 
----
 
 ## Training Tips
 
@@ -280,7 +272,6 @@ bash run_bt.sh
     - **Sequence Length**: Match your use case (4K-8K for evaluation, 16K+ for documents)
     - **Validation**: Monitor `val/loss` — stop if it plateaus or increases
 
----
 
 ## Complete Training Pipeline
 
@@ -304,7 +295,6 @@ MODEL_PATH=../sft/checkpoints/sft-final bash run_bt.sh
 
 **Why:** SFT establishes baseline capabilities → Reward training specializes for evaluation
 
----
 
 ## Next Steps
 

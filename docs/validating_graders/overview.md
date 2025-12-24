@@ -2,7 +2,6 @@
 
 Validate your graders against benchmark datasets or custom test sets to ensure accurate, reliable evaluation results before production deployment.
 
----
 
 ## Why Validate?
 
@@ -16,7 +15,6 @@ Graders are evaluation systems that need validation themselves. Without validati
 - **Debug Issues** — Identify systematic errors or biases
 - **Track Improvements** — Monitor performance over time
 
----
 
 ## How to Validate a Grader?
 
@@ -104,7 +102,6 @@ Choose metrics based on your evaluation task:
 
 **See cookbook for complete examples:** `tutorials/cookbooks/grader_validation/`
 
----
 
 ## Tips for Success
 
@@ -134,7 +131,6 @@ Choose metrics based on your evaluation task:
     - **Adversarial Testing** — Test with challenging cases (similar responses, negation, position bias)
     - **Confidence Calibration** — Verify if grader confidence correlates with actual accuracy
 
----
 
 ## Troubleshooting
 
@@ -148,7 +144,6 @@ Choose metrics based on your evaluation task:
 
 **Debug Process:** Review failed cases → Identify patterns → Test fixes → Re-validate
 
----
 
 ## Next Steps
 
@@ -158,7 +153,7 @@ Choose metrics based on your evaluation task:
 **Build Custom Validation:**
 - [Create Custom Graders](../building_graders/create_custom_graders.md) — Build graders to validate
 - [Running Graders](../running_graders/run_tasks.md) — Set up batch evaluation pipelines
-- [Evaluation Reports](../running_graders/evaluation_reports.md) — Generate detailed validation reports
+- [Grader Analysis](../running_graders/grader_analysis.md) — Generate detailed validation reports
 
 **Improve Your Graders:**
 - [Train Reward Models](../building_graders/training/overview.md) — Train models on your validation data

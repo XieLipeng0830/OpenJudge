@@ -2,7 +2,6 @@
 
 Compare multiple model versions using pairwise evaluation to determine which performs best. This approach eliminates the need for absolute scoring by directly comparing responses head-to-head.
 
----
 
 ## When to Use
 
@@ -13,7 +12,6 @@ Use pairwise evaluation for:
 - **Deployment Decisions** — Selecting the best model for production
 - **Competitive Benchmarking** — Comparing against competitor models
 
----
 
 ## How It Works
 
@@ -31,7 +29,6 @@ Pairwise evaluation compares every pair of model outputs and determines a winner
 !!! tip "Eliminating Position Bias"
     To eliminate position bias, each pair is evaluated twice with swapped order (A vs B and B vs A).
 
----
 
 ## Three-Step Pipeline
 
@@ -40,10 +37,9 @@ The evaluation follows a clear three-step pipeline:
 | Step | Function | Description |
 |------|----------|-------------|
 | 1 | `prepare_comparison_data()` | Generate all pairwise combinations |
-| 2 | `run_pairwise_evaluation()` | Run LLM-based comparisons |
+| 2 | `run_pairwise_evaluation()` | Run LLM-Based comparisons |
 | 3 | `analyze_and_rank_models()` | Compute win rates and rankings |
 
----
 
 ## Quick Start
 
@@ -81,7 +77,6 @@ Best: model_v2
 3. model_v3: 33.3%
 ```
 
----
 
 ## Step-by-Step Guide
 
@@ -152,7 +147,6 @@ for model_a, opponents in analysis.win_matrix.items():
         print(f"{model_a} beats {model_b}: {rate:.1%}")
 ```
 
----
 
 ## Understanding Results
 
@@ -181,7 +175,6 @@ The `PairwiseAnalysisResult` contains:
     - gpt-4 beats gemini **50%** of the time
     - claude beats gemini **75%** of the time
 
----
 
 ## Configuration Options
 
@@ -208,7 +201,6 @@ model = OpenAIChatModel(model="qwen3-32b")  # Your judge model
 !!! tip "Choosing a Judge Model"
     Use a strong model for judging (e.g., `qwen3-32b`, `gpt-4`) to ensure reliable comparisons. The judge should be at least as capable as the models being evaluated.
 
----
 
 ## Complete Example
 
@@ -254,7 +246,6 @@ async def compare_models():
 analysis = asyncio.run(compare_models())
 ```
 
----
 
 ## Tips for Success
 
@@ -270,7 +261,6 @@ analysis = asyncio.run(compare_models())
     - Ensure judge model is strong enough for reliable comparisons
     - Account for API rate limits when setting concurrency
 
----
 
 ## Next Steps
 

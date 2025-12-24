@@ -2,7 +2,6 @@
 
 Validate your graders against RewardBench2, a comprehensive benchmark for evaluating response quality across multiple domains. RewardBench2 provides standardized test cases covering factuality, focus, safety, math, instruction following, and specialized domains.
 
----
 
 ## What is RewardBench2?
 
@@ -65,7 +64,6 @@ Task: Rate each response (1-10), pick highest-rated
 - Tests absolute quality assessment
 - More nuanced than binary ranking
 
----
 
 ## Quick Start
 
@@ -87,7 +85,6 @@ python rewardbench2.py --data-path rewardbench2_test.parquet --model qwen3-32b
 - Key classes: `RewardBench2Grader`, `RewardBench2Analyzer`, `load_rewardbench2_data()`
 
 
----
 
 ## Interpreting Results
 
@@ -148,7 +145,6 @@ for subset, errors in errors_by_subset.items():
         print(f"  Predicted: {error['predicted']}, Correct: {error['correct']}")
 ```
 
----
 
 ## Tips for Success
 
@@ -171,7 +167,6 @@ for subset, errors in errors_by_subset.items():
     - **Compare Graders** — Run multiple graders on same dataset to find best performer
     - **Error Analysis** — Review failed cases per subset to identify systematic issues
 
----
 
 ## Troubleshooting
 
@@ -187,7 +182,6 @@ for subset, errors in errors_by_subset.items():
 
 See [Overview - Troubleshooting](overview.md#troubleshooting) for more techniques.
 
----
 
 ## Next Steps
 
@@ -198,5 +192,5 @@ See [Overview - Troubleshooting](overview.md#troubleshooting) for more technique
 
 **Deploy Validated Graders:**
 - [Running Graders](../running_graders/run_tasks.md) — Set up production evaluation pipelines
-- [Monitor Performance](../running_graders/evaluation_reports.md) — Track grader accuracy over time
+- [Monitor Performance](../running_graders/grader_analysis.md) — Track grader accuracy over time
 

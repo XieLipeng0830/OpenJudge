@@ -2,7 +2,6 @@
 
 Train reward models to generate absolute quality scores for individual responses using reinforcement learning. This method teaches models to evaluate responses on a fixed scale (e.g., 0-4 helpfulness).
 
----
 
 ## Overview
 
@@ -24,7 +23,6 @@ The model generates responses with scores, and receives rewards based on predict
 
 This exponential decay rewards accurate predictions and penalizes errors.
 
----
 
 ## Data Format
 
@@ -63,7 +61,6 @@ Typical scoring scales:
 - **Correctness**: 0 (wrong) to 4 (perfect)
 - **Relevance**: 0 (off-topic) to 4 (highly relevant)
 
----
 
 ## Data Preparation
 
@@ -126,7 +123,6 @@ df = pd.DataFrame(data)
 df.to_parquet("./data/custom_pointwise.parquet")
 ```
 
----
 
 ## Training Setup
 
@@ -314,7 +310,6 @@ class PointwiseTrainTemplate(BaseModel):
         raise ValueError("Failed to parse score from output")
 ```
 
----
 
 ## Launch Training
 
@@ -410,7 +405,6 @@ bash run_pointwise.sh
 open http://127.0.0.1:8265
 ```
 
----
 
 ## Key Parameters
 
@@ -425,7 +419,6 @@ open http://127.0.0.1:8265
 | `actor_rollout_ref.rollout.n` | Samples per prompt | 4 |
 | `trainer.total_epochs` | Training epochs | 1-2 |
 
----
 
 ## Monitoring
 
@@ -460,7 +453,6 @@ wandb login
 open http://127.0.0.1:8265
 ```
 
----
 
 ## Using Trained Models
 
@@ -507,7 +499,6 @@ dataset = [
 results = await runner.arun(dataset)
 ```
 
----
 
 ## Advanced Configuration
 
@@ -538,7 +529,6 @@ def compute_custom_reward(predicted, true):
     return (1.0 - penalty / 16) * time_weight
 ```
 
----
 
 
 ## Next Steps

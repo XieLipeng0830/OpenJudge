@@ -5,7 +5,6 @@ Reinforcement Learning from Human Feedback (RLHF) and post-training optimization
 !!! note "Additional Resources"
     For detailed grader documentation, see [Built-in Graders](../built_in_graders/overview.md).
 
----
 
 ## The Task: Customer Support Chatbot
 
@@ -13,7 +12,6 @@ Imagine you're building a chatbot to handle refund policy questions for an e-com
 
 The training process requires computing a reward score for each model response. This reward will guide the model to generate better responses through reinforcement learning. We'll start simple with a single quality check, then progressively add more evaluation criteria to create a robust reward signal.
 
----
 
 ## Start Simple: Evaluate Relevance
 
@@ -72,7 +70,6 @@ asyncio.run(main())
 
 This gives you a basic reward signal based on relevance. For simple use cases, this single-dimension reward might be sufficient. But for production systems, you typically need to evaluate multiple quality dimensions simultaneously.
 
----
 
 ## Add More Dimensions: Build Composite Rewards
 
@@ -169,7 +166,6 @@ for i in range(len(dataset)):
 
 If you don't specify weights, the aggregator automatically assigns equal weights to all graders. For more complex scenarios, you can write custom aggregation logic—for instance, using the minimum score across all graders to create a conservative reward signal that penalizes any dimension that falls short.
 
----
 
 ## Putting It All Together
 
@@ -241,7 +237,6 @@ Running this code evaluates both responses across three quality dimensions and p
 
 You now have a foundation for building reward models. Start with a single grader to validate your setup, then progressively add more dimensions as needed. The key is choosing graders that align with your application's requirements and weighting them appropriately based on what matters most for your use case.
 
----
 
 ## Explore More Graders
 
@@ -251,7 +246,6 @@ For text-based applications, you might need graders that check for hallucination
 
 When built-in graders don't cover your specific requirements, you can create custom graders tailored to your domain. See [Create Custom Graders](../building_graders/create_custom_graders.md) for guidance on building evaluators that understand your application's unique constraints and quality standards.
 
----
 
 ## Next Steps
 

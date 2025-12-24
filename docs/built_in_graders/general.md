@@ -2,7 +2,6 @@
 
 General-purpose graders for evaluating AI responses across common quality dimensions. These graders work with any LLM application and cover the most frequently needed evaluation criteria.
 
----
 
 ## Overview
 
@@ -39,7 +38,6 @@ Benchmark results across different judge models:
 !!! note "Performance Metrics"
     Preference Accuracy measures alignment with human-annotated preference labels. Higher is better. Best results per grader are **bolded**.
 
----
 
 ## RelevanceGrader
 
@@ -91,7 +89,6 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
 ## HallucinationGrader
 
@@ -160,7 +157,6 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
 ## HarmfulnessGrader
 
@@ -220,7 +216,6 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
 ## InstructionFollowingGrader
 
@@ -286,7 +281,6 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
 ## CorrectnessGrader
 
@@ -352,7 +346,6 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
 ## Next Steps
 

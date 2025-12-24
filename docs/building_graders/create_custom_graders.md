@@ -22,21 +22,21 @@ The **Pointwise** approach evaluates each response independently, resulting in a
 Conversely, the **Listwise** approach is inherently comparative. It works by directly comparing multiple responses to the same query, producing a relative ranking. This method is the natural choice when your goal is to select the best candidate from a set of responses or perform a direct head-to-head comparison between models or prompts.
 
 ### Implementation Methods
-**Rule-based** graders rely on predefined, programmed logic and are most effective for objective assessments. They excel when evaluating quantifiable metrics like response length or keyword presence, where the criteria are clear and unambiguous. Their deterministic nature makes them highly reproducible and cost-effective, especially for high-volume evaluations.
+**Code-Based** graders rely on predefined, programmed logic and are most effective for objective assessments. They excel when evaluating quantifiable metrics like response length or keyword presence, where the criteria are clear and unambiguous. Their deterministic nature makes them highly reproducible and cost-effective, especially for high-volume evaluations.
 
-**LLM-based** graders leverage the language understanding capabilities of large models (such as GPT-4 or Qwen) to make nuanced judgments. They are ideal for subjective assessments that require an understanding of context and meaning, such as judging helpfulness, coherence, or overall quality. These graders are also the preferred choice when you need rich, detailed feedback and explanations for their scores.
+**LLM-Based** graders leverage the language understanding capabilities of large models (such as GPT-4 or Qwen) to make nuanced judgments. They are ideal for subjective assessments that require an understanding of context and meaning, such as judging helpfulness, coherence, or overall quality. These graders are also the preferred choice when you need rich, detailed feedback and explanations for their scores.
 
 ### Decision Guide
 | Scenario | Approach | Method | Why |
 | --- | --- | --- | --- |
-| Objective properties (length, keywords) | Pointwise | Rule-based | Deterministic, fast, cost-effective |
-| Subjective qualities (helpfulness, coherence) | Pointwise | LLM-based | Handles nuanced judgments |
-| Response comparison/selection | Listwise | Either | LLM for quality insight, Rule for simplicity |
-| High-volume evaluation | Either | Rule-based | Cost-effective at scale |
-| Detailed feedback needed | Either | LLM-based | Rich qualitative output |
+| Objective properties (length, keywords) | Pointwise | Code-Based | Deterministic, fast, cost-effective |
+| Subjective qualities (helpfulness, coherence) | Pointwise | LLM-Based | Handles nuanced judgments |
+| Response comparison/selection | Listwise | Either | LLM for quality insight, Code-Based for simplicity |
+| High-volume evaluation | Either | Code-Based | Cost-effective at scale |
+| Detailed feedback needed | Either | LLM-Based | Rich qualitative output |
 
 
-You can combine approaches—using both LLM-based and rule-based graders—for comprehensive evaluation.
+You can combine approaches—using both LLM-Based and Code-Based graders—for comprehensive evaluation.
 
 ## Implementing Custom Graders
 Once you've determined the appropriate approach and implementation method, you can begin developing your custom grader.
@@ -79,9 +79,9 @@ async def evaluate_helpfulness(query: str, response: str) -> GraderScore:
         )
 ```
 
-### LLM-based Grader Implementation
+### LLM-Based Grader Implementation
 
-To create effective LLM-based graders:
+To create effective LLM-Based graders:
 
 !!! info "LLM Grader Components"
     - **Role Definition**: Establish the LLM as an expert evaluator
@@ -129,7 +129,7 @@ helpfulness_grader = LLMGrader(
 !!! tip
     Incorporate examples of good and poor responses when possible to improve consistency.
 
-#### Listwise LLM-based Example: Response Comparator
+#### Listwise LLM-Based Example: Response Comparator
 
 For comparative evaluations, you can create graders that directly compare multiple responses:
 
@@ -161,17 +161,17 @@ comparison_grader = LLMGrader(
 )
 ```
 
-### Rule-based Grader Implementation
+### Code-Based Grader Implementation
 
-!!! info "Rule-based Grader Best Practices"
-    Effective rule-based graders should have:
+!!! info "Code-Based Grader Best Practices"
+    Effective Code-Based graders should have:
     
     - **Transparent Logic**: Clear, understandable evaluation rules
     - **Modular Design**: Separate concerns for maintainability
     - **Edge Case Handling**: Robust error handling
     - **Consistent Scoring**: Predictable score ranges
 
-#### Pointwise Rule-based Example: Content Quality Checker
+#### Pointwise Code-Based Example: Content Quality Checker
 ```python
 from rm_gallery.core.graders.function_grader import FunctionGrader
 from rm_gallery.core.graders.schema import GraderScore
@@ -227,14 +227,14 @@ content_quality_grader = FunctionGrader(
 ```
 
 !!! tip "Advanced Techniques"
-    When developing rule-based graders, consider:
+    When developing Code-Based graders, consider:
     
     - **Compiled Regex**: Use for complex pattern matching
     - **Weighted Scoring**: Assign different weights to criteria
     - **Clear Thresholds**: Define explicit pass/fail boundaries
     - **Metric Combination**: Combine multiple simple metrics into complex evaluations
 
-#### Listwise Rule-based Example: Multi-factor Ranker
+#### Listwise Code-Based Example: Multi-factor Ranker
 ```python
 from rm_gallery.core.graders.function_grader import FunctionGrader
 from rm_gallery.core.graders.schema import GraderRank
@@ -290,7 +290,7 @@ multi_factor_grader = FunctionGrader(
 ## Validating Your Custom Graders
 After implementing your custom grader, it's crucial to validate that it effectively measures what you intend to measure and produces reliable results. Proper validation ensures your grader performs as expected and produces meaningful results.
 
-For comprehensive guidance on validating your graders and generating detailed validation reports, please refer to the [Grader Validation](../running_graders/evaluation_reports.md) documentation. This document covers statistical analysis techniques for understanding grader behavior, validation against ground truth data, error analysis to identify specific weaknesses, and building comprehensive validation strategies.
+For comprehensive guidance on validating your graders and generating detailed validation reports, please refer to the [Grader Analysis](../running_graders/grader_analysis.md) documentation. This document covers statistical analysis techniques for understanding grader behavior, validation against ground truth data, error analysis to identify specific weaknesses, and building comprehensive validation strategies.
 
 The validation process helps you ensure your grader produces accurate results, measure consistency and reliability, identify potential biases in evaluation, and optimize grader performance based on empirical evidence.
 
@@ -303,7 +303,7 @@ When running graders, focus on configuring data mappers to connect your dataset 
 Now that you understand how to build, validate, and run custom graders for your specific needs:
 
 + 🚀 [Run grading tasks](../running_graders/run_tasks.md) to evaluate your models at scale
-+ 📈 [Validate your graders](../running_graders/evaluation_reports.md) to ensure consistent and reliable results
++ 📈 [Validate your graders](../running_graders/grader_analysis.md) to ensure consistent and reliable results
 + ⚙️ [Generate graders from data](generate_graders_from_data.md) to automate creation of evaluation criteria
 + 💪 [Train a grader](training/overview.md) to build a reward model from your custom evaluations
 

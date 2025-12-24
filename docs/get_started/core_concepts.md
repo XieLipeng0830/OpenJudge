@@ -40,7 +40,7 @@ Flexible [data mapping](#data-mapping) ensures your existing data formats can be
 
 Based on your evaluation purpose, you can choose the appropriate assessment approach:
 
-- **Code-based graders**: For objective, quantitative evaluations using the [FunctionGrader](../../rm_gallery/core/graders/function_grader.py), these graders use predefined functions or algorithms to compute scores. These graders are deterministic and fast, ideal for metrics like exact match, format validation, or simple rule-based checks. This approach is best suited for quantitative analysis where you need consistent, reproducible results based on mathematical or logical operations.
+- **Code-Based graders**: For objective, quantitative evaluations using the [FunctionGrader](../../rm_gallery/core/graders/function_grader.py), these graders use predefined functions or algorithms to compute scores. These graders are deterministic and fast, ideal for metrics like exact match, format validation, or simple checks. This approach is best suited for quantitative analysis where you need consistent, reproducible results based on mathematical or logical operations.
 
 ```
 # A simple function grader that checks if response contains reference answer
@@ -50,7 +50,7 @@ def contains_reference(response, reference):
 contains_grader = FunctionGrader(contains_reference)
 ```
 
-- **LLM-based graders**: For subjective, qualitative evaluations using the [LLMGrader](../../rm_gallery/core/graders/llm_grader.py), these graders leverage large language models to perform sophisticated evaluations. These graders can assess complex qualities like helpfulness, safety, or coherence by using natural language understanding. This approach is best suited for qualitative analysis where nuanced understanding is required, such as evaluating the helpfulness of responses, detecting subtle hallucinations, or assessing the quality of creative content.
+- **LLM-Based graders**: For subjective, qualitative evaluations using the [LLMGrader](../../rm_gallery/core/graders/llm_grader.py), these graders leverage large language models to perform sophisticated evaluations. These graders can assess complex qualities like helpfulness, safety, or coherence by using natural language understanding. This approach is best suited for qualitative analysis where nuanced understanding is required, such as evaluating the helpfulness of responses, detecting subtle hallucinations, or assessing the quality of creative content.
 
 ```
 # An LLM grader that evaluates helpfulness of responses
@@ -103,7 +103,7 @@ For a comprehensive list and detailed usage of the predefined graders, please re
 
 While RM-Gallery provides many built-in graders, you'll often need to create custom graders for your specific use cases. The system supports three main approaches to grader creation:
 
-- **Custom implementation**: Implementing your own graders using code-based or LLM-based approaches
+- **Custom implementation**: Implementing your own graders using Code-Based or LLM-Based approaches
 - **Automated generation**: Using the generator module to automatically create graders from data
 - **Model training**: Training specialized models for evaluation (using supervised or reinforcement learning)
 

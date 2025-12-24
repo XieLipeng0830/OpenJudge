@@ -17,7 +17,6 @@ Data Refinement in RM-Gallery is fundamentally about improving model outputs thr
 4. Improve response based on feedback
 5. Re-evaluate (repeat as needed)
 
----
 
 ## How to Implement Data Refinement with Graders
 
@@ -131,7 +130,6 @@ Running the same Grader on this improved response yields:
 
 This demonstrates the core data refinement process: **evaluate → feedback → improve → re-evaluate**, leading to progressively better model outputs.
 
----
 
 ## Key Benefits of Grader-Based Refinement
 
@@ -152,7 +150,6 @@ Data Refinement in RM-Gallery centers on using Graders to improve model outputs 
     - Iterate 2-3 times for optimal results
     - Track score improvements to measure progress
 
----
 
 ## Next Steps
 

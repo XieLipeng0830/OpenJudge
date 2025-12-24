@@ -2,7 +2,6 @@
 
 This guide demonstrates the various styling features available in our documentation. Use this as a reference when writing docs.
 
----
 
 ## Tabbed Code Blocks
 
@@ -92,7 +91,6 @@ To create tabbed code blocks, use the following syntax:
 !!! warning "Important"
     The content under each tab **must be indented by 4 spaces**. This is required for the tabs to work correctly.
 
----
 
 ## Admonitions (Call-out Boxes)
 
@@ -138,7 +136,6 @@ Admonitions are useful for highlighting important information.
     Warning without a custom title.
 ```
 
----
 
 ## Collapsible Sections
 
@@ -166,7 +163,6 @@ Use collapsible sections to hide detailed content that not all readers need.
     Visible content here.
 ```
 
----
 
 ## Code Blocks
 
@@ -192,7 +188,6 @@ def greet(name: str) -> str:
 
 Use backticks for inline code: `print("Hello")` or `const x = 1`.
 
----
 
 ## Tables
 
@@ -202,7 +197,6 @@ Use backticks for inline code: `print("Hello")` or `const x = 1`.
 | `LLMGrader` | Uses LLM for evaluation | Complex assessments |
 | `FunctionGrader` | Custom function-based | Specific logic |
 
----
 
 ## Math Equations
 
@@ -214,7 +208,6 @@ Block math:
 f(x) = \int_{-\infty}^{\infty} \hat{f}(\xi) e^{2\pi i \xi x} d\xi
 \]
 
----
 
 ## Links and References
 
@@ -224,7 +217,6 @@ f(x) = \int_{-\infty}^{\infty} \hat{f}(\xi) e^{2\pi i \xi x} d\xi
 
 [^1]: This is a footnote. Use them sparingly.
 
----
 
 ## Lists
 
@@ -248,7 +240,6 @@ f(x) = \int_{-\infty}^{\infty} \hat{f}(\xi) e^{2\pi i \xi x} d\xi
 - [ ] Pending task
 - [ ] Another pending task
 
----
 
 ## Workflow Steps
 
@@ -387,7 +378,6 @@ Description with nested list:
     - Keep step titles concise but descriptive
     - The workflow container must use `<div class="workflow">` wrapper
 
----
 
 ## Combining Elements
 
@@ -412,7 +402,6 @@ Here's an example combining multiple elements:
     !!! success "Expected Output"
         You should see the version number printed.
 
----
 
 ## Typography Elements
 
@@ -451,7 +440,6 @@ The HTML specification is maintained by the W3C.
 *[HTML]: HyperText Markup Language
 *[W3C]: World Wide Web Consortium
 
----
 
 ## Enhanced Admonitions
 
@@ -512,7 +500,6 @@ Admonitions can contain complex nested content:
     print(f"Pass: {result.passed}")  # Pass: True
     ```
 
----
 
 ## Links Styling
 
@@ -527,17 +514,14 @@ Check the [`LLMGrader`](../built_in_graders/overview.md) class for more details.
 
 Use the [`evaluate()`](../built_in_graders/overview.md) method to run grading.
 
----
 
 ## Horizontal Rules
 
 Standard divider (three dashes):
 
----
 
 Use dividers to separate major sections of your documentation.
 
----
 
 ## Enhanced Tables
 
@@ -545,7 +529,7 @@ Use dividers to separate major sections of your documentation.
 
 | Feature | Status | Description |
 |---------|--------|-------------|
-| `LLMGrader` | ✅ Stable | LLM-based evaluation |
+| `LLMGrader` | ✅ Stable | LLM-Based evaluation |
 | `TextSimilarity` | ✅ Stable | Text comparison |
 | `FunctionGrader` | 🔶 Beta | Custom functions |
 
@@ -557,7 +541,6 @@ Use dividers to separate major sections of your documentation.
 | `TextSimilarityGrader` | `from rm_gallery import TextSimilarityGrader` | [View docs](../built_in_graders/overview.md) |
 | `FunctionGrader` | `from rm_gallery import FunctionGrader` | [View docs](../built_in_graders/overview.md) |
 
----
 
 ## Footnotes
 

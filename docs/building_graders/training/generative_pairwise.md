@@ -2,7 +2,6 @@
 
 Train reward models to generate comparative evaluations between two responses using reinforcement learning. This method teaches models to explain which response is better and why.
 
----
 
 ## Overview
 
@@ -26,7 +25,6 @@ The model generates preference analysis and receives binary rewards:
 \end{cases}
 \]
 
----
 
 ## Data Format
 
@@ -69,7 +67,6 @@ Pairwise training expects Parquet files with:
     - **"B"**: Second response is better
     - **"tie"**: Both responses are equal quality
 
----
 
 ## Data Preparation
 
@@ -155,7 +152,6 @@ Pairwise training expects Parquet files with:
     df.to_parquet("./data/custom_pairwise.parquet")
     ```
 
----
 
 ## Training Setup
 
@@ -377,7 +373,6 @@ class PairwiseComparisonTemplate(BaseModel):
         return cls(**contents)
 ```
 
----
 
 ## Launch Training
 
@@ -457,7 +452,6 @@ bash run_pairwise.sh
 open http://127.0.0.1:8265
 ```
 
----
 
 ## Key Parameters
 
@@ -471,7 +465,6 @@ open http://127.0.0.1:8265
 | `actor_rollout_ref.rollout.n` | Rollouts per prompt | 4 |
 | `trainer.total_epochs` | Training epochs | 1-2 |
 
----
 
 ## Monitoring
 
@@ -513,7 +506,6 @@ print(by_strength)
     - Strength 1 (weak): ~75%
     - Strength 2 (strong): ~90%
 
----
 
 ## Using Trained Models
 
@@ -565,7 +557,6 @@ runner = GradingRunner(
 results = await runner.arun(your_comparison_data)
 ```
 
----
 
 ## Advanced Techniques
 
@@ -611,7 +602,6 @@ class ConfidentPairwiseTemplate(BaseModel):
     )
 ```
 
----
 
 ## Next Steps
 

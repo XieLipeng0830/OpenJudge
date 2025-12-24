@@ -2,25 +2,6 @@
 
 Algorithm-based graders for evaluating text similarity, string matching, and numerical accuracy. These graders don't require LLMs—they rely purely on algorithms and rules, offering fast execution, zero cost, and deterministic results.
 
----
-
-## Overview
-
-| Grader | Purpose | Key Use Cases |
-|--------|---------|---------------|
-| `SimilarityGrader` | Compute text similarity | Translation quality, summarization, answer matching |
-| `StringMatchGrader` | String pattern matching | Format validation, keyword detection, exact matching |
-| `NumberAccuracyGrader` | Numerical accuracy checks | Math calculations, data reports, quantitative metrics |
-
-## Key Features
-
-**When to Use:**
-- Need fast batch evaluation
-- Require fully reproducible results
-- Have clear reference answers or patterns
-- Cost-sensitive applications
-
----
 
 ## Algorithm Selection Guide
 
@@ -49,7 +30,23 @@ Choose the right algorithm based on your evaluation goal:
 | Fault tolerance | Moderate | Moderate | Moderate | High | None |
 | Long text support | ✓ | ✓ | ✓ | ✓ | ✗ |
 
----
+
+## Overview
+
+| Grader | Purpose | Key Use Cases |
+|--------|---------|---------------|
+| `SimilarityGrader` | Compute text similarity | Translation quality, summarization, answer matching |
+| `StringMatchGrader` | String pattern matching | Format validation, keyword detection, exact matching |
+| `NumberAccuracyGrader` | Numerical accuracy checks | Math calculations, data reports, quantitative metrics |
+
+## Key Features
+
+**When to Use:**
+- Need fast batch evaluation
+- Require fully reproducible results
+- Have clear reference answers or patterns
+- Cost-sensitive applications
+
 
 ## SimilarityGrader
 
@@ -225,7 +222,6 @@ asyncio.run(main())
 - `ngram_range` (tuple): N-gram range (default (1, 2))
 - `max_features` (int): Maximum features (default None)
 
----
 
 ## StringMatchGrader
 
@@ -443,7 +439,6 @@ asyncio.run(main())
 **contains_all/contains_any:**
 - `substrings` (List[str]): List of substrings to detect
 
----
 
 ## NumberAccuracyGrader
 
@@ -581,7 +576,6 @@ asyncio.run(main())
 - Non-numeric text content is ignored
 - Returns 0.0 if reference text has no numbers
 
----
 
 ## Best Practices
 
@@ -654,7 +648,6 @@ if result.metadata.get('recall', 0) < 0.5:
     print("Warning: Low recall - response may be incomplete")
 ```
 
----
 
 ## Performance Characteristics
 
@@ -669,7 +662,6 @@ if result.metadata.get('recall', 0) < 0.5:
 !!! note "Performance Note"
     Performance metrics are based on typical text length (100-500 tokens). Actual performance may vary based on text length and hardware configuration.
 
----
 
 ## Next Steps
 

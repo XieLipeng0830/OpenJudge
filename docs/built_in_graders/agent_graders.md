@@ -46,7 +46,6 @@ Benchmark results using qwen3-max on agent evaluation tasks:
     Preference Accuracy measures alignment with human-annotated preference labels (positive and negative samples) on agent evaluation tasks. Higher is better.
 
 
----
 
 ## Action Graders
 
@@ -160,7 +159,6 @@ Score: 0.0
 Similar pairs: 1
 ```
 
----
 
 ## Tool Graders
 
@@ -512,7 +510,6 @@ Score: 1.0
 Reason: Tool call sequence evaluation (strict mode, jaccard): jaccard_similarity=1.000
 ```
 
----
 
 ## Memory Graders
 
@@ -683,7 +680,6 @@ Score: 1.0
 Reason: The agent's plan effectively retrieves relevant information from memory by referencing the key found in drawer 1 during step 3. This demonstrates that the agent is using previously stored and correct information to inform its current action of unlocking the door. The plan aligns with the memory content, avoids repetition of past actions (no indication of trying other drawers), and is consistent with the observation of a locked door. The retrieval is current and accurate, showing strong memory effectiveness. Confidence is high because the connection between memory and plan is clear and directly supports the task at hand.
 ```
 
----
 
 ## Plan Graders
 
@@ -744,7 +740,6 @@ Score: 1.0
 Reason: The plan is logically sound and feasible. It respects causal logic by first retrieving the key (which is inside the drawer) before attempting to unlock the door. The sequence of actions—opening the drawer, obtaining the key, and then unlocking the door—is in a correct and necessary order. The plan also accounts for the current environment state: the drawer is closed, and the agent does not yet have the key. Therefore, opening the drawer is a valid prerequisite action. The steps are consistent with the goal of unlocking the door and are executable given the described scenario. Confidence is high because all rubrics for feasibility are clearly satisfied.
 ```
 
----
 
 ## Reflection Graders
 
@@ -913,7 +908,6 @@ Score: 1.0
 Reason: The agent demonstrates accurate progress awareness by correctly identifying that it has collected 3 out of the 5 required items and acknowledging that 2 more are still needed. The reflection states, 'I'm about halfway through the task,' which is a realistic estimation given the current state. The agent does not overestimate its progress or ignore any critical sub-goals. It also shows awareness of the exact number of remaining tasks without substituting or omitting any specific item from the original task description. The reflection is concise but contains all necessary information to assess forward progress accurately. Confidence in this evaluation is high because the agent's self-assessment aligns with the observable facts and task constraints.
 ```
 
----
 
 ## Observation Graders
 
@@ -972,7 +966,6 @@ Score: 0.7857142857142857
 Each turn similarity: [0.0, 0.42857142857142855]
 ```
 
----
 
 ## Trajectory Graders
 
@@ -1062,7 +1055,6 @@ Step 0: This step searches for all Python files (files ending with .py) in the s
 Step 1: This step retrieves file metadata (specifically modification dates) for the identified Python files. This information is essential to determine which files were modified today. The result correctly distinguishes between 'today' and 'yesterday', enabling the final answer to be constructed accurately. This is a critical follow-up to Step 0 and directly supports the user's goal.
 ```
 
----
 
 ## Summary
 
@@ -1076,7 +1068,6 @@ Agent graders provide comprehensive evaluation across all aspects of agent behav
 
 Build complete evaluation pipelines by combining graders from different categories to match your agent architecture and debugging needs.
 
----
 
 ## Next Steps
 

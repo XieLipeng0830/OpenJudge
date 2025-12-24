@@ -2,7 +2,6 @@
 
 Specialized graders for evaluating code generation and mathematical problem-solving capabilities. These graders assess syntax correctness, execution results, code style, and mathematical expression accuracy.
 
----
 
 ## Overview
 
@@ -14,7 +13,6 @@ Specialized graders for evaluating code generation and mathematical problem-solv
 | `PatchSimilarityGrader` | Measures patch similarity | Code modification, bug fixes |
 | `MathExpressionVerifyGrader` | Verifies math expressions | Math problem solving, symbolic verification |
 
----
 
 ## Code Graders
 
@@ -97,7 +95,6 @@ dataset = [
 results = await runner.arun(dataset)
 ```
 
----
 
 ### SyntaxCheckGrader
 
@@ -158,7 +155,6 @@ def greet(name)
 asyncio.run(main())
 ```
 
----
 
 ### CodeStyleGrader
 
@@ -228,7 +224,6 @@ def CalculateSum(Numbers):
 asyncio.run(main())
 ```
 
----
 
 ### PatchSimilarityGrader
 
@@ -286,7 +281,6 @@ def calculate_area(r):
 asyncio.run(main())
 ```
 
----
 
 ## Math Graders
 
@@ -375,7 +369,6 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
 ## Combining Multiple Code Graders
 
@@ -428,7 +421,6 @@ def calculate_sum(numbers):
 asyncio.run(main())
 ```
 
----
 
 ## Best Practices
 
@@ -450,12 +442,11 @@ asyncio.run(main())
 - Combine code style with correctness for educational applications
 - Cache evaluation results for repeated assessments
 
----
 
 ## Next Steps
 
-- [Text Graders](text.md) — Evaluate text similarity and linguistic quality
-- [Format Graders](format.md) — Validate output format and structure
+- [Text Graders](../built_in_graders/text.md) — Evaluate text similarity and linguistic quality
+- [Format Graders](../built_in_graders/format.md) — Validate output format and structure
 - [Create Custom Graders](../building_graders/create_custom_graders.md) — Build specialized code graders
 
 

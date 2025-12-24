@@ -2,30 +2,30 @@
 
 Format graders for evaluating structural and formatting aspects of AI responses. These graders validate JSON structures, check length constraints, detect repetition, and verify specific output formats like reasoning tags.
 
----
 
-## Overview
+## Format Selection Guide
 
-| Grader | Purpose | Key Use Case |
-|--------|---------|--------------|
-| `JsonValidatorGrader` | Validates JSON syntax | Structured output validation |
-| `JsonMatchGrader` | Deep JSON structure comparison | API response verification |
-| `LengthPenaltyGrader` | Penalizes inappropriate length | Content length control |
-| `NgramRepetitionPenaltyGrader` | Detects repetitive patterns | Quality assurance |
-| `ReasoningFormatGrader` | Validates reasoning tags | Chain-of-thought formatting |
-| `ReasoningToolCallFormatGrader` | Validates tool call format | Agent output validation |
+Choose the appropriate format grader based on your validation requirements:
 
----
+| Use Case | Recommended Grader | Key Benefit |
+|----------|-------------------|-------------|
+| JSON output validation | `JsonValidatorGrader` | Fast syntax validation |
+| API response matching | `JsonMatchGrader` | Deep structure comparison |
+| Control response length | `LengthPenaltyGrader` | Penalize verbose/short outputs |
+| Detect text repetition | `NgramRepetitionPenaltyGrader` | Quality control |
+| Chain-of-thought format | `ReasoningFormatGrader` | Enforce thinking structure |
+| Agent tool calls | `ReasoningToolCallFormatGrader` | Validate tool usage format |
 
-## JsonValidatorGrader
+**Graders are organized into three categories:** JSON Validation for structured data outputs, Length & Quality Control for enforcing output constraints, and Reasoning Format Validation for chain-of-thought and agent-based evaluations.
 
-Validates whether a response is valid JSON. Essential for ensuring structured outputs can be parsed correctly.
 
-**When to use:**
-- Structured data generation
-- API response validation
-- JSON output requirements
-- Format compliance checking
+## JSON Validation
+
+This category provides graders for validating JSON syntax and comparing JSON structures.
+
+### JsonValidatorGrader
+
+Validates whether a response is valid JSON, ensuring structured outputs can be parsed correctly. Use this grader when you need to verify structured data generation, validate API responses, or enforce JSON output requirements in your AI systems.
 
 **Parameters:**
 
@@ -65,17 +65,10 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
-## JsonMatchGrader
+### JsonMatchGrader
 
-Performs deep structural comparison of JSON objects. Recursively validates that two JSON structures match according to configurable rules.
-
-**When to use:**
-- Ground truth comparison for JSON outputs
-- API response verification
-- Structured data evaluation
-- Testing JSON generation accuracy
+Performs deep structural comparison of JSON objects by recursively validating that two JSON structures match according to configurable rules. This grader is ideal for comparing generated JSON outputs against ground truth, verifying API responses, evaluating structured data accuracy, and testing JSON generation quality.
 
 **Parameters:**
 
@@ -130,17 +123,14 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
-## LengthPenaltyGrader
+## Length & Quality Control
 
-Applies penalties to responses that are too short or too long. Useful for controlling output verbosity.
+This category provides graders for controlling output length and detecting repetitive patterns.
 
-**When to use:**
-- Enforcing response length constraints
-- Penalizing overly verbose outputs
-- Ensuring minimum content length
-- Training models for concise responses
+### LengthPenaltyGrader
+
+Applies penalties to responses that are too short or too long, helping you control output verbosity. This grader enforces response length constraints by penalizing overly verbose outputs while ensuring minimum content length, making it valuable for training models to generate concise yet complete responses.
 
 **Parameters:**
 
@@ -196,17 +186,10 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
-## NgramRepetitionPenaltyGrader
+### NgramRepetitionPenaltyGrader
 
-Detects and penalizes repetitive patterns in text using N-gram analysis. Supports multiple languages and tokenization methods.
-
-**When to use:**
-- Detecting repetitive content
-- Quality control for generated text
-- Training models to avoid repetition
-- Evaluating text diversity
+Detects and penalizes repetitive patterns in text using N-gram analysis with support for multiple languages and tokenization methods. This grader is essential for quality control of generated text, helping you detect repetitive content, train models to avoid repetition, and evaluate overall text diversity.
 
 **Parameters:**
 
@@ -272,17 +255,14 @@ async def main():
 asyncio.run(main())
 ```
 
----
 
-## ReasoningFormatGrader
+## Reasoning Format Validation
 
-Validates that responses follow a specific reasoning format with `<think>` and `<answer>` tags. Essential for chain-of-thought evaluation.
+This category provides graders for validating structured reasoning outputs and agent tool calls.
 
-**When to use:**
-- Chain-of-thought (CoT) formatting
-- Reasoning process validation
-- Training models with structured reasoning
-- Ensuring proper thought-answer separation
+### ReasoningFormatGrader
+
+Validates that responses follow a specific reasoning format with `<think>` and `<answer>` tags, essential for chain-of-thought evaluation. Use this grader to enforce structured reasoning in your models, validate chain-of-thought (CoT) formatting, and ensure proper separation between the thinking process and final answers.
 
 **Parameters:**
 
@@ -340,17 +320,10 @@ Python is easy to learn, has extensive libraries, and strong community support.
 asyncio.run(main())
 ```
 
----
 
-## ReasoningToolCallFormatGrader
+### ReasoningToolCallFormatGrader
 
-Validates that responses follow proper format for tool-calling agents with reasoning. Checks for `<think>` tags combined with either `<answer>` or `<tool_call>` tags, and validates JSON structure in tool calls.
-
-**When to use:**
-- Agent output validation
-- Tool-calling format enforcement
-- Function calling verification
-- Multi-step reasoning with tool use
+Validates that responses follow proper format for tool-calling agents with reasoning by checking for `<think>` tags combined with either `<answer>` or `<tool_call>` tags, and validating JSON structure in tool calls. This grader is ideal for agent output validation, enforcing tool-calling formats, verifying function calls, and ensuring proper multi-step reasoning with tool use.
 
 **Parameters:**
 
@@ -447,48 +420,6 @@ I need to gather data from multiple sources.
 asyncio.run(main())
 ```
 
----
-
-## Combining Format Graders
-
-For comprehensive format evaluation, combine multiple format graders using `GradingRunner`:
-
-```python
-import asyncio
-from rm_gallery.core.graders.format import (
-    JsonValidatorGrader,
-    LengthPenaltyGrader,
-    NgramRepetitionPenaltyGrader,
-)
-from rm_gallery.core.runner.grading_runner import GradingRunner, GraderConfig
-
-async def main():
-    grader_configs = {
-        "json_valid": GraderConfig(grader=JsonValidatorGrader()),
-        "length": GraderConfig(
-            grader=LengthPenaltyGrader(min_length=20, max_length=500)
-        ),
-        "repetition": GraderConfig(
-            grader=NgramRepetitionPenaltyGrader(n=3, penalty_threshold=0.3)
-        ),
-    }
-
-    runner = GradingRunner(grader_configs=grader_configs)
-
-    dataset = [
-        {"response": '{"name": "Alice", "skills": ["Python", "Machine Learning"]}'},
-    ]
-
-    results = await runner.arun(dataset)
-
-    print(f"JSON Valid: {results['json_valid'][0].score}")
-    print(f"Length Penalty: {results['length'][0].score}")
-    print(f"Repetition Penalty: {results['repetition'][0].score}")
-
-asyncio.run(main())
-```
-
----
 
 ## Next Steps
 

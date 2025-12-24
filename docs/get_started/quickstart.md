@@ -25,7 +25,7 @@ pip install -e .
 
 ## Configure Environment
 
-For LLM-based graders, you need to configure API credentials. RM-Gallery uses the OpenAI-compatible API format.
+For LLM-Based graders, you need to configure API credentials. RM-Gallery uses the OpenAI-compatible API format.
 
 === "Environment Variables (Recommended)"
 
