@@ -1,6 +1,6 @@
 # Built-in Graders Overview
 
-OpenJudge provides **50+ pre-built graders** for evaluating AI responses across quality dimensions, agent behaviors, formats, and modalities. All graders are **rigorously evaluated** on benchmark datasets to ensure reliability and accuracy.
+ OpenJudge provides **50+ pre-built graders** for evaluating AI responses across quality dimensions, agent behaviors, formats, and modalities. All graders are **rigorously evaluated** on benchmark datasets to ensure reliability and accuracy. For installation, environment setup, and running your first evaluation, see the **[Quick Start Guide](../get_started/quickstart.md)**.
 
 
 ## Key Features
@@ -15,9 +15,6 @@ OpenJudge provides **50+ pre-built graders** for evaluating AI responses across 
 
 - **Flexible Implementation:** Choose between LLM-based graders for nuanced quality assessment or code-based graders for fast, deterministic, zero-cost evaluation depending on your requirements.
 
-## Getting Started
-
-For installation, environment setup, and running your first evaluation, see the **[Quick Start Guide](../get_started/quickstart.md)**.
 
 ## Available Graders
 
@@ -79,13 +76,17 @@ Comprehensive evaluation for AI agents across the entire lifecycle. [→ Detaile
 | `ReflectionOutcomeUnderstandingGrader` | Evaluates understanding of outcomes | LLM-Based | {0, 1} |
 | `ReflectionProgressAwarenessGrader` | Checks awareness of task progress | LLM-Based | {0, 1} |
 
+**Observation Graders**
+
+| Grader | Description | Type | Score Range |
+|--------|-------------|------|-------------|
+| `ObservationInformationGainGrader` | Evaluates information gain from observations | Code-Based | [0, 1] |
+
 **Trajectory Graders**
 
 | Grader | Description | Type | Score Range |
 |--------|-------------|------|-------------|
 | `TrajectoryComprehensiveGrader` | Comprehensive trajectory evaluation | LLM-Based | {0, 1} |
-| `RubricsBasedTrajectoryPerformance` | Rubrics-based trajectory scoring | LLM-Based | {0, 1} |
-| `ObservationInformationGainGrader` | Evaluates information gain from observations | Code-Based | [0, 1] |
 
 
 ### Text Graders

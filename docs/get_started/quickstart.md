@@ -112,7 +112,7 @@ from open_judge.models import OpenAIChatModel
 from open_judge.graders.common.relevance import RelevanceGrader
 
 # Create the judge model (uses OPENAI_API_KEY and OPENAI_BASE_URL from env)
-    model = OpenAIChatModel(model="qwen3-32b")
+model = OpenAIChatModel(model="qwen3-32b")
 
 # Create the grader
 grader = RelevanceGrader(model=model)

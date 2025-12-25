@@ -43,11 +43,10 @@ Auto-Rubric extracts evaluation rubrics from preference data without training. B
 
 **Data efficiency:** Using just 70 preference pairs, this method enables smaller models to match or outperform fully-trained reward models.
 
-<div style="border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden; margin: 1.5em 0;">
-  <iframe src="../assets/auto_rubric_overview.pdf#view=FitH" width="100%" height="600px" style="border: none; display: block;">
-    <p>Unable to display PDF. <a href="../assets/auto_rubric_overview.pdf" target="_blank">View Auto-Rubric Pipeline diagram (PDF)</a></p>
-  </iframe>
-</div>
+<figure markdown="span">
+  ![Auto-Rubric Pipeline Overview](../images/auto_rubric_overview.png){ width="100%" }
+  <figcaption>Auto-Rubric Pipeline: From preference data to evaluation rubrics</figcaption>
+</figure>
 
 
 ## When to Use This Approach

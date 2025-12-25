@@ -27,20 +27,20 @@ Evaluate AI agent behavior across actions, tools, memory, planning, reflection, 
 
 Benchmark results using qwen3-max on agent evaluation tasks:
 
-| Grader | Samples | Preference Accuracy | Source |
-|--------|---------|---------------------|--------|
-| ActionAlignmentGrader | 14 | 79% | ALFWorld, WebShop, GAIA |
-| ToolCallAccuracyGrader | 80 | 88% | API-Bank |
-| ToolCallSuccessGrader | 40 | 98% | API-Bank |
-| ToolParameterCheckGrader | 40 | 75% | API-Bank |
-| ToolSelectionGrader | 40 | 73% | API-Bank |
-| MemoryAccuracyGrader | 24 | 75% | ALFWorld, WebShop, GAIA |
-| MemoryDetailPreservationGrader | 40 | 73% | ALFWorld, WebShop, GAIA |
-| MemoryRetrievalEffectivenessGrader | 4 | 100% | ALFWorld |
-| PlanFeasibilityGrader | 14 | 64% | ALFWorld, GAIA |
-| ReflectionAccuracyGrader | 2 | 100% | ALFWorld |
-| ReflectionOutcomeUnderstandingGrader | 24 | 76% | ALFWorld, GAIA |
-| ReflectionProgressAwarenessGrader | 40 | 70% | ALFWorld, WebShop, GAIA |
+| Category | Grader | Samples | Preference Accuracy | Source |
+|----------|--------|---------|---------------------|--------|
+| Action | ActionAlignmentGrader | 8 | 88% | ALFWorld, WebShop, GAIA |
+| Tool | ToolCallAccuracyGrader | 40 | 90% | API-Bank |
+| Tool | ToolCallSuccessGrader | 20 | 95% | API-Bank |
+| Tool | ToolParameterCheckGrader | 20 | 75% | API-Bank |
+| Tool | ToolSelectionGrader | 20 | 85% | API-Bank |
+| Memory | MemoryAccuracyGrader | 18 | 78% | ALFWorld, WebShop, GAIA |
+| Memory | MemoryDetailPreservationGrader | 25 | 76% | ALFWorld, WebShop, GAIA |
+| Memory | MemoryRetrievalEffectivenessGrader | 4 | 100% | ALFWorld |
+| Plan | PlanFeasibilityGrader | 7 | 86% | ALFWorld, GAIA |
+| Reflection | ReflectionAccuracyGrader | 2 | 100% | ALFWorld |
+| Reflection | ReflectionOutcomeUnderstandingGrader | 23 | 78% | ALFWorld, GAIA |
+| Reflection | ReflectionProgressAwarenessGrader | 28 | 74% | ALFWorld, WebShop, GAIA |
 
 !!! note "Performance Metrics"
     Preference Accuracy measures alignment with human-annotated preference labels (positive and negative samples) on agent evaluation tasks. Higher is better.
