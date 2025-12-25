@@ -39,8 +39,8 @@ sample = {
 We can then define a Grader that evaluates the quality of this response:
 
 ```python
-from open_judge.graders.llm_grader import LLMGrader
-from open_judge.models.openai_chat_model import OpenAIChatModel
+from openjudge.graders.llm_grader import LLMGrader
+from openjudge.models.openai_chat_model import OpenAIChatModel
 
 # Initialize our evaluation model
 evaluation_model = OpenAIChatModel(model="qwen3-32b", api_key="your-api-key")

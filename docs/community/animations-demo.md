@@ -50,7 +50,7 @@ Hover over these links to see the animated underline effect:
 
 - [Regular internal link](../built_in_graders/overview.md)
 - [External link with icon animation](https://example.com)
-- Link with code inside: [`open_judge.graders`](../built_in_graders/overview.md)
+- Link with code inside: [`openjudge.graders`](../built_in_graders/overview.md)
 
 
 ## 💻 Code Block Enhancements
@@ -58,7 +58,7 @@ Hover over these links to see the animated underline effect:
 Hover over the code block to see the shadow lift effect and the copy button appear:
 
 ```python
-from open_judge import GraderRunner
+from openjudge import GraderRunner
 
 # Initialize grader
 runner = GraderRunner()

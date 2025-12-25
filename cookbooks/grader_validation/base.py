@@ -9,9 +9,9 @@ by running evaluations and analyzing the results.
 from abc import ABC
 from typing import Dict, List
 
-from open_judge.analyzer.base_analyzer import AnalysisResult, BaseAnalyzer
-from open_judge.graders.base_grader import BaseGrader
-from open_judge.runner.grading_runner import GradingRunner
+from openjudge.analyzer.base_analyzer import AnalysisResult, BaseAnalyzer
+from openjudge.graders.base_grader import BaseGrader
+from openjudge.runner.grading_runner import GradingRunner
 
 
 class GraderValidator(ABC):

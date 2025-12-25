@@ -1,6 +1,6 @@
 import pytest
 
-from open_judge.graders.format.json.json_validator import JsonValidatorGrader
+from openjudge.graders.format.json.json_validator import JsonValidatorGrader
 
 
 class TestJsonValidatorGrader:

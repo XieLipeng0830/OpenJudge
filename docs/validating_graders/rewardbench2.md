@@ -96,8 +96,8 @@ Initialize a model and create a grader with custom prompts for evaluating respon
 
 ???+ example "Show Code"
     ```python
-    from open_judge.graders.llm_grader import LLMGrader
-    from open_judge.models import OpenAIChatModel
+    from openjudge.graders.llm_grader import LLMGrader
+    from openjudge.models import OpenAIChatModel
 
     # Initialize model
     model = OpenAIChatModel(model="qwen3-32b")
@@ -117,8 +117,8 @@ Execute evaluation on the dataset and analyze results to get accuracy metrics.
 
 ???+ example "Show Code"
     ```python
-    from open_judge.runner import GradingRunner
-    from open_judge.analyzer import ValidationAnalyzer
+    from openjudge.runner import GradingRunner
+    from openjudge.analyzer import ValidationAnalyzer
 
     # Setup runner
     runner = GradingRunner(grader_configs={"my_grader": grader})

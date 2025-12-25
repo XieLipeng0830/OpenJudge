@@ -3,8 +3,8 @@
 
 import pytest
 
-from open_judge.analyzer.validation import RecallAnalysisResult, RecallAnalyzer
-from open_judge.graders.schema import GraderScore
+from openjudge.analyzer.validation import RecallAnalysisResult, RecallAnalyzer
+from openjudge.graders.schema import GraderScore
 
 
 @pytest.mark.unit

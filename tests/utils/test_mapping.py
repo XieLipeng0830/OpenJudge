@@ -8,7 +8,7 @@ from typing import Any, Dict
 
 import pytest
 
-from open_judge.utils.mapping import (
+from openjudge.utils.mapping import (
     get_value_by_mapping,
     get_value_by_path,
     parse_data_with_mapper,

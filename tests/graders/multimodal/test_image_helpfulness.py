@@ -32,12 +32,12 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from open_judge.analyzer.statistical import ConsistencyAnalyzer
-from open_judge.analyzer.validation import FalseNegativeAnalyzer, FalsePositiveAnalyzer
-from open_judge.graders.multimodal._internal import MLLMImage
-from open_judge.graders.multimodal.image_helpfulness import ImageHelpfulnessGrader
-from open_judge.models.openai_chat_model import OpenAIChatModel
-from open_judge.runner.grading_runner import GraderConfig, GradingRunner
+from openjudge.analyzer.statistical import ConsistencyAnalyzer
+from openjudge.analyzer.validation import FalseNegativeAnalyzer, FalsePositiveAnalyzer
+from openjudge.graders.multimodal._internal import MLLMImage
+from openjudge.graders.multimodal.image_helpfulness import ImageHelpfulnessGrader
+from openjudge.models.openai_chat_model import OpenAIChatModel
+from openjudge.runner.grading_runner import GraderConfig, GradingRunner
 
 # ==================== UNIT TESTS ====================
 # These tests verify the basic functionality of the grader in isolation
@@ -130,7 +130,7 @@ class TestImageHelpfulnessGraderQuality:
 
     @pytest.fixture
     def dataset(self):
-        """Load evaluation dataset from open_judge-hug"""
+        """Load evaluation dataset from openjudge-hug"""
         import json
 
         if not DATA_FILE.exists():
@@ -286,7 +286,7 @@ class TestImageHelpfulnessGraderAdversarial:
 
     @pytest.fixture
     def dataset(self):
-        """Load evaluation dataset from open_judge-hug for adversarial testing"""
+        """Load evaluation dataset from openjudge-hug for adversarial testing"""
         import json
 
         if not DATA_FILE.exists():

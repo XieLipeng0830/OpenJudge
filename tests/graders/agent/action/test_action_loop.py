@@ -7,7 +7,7 @@ Tests for the ActionLoopDetectionGrader class functionality.
 
 import pytest
 
-from open_judge.graders.agent.action.action_loop import ActionLoopDetectionGrader
+from openjudge.graders.agent.action.action_loop import ActionLoopDetectionGrader
 
 
 def test_action_loop_detection_grader_creation():

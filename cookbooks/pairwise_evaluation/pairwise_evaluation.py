@@ -25,13 +25,13 @@ import fire
 from loguru import logger
 from pydantic import Field
 
-from open_judge.analyzer.base_analyzer import AnalysisResult, BaseAnalyzer
-from open_judge.graders.llm_grader import GraderMode, LLMGrader
-from open_judge.graders.schema import GraderResult, GraderScore
-from open_judge.models.openai_chat_model import OpenAIChatModel
-from open_judge.models.schema.oai.message import ChatMessage
-from open_judge.models.schema.prompt_template import PromptTemplate
-from open_judge.runner.grading_runner import GraderConfig, GradingRunner
+from openjudge.analyzer.base_analyzer import AnalysisResult, BaseAnalyzer
+from openjudge.graders.llm_grader import GraderMode, LLMGrader
+from openjudge.graders.schema import GraderResult, GraderScore
+from openjudge.models.openai_chat_model import OpenAIChatModel
+from openjudge.models.schema.oai.message import ChatMessage
+from openjudge.models.schema.prompt_template import PromptTemplate
+from openjudge.runner.grading_runner import GraderConfig, GradingRunner
 
 # Default example data for direct invocation
 DEFAULT_INSTRUCTION = "Write a short poem about artificial intelligence"
@@ -219,7 +219,7 @@ def prepare_comparison_data(
         }
 
     # Create dataset with both orders for each pair (to eliminate position bias)
-    # Following open_judge design: separate evaluation data from metadata
+    # Following openjudge design: separate evaluation data from metadata
     dataset = [
         comparison
         for model_a, model_b in pairs
@@ -279,7 +279,7 @@ async def run_pairwise_evaluation(
     )
 
     # Define mapper to extract evaluation data fields
-    # Following open_judge design: use dict mapper for simple field extraction
+    # Following openjudge design: use dict mapper for simple field extraction
     mapper = {
         "instruction": "evaluation_data.instruction",
         "response_a": "evaluation_data.response_a",

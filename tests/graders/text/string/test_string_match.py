@@ -5,7 +5,7 @@ Tests for StringMatchGrader
 
 import pytest
 
-from open_judge.graders.text.string_match import StringMatchGrader
+from openjudge.graders.text.string_match import StringMatchGrader
 
 # pylint: disable=too-many-public-methods
 

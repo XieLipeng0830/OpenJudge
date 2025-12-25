@@ -9,14 +9,14 @@ from typing import List
 import pytest
 from pydantic import BaseModel
 
-from open_judge.graders.base_grader import BaseGrader
-from open_judge.graders.function_grader import FunctionGrader
-from open_judge.graders.llm_grader import LLMGrader
-from open_judge.graders.schema import GraderRank, GraderScore
-from open_judge.models import OpenAIChatModel
-from open_judge.models.schema.oai.message import ChatMessage
-from open_judge.models.schema.prompt_template import PromptTemplate
-from open_judge.runner import GradingRunner
+from openjudge.graders.base_grader import BaseGrader
+from openjudge.graders.function_grader import FunctionGrader
+from openjudge.graders.llm_grader import LLMGrader
+from openjudge.graders.schema import GraderRank, GraderScore
+from openjudge.models import OpenAIChatModel
+from openjudge.models.schema.oai.message import ChatMessage
+from openjudge.models.schema.prompt_template import PromptTemplate
+from openjudge.runner import GradingRunner
 
 
 class TestCustomGradersBasicLLM:

@@ -10,10 +10,10 @@ from typing import Dict, List
 
 from tutorials.grader_validation.base import GraderValidator
 
-from open_judge.analyzer.base_analyzer import AnalysisResult
-from open_judge.analyzer.validation.accuracy_analyzer import AccuracyAnalyzer
-from open_judge.graders.base_grader import BaseGrader
-from open_judge.runner.grading_runner import GradingRunner
+from openjudge.analyzer.base_analyzer import AnalysisResult
+from openjudge.analyzer.validation.accuracy_analyzer import AccuracyAnalyzer
+from openjudge.graders.base_grader import BaseGrader
+from openjudge.runner.grading_runner import GradingRunner
 
 
 class AccuracyGraderValidator(GraderValidator):

@@ -59,7 +59,7 @@ Bradley-Terry training expects Parquet files with two columns:
 
     ```python
     import pandas as pd
-    from open_judge.generator import export_data
+    from openjudge.generator import export_data
 
     # Create preference pairs from scored data
     def create_preference_pairs(eval_cases):
@@ -125,7 +125,7 @@ trainer:
   save_freq: 500
   test_freq: 500
   logger: ['console', 'swanlab']
-  project_name: open_judge-bt
+  project_name: openjudge-bt
   experiment_name: qwen2.5-7b-bt
   default_local_dir: ./checkpoints/bt
 ```
@@ -188,7 +188,7 @@ MODEL_PATH=Qwen/Qwen2.5-7B-Instruct
 TRAIN_FILE=hendrydong/preference_700K/train.parquet
 VAL_FILE=hendrydong/preference_700K/test.parquet
 
-PROJECT_NAME=open_judge-bt
+PROJECT_NAME=openjudge-bt
 EXPERIMENT_NAME=qwen2.5-7b-bt-${TIMESTAMP}
 
 # Launch training with torchrun
@@ -317,7 +317,7 @@ trainer.experiment_name=qwen-bt-run1
 ### 1. Load as OpenAI-Compatible Model
 
 ```python
-from open_judge.models import OpenAIChatModel
+from openjudge.models import OpenAIChatModel
 
 model = OpenAIChatModel(
     model="./checkpoints/bt/qwen2.5-7b-bt/global_step_3000",
@@ -328,7 +328,7 @@ model = OpenAIChatModel(
 ### 2. Use in Graders
 
 ```python
-from open_judge.graders.common import RelevanceGrader
+from openjudge.graders.common import RelevanceGrader
 
 grader = RelevanceGrader(model=model)
 
@@ -343,7 +343,7 @@ print(f"Score: {result.score}")
 ### 3. Batch Evaluation with GradingRunner
 
 ```python
-from open_judge.runner import GradingRunner, GraderConfig
+from openjudge.runner import GradingRunner, GraderConfig
 
 runner = GradingRunner(
     grader_configs={

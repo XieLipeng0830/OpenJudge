@@ -55,11 +55,11 @@ All training methods use the **VERL** (Versatile Efficient Reinforcement Learnin
                    ▼
 ┌─────────────────────────────────────────────────┐
 │  Trained Model                                  │
-│  └─ Use in open_judge evaluation          │
+│  └─ Use in openjudge evaluation          │
 └─────────────────────────────────────────────────┘
 ```
 
-> **Note:** Training code (`tutorials/cookbooks/training_reward_model/`) is independent from the core evaluation framework (`open_judge`). Train models separately, then integrate them as graders.
+> **Note:** Training code (`tutorials/cookbooks/training_reward_model/`) is independent from the core evaluation framework (`openjudge`). Train models separately, then integrate them as graders.
 
 
 ## Data Requirements
@@ -134,7 +134,7 @@ Convert your data to Parquet format:
 
 ```bash
 # Example: Use HelpSteer2 dataset
-python -m open_judge.generator.export \
+python -m openjudge.generator.export \
     --dataset helpsteer2 \
     --output-dir ./data \
     --format parquet
@@ -167,8 +167,8 @@ bash sft_rm.sh
 Use your trained model as a grader:
 
 ```python
-from open_judge.models import OpenAIChatModel
-from open_judge.graders.common import RelevanceGrader
+from openjudge.models import OpenAIChatModel
+from openjudge.graders.common import RelevanceGrader
 
 # Load your trained model
 model = OpenAIChatModel(

@@ -25,9 +25,9 @@ The first step is to export trace data from Phoenix and evaluate it using OpenJu
 ```python
 import phoenix as px
 import pandas as pd
-from open_judge.graders.text.similarity import SimilarityGrader
-from open_judge.graders.text.relevance_grader import RelevanceGrader
-from open_judge.graders.schema import GraderResult, GraderScore, GraderRank, GraderError
+from openjudge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.relevance_grader import RelevanceGrader
+from openjudge.graders.schema import GraderResult, GraderScore, GraderRank, GraderError
 import asyncio
 
 # Launch Phoenix (if not already started)
@@ -166,11 +166,11 @@ print("Evaluations logged to Phoenix successfully!")
 For improved performance and resource efficiency, especially with large datasets, use OpenJudge's GradingRunner. This approach processes multiple spans in batches, leveraging concurrent execution.
 
 ```python
-from open_judge.runner.grading_runner import GradingRunner
-from open_judge.analyzer.aggregator.weighted_sum_aggregator import WeightedSumAggregator
-from open_judge.graders.text.similarity import SimilarityGrader
-from open_judge.graders.text.relevance_grader import RelevanceGrader
-from open_judge.graders.schema import GraderResult
+from openjudge.runner.grading_runner import GradingRunner
+from openjudge.analyzer.aggregator.weighted_sum_aggregator import WeightedSumAggregator
+from openjudge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.relevance_grader import RelevanceGrader
+from openjudge.graders.schema import GraderResult
 
 def prepare_phoenix_data_for_open_judge(spans_df):
     """
@@ -310,10 +310,10 @@ async def advanced_phoenix_integration():
 OpenJudge's GradingRunner also supports result aggregation, which allows you to compute composite scores from multiple individual metrics. This is useful for creating overall quality measures.
 
 ```python
-from open_judge.runner.grading_runner import GradingRunner
-from open_judge.analyzer.aggregator.weighted_sum_aggregator import WeightedSumAggregator
-from open_judge.graders.text.similarity import SimilarityGrader
-from open_judge.graders.text.relevance_grader import RelevanceGrader
+from openjudge.runner.grading_runner import GradingRunner
+from openjudge.analyzer.aggregator.weighted_sum_aggregator import WeightedSumAggregator
+from openjudge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.relevance_grader import RelevanceGrader
 
 async def phoenix_aggregated_integration():
     """
@@ -417,8 +417,8 @@ async def phoenix_aggregated_integration():
 You can also create custom evaluation metrics and use them with the batch processing capabilities:
 
 ```python
-from open_judge.graders.base_grader import BaseGrader
-from open_judge.graders.schema import GraderInput, GraderResult, GraderScore, GraderError
+from openjudge.graders.base_grader import BaseGrader
+from openjudge.graders.schema import GraderInput, GraderResult, GraderScore, GraderError
 
 class CustomPhoenixGrader(BaseGrader):
     """Custom Phoenix grader for specialized evaluation metrics."""

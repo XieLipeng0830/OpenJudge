@@ -41,11 +41,11 @@ Create a worker that fetches trace data from Langfuse, evaluates it using OpenJu
 
 ```python
 import asyncio
-from open_judge.graders.text.similarity import SimilarityGrader
-from open_judge.graders.text.relevance_grader import RelevanceGrader
-from open_judge.graders.schema import GraderResult, GraderScore, GraderRank, GraderError
+from openjudge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.relevance_grader import RelevanceGrader
+from openjudge.graders.schema import GraderResult, GraderScore, GraderRank, GraderError
 
-async def open_judge_eval_worker():
+async def openjudge_eval_worker():
     """
     Worker function that evaluates Langfuse traces using OpenJudge graders.
 
@@ -124,7 +124,7 @@ async def open_judge_eval_worker():
 # Run evaluation worker
 # This executes the evaluation process
 if __name__ == "__main__":
-    asyncio.run(open_judge_eval_worker())
+    asyncio.run(openjudge_eval_worker())
 ```
 
 ## Advanced Usage: Integrating with GradingRunner
@@ -136,12 +136,12 @@ For improved performance and resource efficiency, especially when dealing with m
 ```python
 import asyncio
 import pandas as pd
-from open_judge.graders.text.similarity import SimilarityGrader
-from open_judge.graders.text.relevance_grader import RelevanceGrader
-from open_judge.graders.schema import GraderResult, GraderScore, GraderRank, GraderError
-from open_judge.runner.grading_runner import GradingRunner
+from openjudge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.relevance_grader import RelevanceGrader
+from openjudge.graders.schema import GraderResult, GraderScore, GraderRank, GraderError
+from openjudge.runner.grading_runner import GradingRunner
 
-async def open_judge_batch_eval_worker():
+async def openjudge_batch_eval_worker():
     """
     Worker function that performs batch evaluation using GradingRunner.
 
@@ -237,7 +237,7 @@ async def open_judge_batch_eval_worker():
 # Run batch evaluation worker
 # This executes the more efficient batch evaluation process
 if __name__ == "__main__":
-    asyncio.run(open_judge_batch_eval_worker())
+    asyncio.run(openjudge_batch_eval_worker())
 ```
 
 ### Working with Aggregated Results
@@ -245,12 +245,12 @@ if __name__ == "__main__":
 OpenJudge's GradingRunner also supports result aggregation, which allows you to compute composite scores from multiple individual metrics. This is useful for creating overall quality measures.
 
 ```python
-from open_judge.runner.grading_runner import GradingRunner
-from open_judge.analyzer.aggregator.weighted_sum_aggregator import WeightedSumAggregator
-from open_judge.graders.text.similarity import SimilarityGrader
-from open_judge.graders.text.relevance_grader import RelevanceGrader
+from openjudge.runner.grading_runner import GradingRunner
+from openjudge.analyzer.aggregator.weighted_sum_aggregator import WeightedSumAggregator
+from openjudge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.relevance_grader import RelevanceGrader
 
-async def open_judge_aggregated_eval_worker():
+async def openjudge_aggregated_eval_worker():
     """
     Worker function that performs evaluation with result aggregation.
 
@@ -361,7 +361,7 @@ async def open_judge_aggregated_eval_worker():
 # Run aggregated batch evaluation worker
 # Uncomment to run the aggregated evaluation
 # if __name__ == "__main__":
-#     asyncio.run(open_judge_aggregated_eval_worker())
+#     asyncio.run(openjudge_aggregated_eval_worker())
 ```
 
 ### Scheduled Evaluation Task with Batch Processing
@@ -372,9 +372,9 @@ For continuous monitoring, you can set up a scheduled task that periodically eva
 import asyncio
 import time
 from datetime import datetime
-from open_judge.runner.grading_runner import GradingRunner
-from open_judge.graders.text.similarity import SimilarityGrader
-from open_judge.graders.text.relevance_grader import RelevanceGrader
+from openjudge.runner.grading_runner import GradingRunner
+from openjudge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.relevance_grader import RelevanceGrader
 
 def transform_trace_data(traces):
     """

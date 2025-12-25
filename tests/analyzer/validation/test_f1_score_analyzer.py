@@ -3,8 +3,8 @@
 
 import pytest
 
-from open_judge.analyzer.validation import F1ScoreAnalysisResult, F1ScoreAnalyzer
-from open_judge.graders.schema import GraderScore
+from openjudge.analyzer.validation import F1ScoreAnalysisResult, F1ScoreAnalyzer
+from openjudge.graders.schema import GraderScore
 
 
 @pytest.mark.unit

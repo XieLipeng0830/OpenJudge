@@ -32,11 +32,11 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from open_judge.analyzer.statistical import ConsistencyAnalyzer
-from open_judge.analyzer.validation import FalseNegativeAnalyzer, FalsePositiveAnalyzer
-from open_judge.graders.common.relevance import RelevanceGrader
-from open_judge.models.openai_chat_model import OpenAIChatModel
-from open_judge.runner.grading_runner import GraderConfig, GradingRunner
+from openjudge.analyzer.statistical import ConsistencyAnalyzer
+from openjudge.analyzer.validation import FalseNegativeAnalyzer, FalsePositiveAnalyzer
+from openjudge.graders.common.relevance import RelevanceGrader
+from openjudge.models.openai_chat_model import OpenAIChatModel
+from openjudge.runner.grading_runner import GraderConfig, GradingRunner
 
 # ==================== UNIT TESTS ====================
 # These tests verify the basic functionality of the grader in isolation
@@ -66,7 +66,7 @@ class TestRelevanceGraderUnit:
         }
 
         # Use patch to mock the model's achat method
-        with patch("open_judge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
+        with patch("openjudge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
             mock_achat.return_value = mock_response
 
             mock_model = AsyncMock()
@@ -99,7 +99,7 @@ class TestRelevanceGraderUnit:
         }
 
         # Use patch to mock the model's achat method
-        with patch("open_judge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
+        with patch("openjudge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
             mock_achat.return_value = mock_response
 
             mock_model = AsyncMock()
@@ -125,7 +125,7 @@ class TestRelevanceGraderUnit:
     async def test_error_handling(self):
         """Test graceful error handling"""
         # Use patch to mock the model's achat method to raise an exception
-        with patch("open_judge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
+        with patch("openjudge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
             mock_achat.side_effect = Exception("API Error")
 
             mock_model = AsyncMock()
@@ -163,7 +163,7 @@ class TestRelevanceGraderQuality:
 
     @pytest.fixture
     def dataset(self):
-        """Load evaluation dataset from open_judge-hug"""
+        """Load evaluation dataset from openjudge-hug"""
         import json
 
         if not DATA_FILE.exists():
@@ -287,7 +287,7 @@ class TestRelevanceGraderAdversarial:
 
     @pytest.fixture
     def dataset(self):
-        """Load evaluation dataset from open_judge-hug for adversarial testing"""
+        """Load evaluation dataset from openjudge-hug for adversarial testing"""
         import json
 
         if not DATA_FILE.exists():

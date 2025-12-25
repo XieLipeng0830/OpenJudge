@@ -324,7 +324,7 @@ VAL_FILE=./data/helpsteer2_pointwise_test.parquet
 MODEL_PATH=Qwen/Qwen2.5-7B-Instruct
 
 PROJECT_NAME=pointwise_train
-EXPERIMENT_NAME=open_judge-pointwise-${TIMESTAMP}
+EXPERIMENT_NAME=openjudge-pointwise-${TIMESTAMP}
 
 CUSTOM_REWARD_FUNCTION_PATH=./reward_fn.py
 CUSTOM_DATASET_PATH=./dataset.py
@@ -459,12 +459,12 @@ open http://127.0.0.1:8265
 ### Integrate with OpenJudge
 
 ```python
-from open_judge.models import OpenAIChatModel
-from open_judge.graders.common import RelevanceGrader
+from openjudge.models import OpenAIChatModel
+from openjudge.graders.common import RelevanceGrader
 
 # Load trained model
 model = OpenAIChatModel(
-    model="./checkpoints/open_judge-pointwise-final",
+    model="./checkpoints/openjudge-pointwise-final",
     is_local=True
 )
 
@@ -483,7 +483,7 @@ print(f"Reason: {result.reason}")
 ### Batch Evaluation
 
 ```python
-from open_judge.runner import GradingRunner, GraderConfig
+from openjudge.runner import GradingRunner, GraderConfig
 
 runner = GradingRunner(
     grader_configs={

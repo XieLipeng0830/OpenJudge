@@ -32,23 +32,23 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from open_judge.analyzer.statistical import ConsistencyAnalyzer
-from open_judge.analyzer.validation import (
+from openjudge.analyzer.statistical import ConsistencyAnalyzer
+from openjudge.analyzer.validation import (
     AccuracyAnalyzer,
     CorrelationAnalyzer,
     F1ScoreAnalyzer,
     PrecisionAnalyzer,
     RecallAnalyzer,
 )
-from open_judge.graders.base_grader import (
+from openjudge.graders.base_grader import (
     BaseGrader,
     GraderMode,
     GraderRank,
     GraderScore,
 )
-from open_judge.graders.llm_grader import LLMGrader
-from open_judge.models.openai_chat_model import OpenAIChatModel
-from open_judge.runner.grading_runner import GraderConfig, GradingRunner
+from openjudge.graders.llm_grader import LLMGrader
+from openjudge.models.openai_chat_model import OpenAIChatModel
+from openjudge.runner.grading_runner import GraderConfig, GradingRunner
 
 # ==================== UNIT TESTS ====================
 # These tests verify the basic functionality of the grader in isolation

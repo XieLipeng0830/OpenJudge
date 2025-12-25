@@ -10,10 +10,10 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from open_judge.graders.base_grader import BaseGrader
-from open_judge.graders.schema import GraderError, GraderScore
-from open_judge.runner.aggregator.weighted_sum_aggregator import WeightedSumAggregator
-from open_judge.runner.grading_runner import GradingRunner
+from openjudge.graders.base_grader import BaseGrader
+from openjudge.graders.schema import GraderError, GraderScore
+from openjudge.runner.aggregator.weighted_sum_aggregator import WeightedSumAggregator
+from openjudge.runner.grading_runner import GradingRunner
 
 
 class MockGrader(BaseGrader):
@@ -667,10 +667,12 @@ class TestGradingRunner:
             for grader_name in ["grader_1", "grader_2"]:
                 grader_results = dataset_results[grader_name]
                 for j, (result, expected_sample) in enumerate(zip(grader_results, dataset)):
-                    assert result.metadata["query"] == expected_sample["query"], \
-                        f"Query mismatch at dataset {i}, {grader_name}, sample {j}"
-                    assert result.metadata["answer"] == expected_sample["answer"], \
-                        f"Answer mismatch at dataset {i}, {grader_name}, sample {j}"
+                    assert (
+                        result.metadata["query"] == expected_sample["query"]
+                    ), f"Query mismatch at dataset {i}, {grader_name}, sample {j}"
+                    assert (
+                        result.metadata["answer"] == expected_sample["answer"]
+                    ), f"Answer mismatch at dataset {i}, {grader_name}, sample {j}"
 
     @pytest.mark.asyncio
     async def test_grading_runner_multiple_datasets_order_under_high_concurrency(self):
@@ -703,10 +705,7 @@ class TestGradingRunner:
         )
 
         # Create multiple datasets with many samples
-        datasets = [
-            [{"query": f"D{d}_S{s}", "answer": f"A{d}_{s}"} for s in range(10)]
-            for d in range(5)
-        ]
+        datasets = [[{"query": f"D{d}_S{s}", "answer": f"A{d}_{s}"} for s in range(10)] for d in range(5)]
 
         # Run multiple_datasets evaluation multiple times to test consistency
         for run in range(3):
@@ -725,10 +724,12 @@ class TestGradingRunner:
                 for s in range(10):
                     expected_query = f"D{d}_S{s}"
                     expected_answer = f"A{d}_{s}"
-                    assert grader_results[s].metadata["query"] == expected_query, \
-                        f"Run {run}: Query order mismatch at dataset {d}, sample {s}"
-                    assert grader_results[s].metadata["answer"] == expected_answer, \
-                        f"Run {run}: Answer order mismatch at dataset {d}, sample {s}"
+                    assert (
+                        grader_results[s].metadata["query"] == expected_query
+                    ), f"Run {run}: Query order mismatch at dataset {d}, sample {s}"
+                    assert (
+                        grader_results[s].metadata["answer"] == expected_answer
+                    ), f"Run {run}: Answer order mismatch at dataset {d}, sample {s}"
 
     @pytest.mark.asyncio
     async def test_grading_runner_multiple_datasets_order_with_errors(self):
@@ -751,10 +752,7 @@ class TestGradingRunner:
                 )
 
         # Create grader that will fail on specific queries
-        grader = SelectiveErrorGrader(
-            name="selective_grader",
-            error_queries=["D0_S1", "D1_S0", "D2_S2"]
-        )
+        grader = SelectiveErrorGrader(name="selective_grader", error_queries=["D0_S1", "D1_S0", "D2_S2"])
 
         # Create runner
         runner = GradingRunner(

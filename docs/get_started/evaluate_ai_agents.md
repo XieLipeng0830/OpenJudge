@@ -54,7 +54,7 @@ In this example, we'll use `CorrectnessGrader` to evaluate the agent's final ans
 === "Environment Variables"
 
     ```python
-    from open_judge.models import OpenAIChatModel
+    from openjudge.models import OpenAIChatModel
 
     # Uses OPENAI_API_KEY and OPENAI_BASE_URL from environment
     model = OpenAIChatModel(model="qwen3-32b")
@@ -63,7 +63,7 @@ In this example, we'll use `CorrectnessGrader` to evaluate the agent's final ans
 === "Pass Directly"
 
     ```python
-    from open_judge.models import OpenAIChatModel
+    from openjudge.models import OpenAIChatModel
 
     model = OpenAIChatModel(
         model="qwen3-32b",
@@ -89,8 +89,8 @@ dataset = [
 
 ```python
 import asyncio
-from open_judge.graders.common import CorrectnessGrader
-from open_judge.models import OpenAIChatModel
+from openjudge.graders.common import CorrectnessGrader
+from openjudge.models import OpenAIChatModel
 
 async def main():
     # Initialize model and grader
@@ -152,7 +152,7 @@ In this example, we'll use `ToolSelectionGrader` to evaluate the agent's tool ch
 === "Environment Variables"
 
     ```python
-    from open_judge.models import OpenAIChatModel
+    from openjudge.models import OpenAIChatModel
 
     # Uses OPENAI_API_KEY and OPENAI_BASE_URL from environment
     model = OpenAIChatModel(model="qwen3-32b")
@@ -161,7 +161,7 @@ In this example, we'll use `ToolSelectionGrader` to evaluate the agent's tool ch
 === "Pass Directly"
 
     ```python
-    from open_judge.models import OpenAIChatModel
+    from openjudge.models import OpenAIChatModel
 
     model = OpenAIChatModel(
         model="qwen3-32b",
@@ -194,8 +194,8 @@ data = {
 
 ```python
 import asyncio
-from open_judge.graders.agent import ToolSelectionGrader
-from open_judge.models import OpenAIChatModel
+from openjudge.graders.agent import ToolSelectionGrader
+from openjudge.models import OpenAIChatModel
 
 async def main():
     # Initialize model and grader
@@ -255,7 +255,7 @@ In this example, we'll use `TrajectoryComprehensiveGrader` to evaluate the agent
 === "Environment Variables"
 
     ```python
-    from open_judge.models import OpenAIChatModel
+    from openjudge.models import OpenAIChatModel
 
     # Uses OPENAI_API_KEY and OPENAI_BASE_URL from environment
     model = OpenAIChatModel(model="qwen3-32b")
@@ -264,7 +264,7 @@ In this example, we'll use `TrajectoryComprehensiveGrader` to evaluate the agent
 === "Pass Directly"
 
     ```python
-    from open_judge.models import OpenAIChatModel
+    from openjudge.models import OpenAIChatModel
 
     model = OpenAIChatModel(
         model="qwen3-32b",
@@ -308,8 +308,8 @@ data = {
 
 ```python
 import asyncio
-from open_judge.graders.agent import TrajectoryComprehensiveGrader
-from open_judge.models import OpenAIChatModel
+from openjudge.graders.agent import TrajectoryComprehensiveGrader
+from openjudge.models import OpenAIChatModel
 
 async def main():
     # Initialize model and grader
@@ -370,9 +370,9 @@ For evaluating multiple agent traces efficiently, use `GradingRunner` to run gra
 
 ```python
 import asyncio
-from open_judge.graders.agent import ToolSelectionGrader
-from open_judge.models import OpenAIChatModel
-from open_judge.runner.grading_runner import GradingRunner, GraderConfig
+from openjudge.graders.agent import ToolSelectionGrader
+from openjudge.models import OpenAIChatModel
+from openjudge.runner.grading_runner import GradingRunner, GraderConfig
 
 async def main():
     # Initialize model and grader

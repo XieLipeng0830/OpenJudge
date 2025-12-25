@@ -7,7 +7,7 @@ Test BLEU score calculation for machine translation evaluation.
 
 import pytest
 
-from open_judge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.similarity import SimilarityGrader
 
 
 class TestBLEUBasic:

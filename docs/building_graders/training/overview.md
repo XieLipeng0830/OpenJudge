@@ -49,11 +49,11 @@ All training methods use the **VERL** (Versatile Efficient Reinforcement Learnin
                    ▼
 ┌─────────────────────────────────────────────────┐
 │  Trained Reward Model                           │
-│  └─ Integrate as open_judge grader        │
+│  └─ Integrate as openjudge grader        │
 └─────────────────────────────────────────────────┘
 ```
 
-> **Note:** Training code (`tutorials/cookbooks/training_reward_model/`) is independent from the core evaluation framework (`open_judge`). Train models separately, then integrate them as graders.
+> **Note:** Training code (`tutorials/cookbooks/training_reward_model/`) is independent from the core evaluation framework (`openjudge`). Train models separately, then integrate them as graders.
 
 
 ## Quick Start
@@ -75,8 +75,8 @@ bash run_bt.sh
 After training completes, use your model as a grader:
 
 ```python
-from open_judge.models import OpenAIChatModel
-from open_judge.graders.common import RelevanceGrader
+from openjudge.models import OpenAIChatModel
+from openjudge.graders.common import RelevanceGrader
 
 # Load trained model
 model = OpenAIChatModel(model="./checkpoints/your-model", is_local=True)

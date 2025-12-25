@@ -7,7 +7,7 @@ Test token-based F1 score calculation following OpenAI Evals implementation.
 
 import pytest
 
-from open_judge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.similarity import SimilarityGrader
 
 
 class TestF1ScoreBasic:

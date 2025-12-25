@@ -7,7 +7,7 @@ Tests for the SearchInformationGainGrader class functionality.
 
 import pytest
 
-from open_judge.graders.agent.observation.observation_information_gain import (
+from openjudge.graders.agent.observation.observation_information_gain import (
     ObservationInformationGainGrader,
 )
 

@@ -7,7 +7,7 @@ Tests for the ToolCallSequenceMatchGrader class functionality.
 
 import pytest
 
-from open_judge.graders.agent.tool.tool_call_sequence_match import (
+from openjudge.graders.agent.tool.tool_call_sequence_match import (
     ToolCallSequenceMatchGrader,
 )
 

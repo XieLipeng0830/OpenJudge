@@ -161,7 +161,7 @@ results = await evaluate_task(instruction, model_outputs, max_concurrency=20)
 **Custom Judge Model:**
 
 ```python
-from open_judge.models import OpenAIChatModel
+from openjudge.models import OpenAIChatModel
 
 model = OpenAIChatModel(model="qwen3-32b")  # Pass to run_pairwise_evaluation()
 ```

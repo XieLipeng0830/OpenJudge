@@ -90,8 +90,8 @@ To create effective LLM-Based graders:
     - **Output Format**: Specify the exact JSON structure for responses
 
 ```python
-from open_judge.graders.llm_grader import LLMGrader
-from open_judge.models.openai_chat_model import OpenAIChatModel
+from openjudge.graders.llm_grader import LLMGrader
+from openjudge.models.openai_chat_model import OpenAIChatModel
 
 # Define your model
 model = OpenAIChatModel(
@@ -173,8 +173,8 @@ comparison_grader = LLMGrader(
 
 #### Pointwise Code-Based Example: Content Quality Checker
 ```python
-from open_judge.graders.function_grader import FunctionGrader
-from open_judge.graders.schema import GraderScore
+from openjudge.graders.function_grader import FunctionGrader
+from openjudge.graders.schema import GraderScore
 
 async def content_quality_checker(query: str, response: str) -> GraderScore:
     """Check content quality based on multiple criteria."""
@@ -236,8 +236,8 @@ content_quality_grader = FunctionGrader(
 
 #### Listwise Code-Based Example: Multi-factor Ranker
 ```python
-from open_judge.graders.function_grader import FunctionGrader
-from open_judge.graders.schema import GraderRank
+from openjudge.graders.function_grader import FunctionGrader
+from openjudge.graders.schema import GraderRank
 
 async def multi_factor_ranker(query: str, response_1: str, response_2: str) -> GraderRank:
     """Rank responses based on multiple factors."""

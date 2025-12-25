@@ -1,11 +1,11 @@
 """
 RewardBench2 Grader Validation - Improved Version
 
-Improved implementation leveraging open_judge features:
+Improved implementation leveraging  OpenJudge features:
 - Uses PromptTemplate for prompt management
 - Uses structured output with Pydantic models
 - Cleaner separation of concerns
-- Better code reuse from open_judge
+- Better code reuse from openjudge
 - Concurrent model API calls with configurable concurrency limit
 
 Concurrency Implementation:
@@ -23,12 +23,12 @@ import pandas as pd
 from loguru import logger
 from pydantic import BaseModel, Field
 
-from open_judge.analyzer.base_analyzer import AnalysisResult, BaseAnalyzer
-from open_judge.graders.base_grader import BaseGrader, GraderMode
-from open_judge.graders.schema import GraderScore
-from open_judge.models.openai_chat_model import OpenAIChatModel
-from open_judge.models.schema.oai.message import ChatMessage
-from open_judge.models.schema.prompt_template import PromptTemplate
+from openjudge.analyzer.base_analyzer import AnalysisResult, BaseAnalyzer
+from openjudge.graders.base_grader import BaseGrader, GraderMode
+from openjudge.graders.schema import GraderScore
+from openjudge.models.openai_chat_model import OpenAIChatModel
+from openjudge.models.schema.oai.message import ChatMessage
+from openjudge.models.schema.prompt_template import PromptTemplate
 
 # ============================================================================
 # Structured Output Models
@@ -175,7 +175,7 @@ class RewardBench2Grader(BaseGrader):
         description: Human-readable description
 
     Example:
-        >>> from open_judge.models.openai_chat_model import OpenAIChatModel
+        >>> from openjudge.models.openai_chat_model import OpenAIChatModel
         >>>
         >>> model = OpenAIChatModel(api_key="sk-...", model="qwen3-max")
         >>> grader = RewardBench2Grader(model=model)

@@ -145,7 +145,7 @@ MODEL_PATH=Qwen/Qwen2.5-7B-Instruct
 TRAIN_FILE=./data/train.parquet
 VAL_FILE=./data/test.parquet
 
-PROJECT_NAME=open_judge-sft
+PROJECT_NAME=openjudge-sft
 EXPERIMENT_NAME=sft-${TIMESTAMP}
 
 # Launch with torchrun
@@ -239,8 +239,8 @@ trainer.logger=['console','swanlab']    # Add SwanLab
 ### Build Grader from SFT Checkpoint
 
 ```python
-from open_judge.models import OpenAIChatModel
-from open_judge.graders.common import RelevanceGrader
+from openjudge.models import OpenAIChatModel
+from openjudge.graders.common import RelevanceGrader
 
 model = OpenAIChatModel(
     model="./checkpoints/sft/qwen-sft-final",

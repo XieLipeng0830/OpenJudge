@@ -4,11 +4,11 @@ Test code examples from docs/building_graders/overview.md
 
 import pytest
 
-from open_judge.graders.function_grader import FunctionGrader
-from open_judge.graders.llm_grader import LLMGrader
-from open_judge.graders.schema import GraderScore
-from open_judge.models import OpenAIChatModel
-from open_judge.runner import GradingRunner
+from openjudge.graders.function_grader import FunctionGrader
+from openjudge.graders.llm_grader import LLMGrader
+from openjudge.graders.schema import GraderScore
+from openjudge.models import OpenAIChatModel
+from openjudge.runner import GradingRunner
 
 
 class TestOverviewLLMGrader:

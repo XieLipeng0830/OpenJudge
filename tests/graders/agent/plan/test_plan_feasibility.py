@@ -31,16 +31,16 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from open_judge.analyzer.statistical import ConsistencyAnalyzer
-from open_judge.analyzer.validation import (
+from openjudge.analyzer.statistical import ConsistencyAnalyzer
+from openjudge.analyzer.validation import (
     AccuracyAnalyzer,
     FalseNegativeAnalyzer,
     FalsePositiveAnalyzer,
 )
-from open_judge.graders.agent import PlanFeasibilityGrader
-from open_judge.models.openai_chat_model import OpenAIChatModel
-from open_judge.models.schema.prompt_template import LanguageEnum
-from open_judge.runner.grading_runner import GraderConfig, GradingRunner
+from openjudge.graders.agent import PlanFeasibilityGrader
+from openjudge.models.openai_chat_model import OpenAIChatModel
+from openjudge.models.schema.prompt_template import LanguageEnum
+from openjudge.runner.grading_runner import GraderConfig, GradingRunner
 
 # ==================== UNIT TESTS ====================
 # These tests verify the basic functionality of the grader in isolation
@@ -73,7 +73,7 @@ class TestPlanFeasibilityGraderUnit:
         }
 
         # Use patch to mock the model's achat method
-        with patch("open_judge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
+        with patch("openjudge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
             mock_achat.return_value = mock_response
 
             mock_model = AsyncMock()
@@ -108,7 +108,7 @@ class TestPlanFeasibilityGraderUnit:
         }
 
         # Use patch to mock the model's achat method
-        with patch("open_judge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
+        with patch("openjudge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
             mock_achat.return_value = mock_response
 
             mock_model = AsyncMock()
@@ -143,7 +143,7 @@ class TestPlanFeasibilityGraderUnit:
         }
 
         # Use patch to mock the model's achat method
-        with patch("open_judge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
+        with patch("openjudge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
             mock_achat.return_value = mock_response
 
             mock_model = AsyncMock()
@@ -177,7 +177,7 @@ class TestPlanFeasibilityGraderUnit:
     async def test_error_handling(self):
         """Test graceful error handling"""
         # Use patch to mock the model's achat method to raise an exception
-        with patch("open_judge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
+        with patch("openjudge.graders.llm_grader.BaseChatModel.achat", new_callable=AsyncMock) as mock_achat:
             mock_achat.side_effect = Exception("API Error")
 
             mock_model = AsyncMock()

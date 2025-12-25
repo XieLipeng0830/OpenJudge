@@ -1,5 +1,5 @@
 [project]
-name = "open_judge"
+name = "py-openjudge"
 dynamic = ["version"]
 description = "OpenJudge: A Next-Generation Evaluation System for AI Model Assessment"
 readme = "README.md"
@@ -91,4 +91,4 @@ requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.dynamic]
-version = {attr = "open_judge.__version__"}
+version = {attr = "openjudge.__version__"}

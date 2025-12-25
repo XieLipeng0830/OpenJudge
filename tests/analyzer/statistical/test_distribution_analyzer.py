@@ -4,11 +4,11 @@
 
 import pytest
 
-from open_judge.analyzer.statistical.distribution_analyzer import (
+from openjudge.analyzer.statistical.distribution_analyzer import (
     DistributionAnalysisResult,
     DistributionAnalyzer,
 )
-from open_judge.graders.schema import GraderScore
+from openjudge.graders.schema import GraderScore
 
 
 @pytest.mark.unit

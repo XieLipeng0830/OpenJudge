@@ -31,12 +31,12 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from open_judge.graders.agent.trajectory.trajectory_comprehensive import (
+from openjudge.graders.agent.trajectory.trajectory_comprehensive import (
     TrajectoryComprehensiveGrader,
 )
-from open_judge.graders.base_grader import GraderError
-from open_judge.models.openai_chat_model import OpenAIChatModel
-from open_judge.models.schema.prompt_template import LanguageEnum
+from openjudge.graders.base_grader import GraderError
+from openjudge.models.openai_chat_model import OpenAIChatModel
+from openjudge.models.schema.prompt_template import LanguageEnum
 
 # ==================== UNIT TESTS ====================
 # These tests verify the basic functionality of the grader in isolation

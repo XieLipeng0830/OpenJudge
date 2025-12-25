@@ -215,7 +215,7 @@ trainer:
   save_freq: 500
   test_freq: 500
   logger: ['console', 'swanlab']
-  project_name: open_judge-sft
+  project_name: openjudge-sft
   experiment_name: qwen-sft
   default_local_dir: ./checkpoints/sft
 
@@ -254,7 +254,7 @@ MODEL_PATH=Qwen/Qwen2.5-7B-Instruct
 TRAIN_FILE=./data/train.parquet
 VAL_FILE=./data/test.parquet
 
-PROJECT_NAME=open_judge-sft
+PROJECT_NAME=openjudge-sft
 EXPERIMENT_NAME=sft-${TIMESTAMP}
 
 # Launch with torchrun
@@ -397,7 +397,7 @@ trainer.logger=['console','swanlab']
 ### 1. Direct Use
 
 ```python
-from open_judge.models import OpenAIChatModel
+from openjudge.models import OpenAIChatModel
 
 model = OpenAIChatModel(
     model="./checkpoints/sft/qwen-sft-final",

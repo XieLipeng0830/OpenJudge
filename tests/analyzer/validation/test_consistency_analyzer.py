@@ -3,11 +3,11 @@
 
 import pytest
 
-from open_judge.analyzer.statistical import (
+from openjudge.analyzer.statistical import (
     ConsistencyAnalysisResult,
     ConsistencyAnalyzer,
 )
-from open_judge.graders.schema import GraderScore
+from openjudge.graders.schema import GraderScore
 
 
 @pytest.mark.unit

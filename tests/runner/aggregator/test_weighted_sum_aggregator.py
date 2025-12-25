@@ -7,8 +7,8 @@ from typing import Dict
 
 import pytest
 
-from open_judge.graders.schema import GraderError, GraderRank, GraderResult, GraderScore
-from open_judge.runner.aggregator.weighted_sum_aggregator import WeightedSumAggregator
+from openjudge.graders.schema import GraderError, GraderRank, GraderResult, GraderScore
+from openjudge.runner.aggregator.weighted_sum_aggregator import WeightedSumAggregator
 
 
 @pytest.mark.unit

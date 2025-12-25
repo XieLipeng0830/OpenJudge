@@ -389,14 +389,14 @@ Here's an example combining multiple elements:
         Make sure you have Python 3.8+ installed.
 
     ```bash
-    pip install open_judge
+    pip install py-openjudge
     ```
 
 === "Verification"
 
     ```python
-    import open_judge
-    print(open_judge.__version__)
+    import openjudge
+    print(openjudge.__version__)
     ```
 
     !!! success "Expected Output"
@@ -451,7 +451,7 @@ Admonitions can contain complex nested content:
     You can include inline code like `grader.evaluate()` and code blocks:
 
     ```python
-    from open_judge import LLMGrader
+    from openjudge import LLMGrader
 
     grader = LLMGrader(model="gpt-4")
     result = grader.evaluate(response, reference)
@@ -487,7 +487,7 @@ Admonitions can contain complex nested content:
     Here's a full working example:
 
     ```python
-    from open_judge import TextSimilarityGrader
+    from openjudge import TextSimilarityGrader
 
     grader = TextSimilarityGrader(threshold=0.8)
 
@@ -537,9 +537,9 @@ Use dividers to separate major sections of your documentation.
 
 | Grader | Import | Documentation |
 |--------|--------|---------------|
-| `LLMGrader` | `from open_judge import LLMGrader` | [View docs](../built_in_graders/overview.md) |
-| `TextSimilarityGrader` | `from open_judge import TextSimilarityGrader` | [View docs](../built_in_graders/overview.md) |
-| `FunctionGrader` | `from open_judge import FunctionGrader` | [View docs](../built_in_graders/overview.md) |
+| `LLMGrader` | `from openjudge import LLMGrader` | [View docs](../built_in_graders/overview.md) |
+| `TextSimilarityGrader` | `from openjudge import TextSimilarityGrader` | [View docs](../built_in_graders/overview.md) |
+| `FunctionGrader` | `from openjudge import FunctionGrader` | [View docs](../built_in_graders/overview.md) |
 
 
 ## Footnotes

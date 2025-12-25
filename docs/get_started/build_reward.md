@@ -38,9 +38,9 @@ Now run the relevance grader on this dataset. The `GradingRunner` handles execut
 
 ```python
 import asyncio
-from open_judge.models import OpenAIChatModel
-from open_judge.graders.common import RelevanceGrader
-from open_judge.runner.grading_runner import GradingRunner, GraderConfig
+from openjudge.models import OpenAIChatModel
+from openjudge.graders.common import RelevanceGrader
+from openjudge.runner.grading_runner import GradingRunner, GraderConfig
 
 async def main():
     # Initialize the grading model
@@ -105,10 +105,10 @@ Now we can configure all three graders and combine their scores into a single re
 
 ```python
 import asyncio
-from open_judge.models import OpenAIChatModel
-from open_judge.graders.common import HarmfulnessGrader, RelevanceGrader, CorrectnessGrader
-from open_judge.runner.grading_runner import GradingRunner, GraderConfig
-from open_judge.runner.aggregator.weighted_sum_aggregator import WeightedSumAggregator
+from openjudge.models import OpenAIChatModel
+from openjudge.graders.common import HarmfulnessGrader, RelevanceGrader, CorrectnessGrader
+from openjudge.runner.grading_runner import GradingRunner, GraderConfig
+from openjudge.runner.aggregator.weighted_sum_aggregator import WeightedSumAggregator
 
 async def main():
     model = OpenAIChatModel(model="qwen3-32b")
@@ -173,10 +173,10 @@ Here's the complete workflow for building a composite reward signal for our cust
 
 ```python
 import asyncio
-from open_judge.models import OpenAIChatModel
-from open_judge.graders.common import HarmfulnessGrader, RelevanceGrader, CorrectnessGrader
-from open_judge.runner.grading_runner import GradingRunner, GraderConfig
-from open_judge.runner.aggregator.weighted_sum_aggregator import WeightedSumAggregator
+from openjudge.models import OpenAIChatModel
+from openjudge.graders.common import HarmfulnessGrader, RelevanceGrader, CorrectnessGrader
+from openjudge.runner.grading_runner import GradingRunner, GraderConfig
+from openjudge.runner.aggregator.weighted_sum_aggregator import WeightedSumAggregator
 
 async def main():
     model = OpenAIChatModel(model="qwen3-32b")

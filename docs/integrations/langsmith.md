@@ -24,8 +24,8 @@ The first step is to create a wrapper function that converts OpenJudge graders i
 
 ```python
 from typing import Callable, Dict, Any, Union
-from open_judge.graders.base_grader import BaseGrader
-from open_judge.graders.schema import GraderResult, GraderScore, GraderRank, GraderError
+from openjudge.graders.base_grader import BaseGrader
+from openjudge.graders.schema import GraderResult, GraderScore, GraderRank, GraderError
 
 def create_langsmith_evaluator(grader: BaseGrader) -> Callable:
     """
@@ -100,7 +100,7 @@ def create_langsmith_evaluator(grader: BaseGrader) -> Callable:
     return langsmith_evaluator
 
 # Example usage
-from open_judge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.similarity import SimilarityGrader
 
 # Create OpenJudge grader for cosine similarity
 similarity_grader = SimilarityGrader(algorithm="cosine")
@@ -113,7 +113,7 @@ After creating the wrapper, you can use OpenJudge graders in LangSmith evaluatio
 ```python
 from langsmith import Client
 from langsmith.evaluation import evaluate
-from open_judge.graders.text.relevance_grader import RelevanceGrader
+from openjudge.graders.text.relevance_grader import RelevanceGrader
 
 # Initialize LangSmith client
 # Make sure you have set the LANGSMITH_API_KEY environment variable
@@ -139,7 +139,7 @@ results = evaluate(
     <your_target_task>,  # Your LLM application or chain
     data=<your_dataset_name_or_id>,  # Dataset in LangSmith
     evaluators=list(langsmith_evaluators.values()),
-    experiment_prefix="open_judge-evaluation"
+    experiment_prefix="openjudge-evaluation"
 )
 ```
 
@@ -150,9 +150,9 @@ results = evaluate(
 For more complex scenarios involving multiple graders, OpenJudge's GradingRunner provides efficient batch processing capabilities. This approach offers better performance and resource management compared to individual grader evaluation.
 
 ```python
-from open_judge.runner.grading_runner import GradingRunner
-from open_judge.graders.text.similarity import SimilarityGrader
-from open_judge.graders.text.relevance_grader import RelevanceGrader
+from openjudge.runner.grading_runner import GradingRunner
+from openjudge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.relevance_grader import RelevanceGrader
 
 class LangSmithBatchEvaluator:
     """Batch evaluator that combines multiple OpenJudge graders"""
@@ -247,7 +247,7 @@ results = evaluate(
     <your_target_task>,
     data=<your_dataset_name_or_id>,
     evaluators=[batch_evaluator],  # Single batch evaluator handles multiple graders
-    experiment_prefix="open_judge-batch-evaluation"
+    experiment_prefix="openjudge-batch-evaluation"
 )
 ```
 
@@ -256,10 +256,10 @@ results = evaluate(
 OpenJudge's GradingRunner also supports result aggregation, allowing you to combine multiple evaluation metrics into composite scores. This is particularly useful when you want to create overall quality measures from individual metrics.
 
 ```python
-from open_judge.runner.grading_runner import GradingRunner
-from open_judge.analyzer.aggregator.weighted_sum_aggregator import WeightedSumAggregator
-from open_judge.graders.text.similarity import SimilarityGrader
-from open_judge.graders.text.relevance_grader import RelevanceGrader
+from openjudge.runner.grading_runner import GradingRunner
+from openjudge.analyzer.aggregator.weighted_sum_aggregator import WeightedSumAggregator
+from openjudge.graders.text.similarity import SimilarityGrader
+from openjudge.graders.text.relevance_grader import RelevanceGrader
 
 class AggregatedLangSmithEvaluator:
     """Evaluator that uses aggregated results from OpenJudge runner"""

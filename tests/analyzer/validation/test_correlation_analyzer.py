@@ -3,11 +3,8 @@
 
 import pytest
 
-from open_judge.analyzer.validation import (
-    CorrelationAnalysisResult,
-    CorrelationAnalyzer,
-)
-from open_judge.graders.schema import GraderScore
+from openjudge.analyzer.validation import CorrelationAnalysisResult, CorrelationAnalyzer
+from openjudge.graders.schema import GraderScore
 
 
 @pytest.mark.unit
