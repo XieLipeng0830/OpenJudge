@@ -116,11 +116,11 @@ def fetch_traces_for_evaluation(
 ) -> list[dict]:
     """
     Fetch traces from Langfuse for evaluation.
-    
+
     Args:
         limit: Maximum number of traces to fetch
         tags: Optional tag filter
-        
+
     Returns:
         List of trace dictionaries
     """
@@ -129,7 +129,7 @@ def fetch_traces_for_evaluation(
         limit=limit,
         tags=tags,
     )
-    
+
     result = []
     for trace in response.data:
         # Only include traces with input and output
@@ -140,13 +140,13 @@ def fetch_traces_for_evaluation(
                 "output": trace.output,
                 "metadata": trace.metadata or {},
             }
-            
+
             # Add expected output if available in metadata
             if trace.metadata and "expected" in trace.metadata:
                 trace_dict["expected"] = trace.metadata["expected"]
-                
+
             result.append(trace_dict)
-    
+
     return result
 ```
 
@@ -164,23 +164,23 @@ def fetch_recent_traces(
 ) -> list[dict]:
     """
     Fetch traces from the last N hours.
-    
+
     Args:
         hours_back: Number of hours to look back
         limit: Maximum number of traces to fetch
         tags: Optional tag filter
-        
+
     Returns:
         List of trace dictionaries
     """
     from_timestamp = datetime.now() - timedelta(hours=hours_back)
-    
+
     response = langfuse.api.trace.list(
         limit=limit,
         tags=tags,
         from_timestamp=from_timestamp,
     )
-    
+
     result = []
     for trace in response.data:
         if trace.input and trace.output:
@@ -190,7 +190,7 @@ def fetch_recent_traces(
                 "output": trace.output,
                 "metadata": trace.metadata or {},
             })
-    
+
     return result
 ```
 
@@ -225,14 +225,14 @@ from openjudge.graders.schema import GraderScore, GraderError
 
 async def evaluate_single_trace():
     """Evaluate traces using a single grader"""
-    
+
     # Initialize model and grader
     model = OpenAIChatModel(model="qwen3-32b")
     grader = RelevanceGrader(model=model)
-    
+
     # Fetch traces
     traces = fetch_traces_for_evaluation(limit=10)
-    
+
     for trace in traces:
         try:
             # Run evaluation
@@ -241,7 +241,7 @@ async def evaluate_single_trace():
                 query=trace["input"],
                 response=trace["output"],
             )
-            
+
             # Process result and send to Langfuse
             if isinstance(result, GraderScore):
                 langfuse.create_score(
@@ -253,10 +253,10 @@ async def evaluate_single_trace():
                 print(f"✓ Trace {trace['id'][:8]}... scored: {result.score}")
             elif isinstance(result, GraderError):
                 print(f"✗ Trace {trace['id'][:8]}... error: {result.error}")
-                
+
         except Exception as e:
             print(f"✗ Error evaluating trace {trace['id']}: {e}")
-    
+
     # Ensure all scores are sent
     langfuse.flush()
 
@@ -280,10 +280,10 @@ from openjudge.runner.aggregator.weighted_sum_aggregator import WeightedSumAggre
 
 async def batch_evaluate_traces():
     """Batch evaluate traces using GradingRunner"""
-    
+
     # Initialize model
     model = OpenAIChatModel(model="qwen3-32b")
-    
+
     # Configure multiple graders with field mappers
     # Map trace fields to grader expected parameters
     runner = GradingRunner(
@@ -310,18 +310,18 @@ async def batch_evaluate_traces():
             )
         ],
     )
-    
+
     # Fetch traces
     traces = fetch_traces_for_evaluation(limit=50)
-    
+
     if not traces:
         print("No traces to evaluate")
         return
-    
+
     # Prepare evaluation data
     evaluation_data = []
     trace_id_mapping = {}  # Map index to trace_id
-    
+
     for i, trace in enumerate(traces):
         eval_item = {
             "input": trace["input"],
@@ -330,14 +330,14 @@ async def batch_evaluate_traces():
         # Add expected output as reference if available
         if trace.get("expected"):
             eval_item["expected"] = trace["expected"]
-        
+
         evaluation_data.append(eval_item)
         trace_id_mapping[i] = trace["id"]
-    
+
     # Run batch evaluation
     try:
         results = await runner.arun(evaluation_data)
-        
+
         # Send results back to Langfuse
         # results contains individual grader scores + aggregated "overall_quality" score
         scores_sent = 0
@@ -347,18 +347,18 @@ async def batch_evaluate_traces():
                 print(f"Sending {grader_name} score for trace {trace_id}")
                 send_result_to_langfuse(trace_id, grader_name, result)
                 scores_sent += 1
-                
-        
+
+
         print(f"✓ Successfully sent {scores_sent} scores for {len(traces)} traces")
-        
+
     except Exception as e:
         print(f"✗ Batch evaluation failed: {e}")
-    
+
     # Ensure all scores are sent
     langfuse.flush()
 def send_result_to_langfuse(trace_id: str, grader_name: str, result) -> None:
     """Send evaluation result to Langfuse"""
-    
+
     if isinstance(result, GraderScore):
         langfuse.create_score(
             trace_id=trace_id,
