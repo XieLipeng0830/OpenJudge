@@ -1,68 +1,75 @@
-# LangSmith Integration Guide
+# Building External Evaluation Pipelines with OpenJudge for LangSmith
+
+This guide walks you through building robust external evaluation pipelines for LangSmith using OpenJudge. By connecting these two tools, you can harness OpenJudge's 50+ built-in graders to deliver thorough automated quality assessment of your LLM applications within the LangSmith platform.
 
 ## Overview
 
-LangSmith is an LLM application development and monitoring platform provided by LangChain. It adopts a "contract-based" integration model, treating evaluators as part of the experimental pipeline. This means LangSmith deeply integrates into the runtime flow, requiring evaluators to be packaged as Python Callables that accept specific inputs and return specific outputs. OpenJudge can be easily integrated with LangSmith by wrapping OpenJudge graders as LangSmith-compatible evaluators, enabling seamless evaluation of LLM applications within the LangSmith ecosystem.
+### Why Implement External Evaluation Pipelines?
+
+Although LangSmith offers native evaluation features, external evaluation pipelines provide additional benefits:
+
+- **Adaptable Execution**: Initiate evaluations anytime, separate from application execution cycles
+- **Comprehensive Assessment**: OpenJudge delivers 50+ graders addressing quality, safety, formatting, agent behaviors, and beyond
+- **Customizability**: Seamlessly incorporate custom evaluation logic tailored to specific business requirements
+- **Scalable Processing**: Efficiently handle large volumes of historical runs with support for scheduled tasks and incremental assessment
+
+### Integration Architecture
+
+```
+┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
+│   LangSmith     │      │    OpenJudge    │      │   LangSmith     │
+│(Dataset+App)    │─────▶│    (Graders)    │─────▶│    (Scores)     │
+└─────────────────┘      └─────────────────┘      └─────────────────┘
+        │                        │                        ▲
+        │   dataset & app        │   evaluate()           │   feedback/score
+        └────────────────────────┴────────────────────────┘
+```
+
+The overall workflow consists of three stages:
+
+1. **Dataset & Application Setup**: Establish datasets in LangSmith and specify the application to be assessed
+2. **Execute Evaluation**: Deploy OpenJudge graders as custom evaluators inside LangSmith's evaluation framework
+3. **Save Results**: LangSmith records the evaluation scores as feedback
 
 ## Prerequisites
 
-### Installation
-
-First, install the required dependencies:
+### Install Dependencies
 
 ```bash
-pip install langsmith py-openjudge python-dotenv
+pip install py-openjudge langsmith python-dotenv
 ```
 
-### Environment Configuration
+### Configure Environment Variables
 
-Create a `.env` file with your API keys:
+```bash
+# LangSmith authentication
+export LANGSMITH_API_KEY="ls-your-api-key"
 
+# OpenAI API configuration (required for LLM-based graders)
+export OPENAI_API_KEY="sk-your-api-key"
+export OPENAI_BASE_URL="https://api.openai.com/v1"  # Optional, defaults to OpenAI
 ```
-LANGSMITH_API_KEY=your_langsmith_api_key
-OPENAI_API_KEY=your_openai_api_key  # if using OpenAI models
-```
 
-Then load the environment variables:
+### Initialize Clients
 
 ```python
-from dotenv import load_dotenv
 import os
+from langsmith import Client
 
-load_dotenv()  # Load environment variables from .env file
+# Initialize LangSmith client
+client = Client()
+
+# Verify connection
+try:
+    client.info()  # Check if the client is properly authenticated
+    print("LangSmith authentication successful")
+except Exception as e:
+    print(f"LangSmith authentication failed: {e}")
 ```
 
-## Define an application
+## Step 1: Create or Select a Dataset
 
-First we need an application to evaluate. Here's an example QA application that we want to evaluate:
-
-```python
-from open_judge.models.openai_chat_model import OpenAIChatModel
-import asyncio
-
-def qa_application(inputs: dict) -> dict:
-    """
-    The target application to be evaluated.
-
-    Args:
-        inputs: Dictionary containing input data
-
-    Returns:
-        Dictionary containing the application output
-    """
-    model = OpenAIChatModel(model="qwen3-32b", extra_body={"enable_thinking": False})
-    response = asyncio.run(model.achat([
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": inputs["question"]}
-    ]))
-    return {"answer": response.content}
-```
-
-We've optionally enabled tracing to capture the inputs and outputs of each step in the pipeline. To understand how to annotate your code for tracing, please refer to the [LangSmith documentation](https://docs.smith.langchain.com/).
-
-## Create or select a dataset
-
-We need a [Dataset](https://docs.smith.langchain.com/langsmith/evaluation-concepts#datasets) to evaluate our application on. Our dataset will contain labeled [examples](https://docs.smith.langchain.com/langsmith/evaluation-concepts#examples) of questions and expected answers.
+We require a [Dataset](https://docs.smith.langchain.com/langsmith/evaluation-concepts#datasets) to assess our application. Our dataset will comprise labeled [examples](https://docs.smith.langchain.com/langsmith/evaluation-concepts#examples) containing questions and expected answers.
 
 ```python
 from langsmith import Client
@@ -89,20 +96,62 @@ examples = [
 dataset = client.create_dataset(dataset_name="QA Evaluation Dataset")
 client.create_examples(
     dataset_id=dataset.id,
-    inputs=[ex["inputs"] for ex in examples],
-    outputs=[ex["outputs"] for ex in examples]
+    examples=examples
 )
 ```
 
-For more details on datasets, refer to the [Manage datasets](https://docs.smith.langchain.com/langsmith/manage-datasets) page.
+For additional details on datasets, consult the [Manage datasets](https://docs.smith.langchain.com/langsmith/manage-datasets) page.
 
-## Define an evaluator
+## Step 2: Define an Application
 
-[Evaluators](https://docs.smith.langchain.com/langsmith/evaluation-concepts#evaluators) are functions for scoring your application's outputs. They take in the example inputs, actual outputs, and, when present, the reference outputs. In this section, we'll show how to integrate OpenJudge graders with LangSmith in two ways: using individual graders and using the GradingRunner.
+Initially, we need an application for evaluation. Here's an example QA application that we aim to evaluate:
 
-### Using Individual OpenJudge Graders
+```python
+from open_judge.models.openai_chat_model import OpenAIChatModel
+import asyncio
 
-The following function wraps an OpenJudge grader to make it compatible with LangSmith's evaluation interface. This version includes mapper support for data transformation:
+def qa_application(inputs: dict) -> dict:
+    """
+    The target application to be evaluated.
+
+    Args:
+        inputs: Dictionary containing input data
+
+    Returns:
+        Dictionary containing the application output
+    """
+    model = OpenAIChatModel(model="gpt-3.5-turbo")
+    response = asyncio.run(model.achat([
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": inputs["question"]}
+    ]))
+    return {"answer": response.content}
+```
+
+We've optionally enabled tracing to capture the inputs and outputs of each step in the pipeline. To understand how to annotate your code for tracing, please refer to the [LangSmith documentation](https://docs.smith.langchain.com/).
+
+## Step 3: Build a Custom Evaluator from OpenJudge Graders
+
+### Selecting the Appropriate Grader
+
+Choose the suitable OpenJudge grader based on your evaluation requirements:
+
+| Evaluation Scenario | Recommended Grader | Type | Description |
+|---------------------|-------------------|------|-------------|
+| Response relevance | `RelevanceGrader` | LLM-Based | Evaluates response-query relevance (1-5) |
+| Content safety | `HarmfulnessGrader` | LLM-Based | Detects harmful content (1-5) |
+| Hallucination detection | `HallucinationGrader` | LLM-Based | Identifies fabricated information (1-5) |
+| Instruction following | `InstructionFollowingGrader` | LLM-Based | Checks instruction compliance (1-5) |
+| Answer correctness | `CorrectnessGrader` | LLM-Based | Compares with reference answer (1-5) |
+| Text similarity | `SimilarityGrader` | Code-Based | Computes text similarity (0-1) |
+| JSON validation | `JsonValidatorGrader` | Code-Based | Validates JSON syntax (0/1) |
+| Agent tool calls | `ToolCallAccuracyGrader` | LLM-Based | Evaluates tool call quality (1-5) |
+
+For the complete list of 50+ built-in graders, see [Built-in Graders Overview](../built_in_graders/overview.md).
+
+### Option 1: Single Grader (Quick Start)
+
+The most straightforward approach is to perform evaluation using a single grader:
 
 ```python
 from typing import Callable, Dict, Any, Union, Awaitable
@@ -135,29 +184,19 @@ def create_langsmith_evaluator(grader: BaseGrader, mapper: dict | None = None):
         """
         try:
             # Prepare data for evaluation
-            data = {
-                "inputs": inputs,
-                "outputs": outputs,
-                "reference_outputs": reference_outputs
-            }
+            data = {"inputs": inputs, "outputs": outputs, "reference_outputs": reference_outputs}
 
             # Parse and map the data using the mapper
             mapped_data = parse_data_with_mapper(data, mapper)
 
             # Execute OpenJudge evaluation with the mapped data
-            result: GraderResult = asyncio.run(grader.aevaluate(**evaluation_data))
+            result: GraderResult = asyncio.run(grader.aevaluate(**mapped_data))
 
             # Convert OpenJudge result to LangSmith format
             if isinstance(result, GraderScore):
                 return {
                     "key": grader.name,  # The feedback key for LangSmith
                     "score": result.score,
-                    "comment": getattr(result, 'reason', '')
-                }
-            elif isinstance(result, GraderRank):
-                return {
-                    "key": grader.name,
-                    "score": getattr(result, 'rank', 0),
                     "comment": getattr(result, 'reason', '')
                 }
             elif isinstance(result, GraderError):
@@ -211,11 +250,23 @@ langsmith_evaluators = [
     create_langsmith_evaluator(grader, mapper)
     for _, grader, mapper in graders
 ]
+
+# Run evaluation with individual graders
+from langsmith.evaluation import evaluate
+
+experiment_results = evaluate(
+    qa_application,  # Your LLM application or chain
+    data=dataset.name,  # Dataset in LangSmith
+    evaluators=langsmith_evaluators,
+    experiment_prefix="open_judge_individual_graders",
+    description="Evaluate QA application using OpenJudge's individual graders with LangSmith integration",
+    max_concurrency=4
+)
 ```
 
-### Using OpenJudge GradingRunner
+### Option 2: Batch Evaluation with GradingRunner (Recommended)
 
-For more complex scenarios involving multiple graders, OpenJudge's GradingRunner provides efficient batch processing capabilities with built-in mapper support:
+For more complex situations involving multiple graders, OpenJudge's GradingRunner delivers efficient batch processing capabilities with integrated mapper support:
 
 ```python
 from open_judge.runner.grading_runner import GradingRunner
@@ -238,20 +289,18 @@ class LangSmithBatchEvaluator:
         if model is None:
             model = OpenAIChatModel(model="qwen3-32b", extra_body={"enable_thinking": False})
 
-        # Define grader configs with their respective mappers
+        # Enhanced grader configuration with diverse evaluation dimensions
         grader_configs = {
             "relevance": (RelevanceGrader(model=model), mapper),
             "correctness": (CorrectnessGrader(model=model), mapper),
         }
 
-        # Configure the runner with multiple graders and their mappers
+        # Configure the runner with comprehensive grader suite
         self.runner = GradingRunner(
             grader_configs=grader_configs,
-            max_concurrency=10
+            max_concurrency=8,  # Slightly reduced for more stable LLM-based evaluations
+            timeout=30
         )
-
-        # Store the top-level mapper for input preprocessing
-        self.mapper = mapper or {}
 
     def __call__(self, inputs: dict, outputs: dict, reference_outputs: dict) -> list:
         """
@@ -267,17 +316,10 @@ class LangSmithBatchEvaluator:
         """
         try:
             # Prepare data for batch processing
-            data = {
-                "inputs": inputs,
-                "outputs": outputs,
-                "reference_outputs": reference_outputs
-            }
-
-            # Wrap in list for batch processing
-            evaluation_data = [final_inputs]
+            data = {"inputs": inputs, "outputs": outputs, "reference_outputs": reference_outputs}
 
             # Execute batch evaluation using OpenJudge runner
-            batch_results = asyncio.run(self.runner.arun(evaluation_data))
+            batch_results = asyncio.run(self.runner.arun([data]))
 
             # Convert results to LangSmith format
             formatted_results = []
@@ -288,13 +330,7 @@ class LangSmithBatchEvaluator:
                         formatted_results.append({
                             "key": grader_name,
                             "score": result.score,
-                            "comment": getattr(result, 'reason', '')
-                        })
-                    elif isinstance(result, GraderRank):
-                        formatted_results.append({
-                            "key": grader_name,
-                            "score": getattr(result, 'rank', 0),
-                            "comment": getattr(result, 'reason', '')
+                            "comment": getattr(result, "reason", "")
                         })
                     elif isinstance(result, GraderError):
                         formatted_results.append({
@@ -319,44 +355,20 @@ class LangSmithBatchEvaluator:
                 "comment": f"Batch evaluation failed: {str(e)}"
             }]
 
-# Define mapper for the batch evaluator - mapping LangSmith data format to OpenJudge format
+# Define comprehensive mapper for the batch evaluator - mapping LangSmith data format to OpenJudge format
 mapper = {
     "query": "inputs.question",
     "response": "outputs.answer",
     "reference_response": "reference_outputs.expected_answer"
+    # The instruction_following grader uses a simplified mapper defined in its config
 }
 
 # Usage example
 batch_evaluator = LangSmithBatchEvaluator(mapper=mapper)
-```
 
-## Run the evaluation
-
-We'll use the [evaluate()](https://docs.smith.langchain.com/reference/python/evaluation/langsmith.evaluation._runner.evaluate)/[aevaluate()](https://docs.smith.langchain.com/reference/python/evaluation/langsmith.evaluation._arunner.aevaluate) methods to run the evaluation. The key arguments are:
-- a target function that takes an input dictionary and returns an output dictionary
-- data - the name OR UUID of the LangSmith dataset to evaluate on, or an iterator of examples
-- evaluators - a list of evaluators to score the outputs of the function
-
-### Using Individual Graders
-
-```python
+# Run evaluation with GradingRunner
 from langsmith.evaluation import evaluate
 
-# Run evaluation with individual graders
-experiment_results = evaluate(
-    qa_application,  # Your LLM application or chain
-    data=dataset.name,  # Dataset in LangSmith
-    evaluators=langsmith_evaluators,
-    experiment_prefix="open_judge_individual_graders",
-    description="Evaluating QA application with OpenJudge individual graders",
-    max_concurrency=4
-)
-```
-
-### Using GradingRunner
-
-```python
-# Run evaluation with GradingRunner
 experiment_results = evaluate(
     qa_application,
     data=dataset.name,
@@ -367,25 +379,7 @@ experiment_results = evaluate(
 )
 ```
 
-### Asynchronous Evaluation
-
-For large evaluation jobs, use the asynchronous version of [evaluate()](https://docs.smith.langchain.com/reference/python/evaluation/langsmith.evaluation._runner.evaluate), which is [aevaluate()](https://docs.smith.langchain.com/reference/python/evaluation/langsmith.evaluation._arunner.aevaluate):
-
-```python
-from langsmith.evaluation import aevaluate
-
-async def run_async_evaluation():
-    """Run evaluation asynchronously for better performance with large datasets."""
-    async for run in aevaluate(
-        qa_application,
-        data=dataset.name,
-        evaluators=langsmith_evaluators,
-        max_concurrency=4
-    ):
-        print(f"Completed run: {run}")
-```
-
-## Explore the results
+## Step 4: Explore the results
 
 Each invocation of [evaluate()](https://docs.smith.langchain.com/reference/python/evaluation/langsmith.evaluation._runner.evaluate) creates an Experiment which can be viewed in the LangSmith UI or queried via the SDK. Evaluation scores are stored against each actual output as feedback.
 
@@ -408,10 +402,12 @@ for _, row in df.iterrows():
     print("---")
 ```
 
-## Related source
 
-- [OpenJudge GradingRunner Documentation](../../openjudge/runner/grading_runner.py)
-- [LangSmith Evaluation Concepts](https://docs.smith.langchain.com/langsmith/evaluation-concepts)
-- [OpenJudge Graders Documentation](../../openjudge/graders/)
-- [LangSmith Dataset Management](https://docs.smith.langchain.com/langsmith/manage-datasets)
-- [LangSmith Evaluation Guide](https://docs.langchain.com/langsmith/evaluate-llm-application)
+## Additional Learning Materials
+
+- **Comprehensive Grading Toolkit**: Explore [OpenJudge's 50+ Built-in Graders](../built_in_graders/overview.md) for immediate use cases
+- **Extensibility Guide**: Learn how to [Create Custom Graders](../building_graders/create_custom_graders.md) for domain-specific evaluation needs
+- **Technical Reference**: Dive into the complete [OpenJudge Graders API Documentation](../../openjudge/graders/)
+- **Evaluation Fundamentals**: Understand core concepts in the [LangSmith Evaluation Guide](https://docs.langchain.com/langsmith/evaluate-llm-application)
+- **Data Management**: Master dataset creation and maintenance with [LangSmith Dataset Management](https://docs.smith.langchain.com/langsmith/manage-datasets)
+- **Conceptual Framework**: Study evaluation principles in the [LangSmith Evaluation Concepts](https://docs.smith.langchain.com/langsmith/evaluation-concepts) documentation

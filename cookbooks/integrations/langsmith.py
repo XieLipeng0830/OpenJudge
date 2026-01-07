@@ -40,8 +40,9 @@ def create_langsmith_evaluator(grader: BaseGrader, mapper: dict | None = None):
         LangSmith evaluator function.
 
         Args:
-            run: The run object from LangSmith containing outputs
-            example: The example object from LangSmith containing inputs
+            inputs: The inputs from LangSmith example
+            outputs: The actual outputs from LangSmith run
+            reference_outputs: The expected outputs from LangSmith example
 
         Returns:
             A dictionary containing the evaluation results with score and reasoning
@@ -104,8 +105,10 @@ class LangSmithBatchEvaluator:
         LangSmith batch evaluator function.
 
         Args:
-            run: The run object from LangSmith
-            example: The example object from LangSmith
+            inputs: The inputs from LangSmith example
+            outputs: The actual outputs from LangSmith run
+            reference_outputs: The expected outputs from LangSmith example
+
 
         Returns:
             A list of dictionaries containing results from all graders
