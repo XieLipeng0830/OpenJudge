@@ -280,7 +280,7 @@ class RelevanceGrader(LLMGrader):
             mode=GraderMode.POINTWISE,
             description="Evaluate relevance of response to user query",
             model=model,
-            template=template,
+            template=template or DEFAULT_RELEVANCE_TEMPLATE,
             language=language,
         )
         self.threshold = threshold
