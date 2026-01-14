@@ -62,7 +62,7 @@ class TestImageCoherenceGraderUnit:
         # Create a simple mock response object (not AsyncMock to avoid __aiter__ check)
         class MockResponse:
             def __init__(self):
-                self.metadata = {
+                self.parsed = {
                     "score": 8.0,  # Will be normalized to 0.8 (divided by 10)
                     "reason": "Image is highly coherent with surrounding text",
                 }
@@ -92,6 +92,8 @@ class TestImageCoherenceGraderUnit:
     @pytest.mark.asyncio
     async def test_error_handling(self):
         """Test graceful error handling"""
+        from openjudge.graders.base_grader import GraderError
+
         # Create mock model that raises exception
         mock_model = AsyncMock()
         mock_model.achat = AsyncMock(side_effect=Exception("API Error"))
@@ -105,9 +107,9 @@ class TestImageCoherenceGraderUnit:
             response=["Text before", mock_image, "Text after"],
         )
 
-        # Assertions
-        assert result.score == 0.0
-        assert "Evaluation error: API Error" in result.reason
+        # Assertions - grader returns GraderError on exception
+        assert isinstance(result, GraderError)
+        assert "Evaluation error: API Error" in result.error
 
 
 # ==================== QUALITY TESTS ====================

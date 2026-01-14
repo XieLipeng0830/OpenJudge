@@ -24,6 +24,7 @@ from openjudge.graders.schema import GraderScoreCallback
 from openjudge.models.base_chat_model import BaseChatModel
 from openjudge.models.schema.oai.message import ChatMessage
 from openjudge.models.schema.prompt_template import LanguageEnum, PromptTemplate
+from openjudge.utils.utils import parse_structured_chat_response
 
 # pylint: disable=line-too-long
 
@@ -218,7 +219,7 @@ class ImageHelpfulnessGrader(LLMGrader):
         context_below: Optional[str],
     ) -> Tuple[float, str]:
         """Async evaluation of single image helpfulness"""
-        messages = self.template.to_messages()
+        messages = self.template.to_messages(self.language)
         prompt = (
             messages[0]
             .format(
@@ -228,36 +229,17 @@ class ImageHelpfulnessGrader(LLMGrader):
             .content
         )
 
-        try:
-            content = format_image_content(prompt, [image])
-            chat_response = await self.model.achat(
-                messages=[{"role": "user", "content": content}],
-                structured_model=GraderScoreCallback,
-            )
+        content = format_image_content(prompt, [image])
+        chat_response = await self.model.achat(
+            messages=[{"role": "user", "content": content}],
+            structured_model=GraderScoreCallback,
+        )
 
-            # Handle both streaming and non-streaming responses
-            if hasattr(chat_response, "__aiter__"):
-                # This is a streaming response, we need to collect it first
-                collected_content = []
-                parsed = {}
-                async for chunk in chat_response:
-                    if chunk.content:
-                        collected_content.extend(chunk.content)
-                    if chunk.parsed:
-                        parsed.update(chunk.parsed)
-
-                # Extract score and reason from metadata
-                score = parsed.get("score", 0.0)
-                reason = parsed.get("reason", "")
-            else:
-                # Non-streaming response
-                score = chat_response.parsed["score"]
-                reason = chat_response.parsed["reason"]
-            return score, reason
-
-        except Exception as e:
-            logger.error(f"Error evaluating image helpfulness: {e}")
-            return 0.0, f"Evaluation error: {str(e)}"
+        # Default to 5.0 (neutral score on 0-10 scale) for missing fields
+        parsed = await parse_structured_chat_response(chat_response)
+        score = parsed.get("score", 5.0)
+        reason = parsed.get("reason", "")
+        return score, reason
 
     async def _acompute(
         self,
@@ -334,7 +316,16 @@ class ImageHelpfulnessGrader(LLMGrader):
             ...     ]
             ... )
         """
-        score, details = await self._acompute(response, **kwargs)
+        try:
+            score, details = await self._acompute(response, **kwargs)
+        except Exception as e:
+            logger.exception(f"Error evaluating image helpfulness: {e}")
+            from openjudge.graders.base_grader import GraderError
+
+            return GraderError(
+                name=self.name,
+                error=f"Evaluation error: {str(e)}",
+            )
 
         if "error" in details:
             return GraderScore(
