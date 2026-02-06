@@ -113,6 +113,9 @@ async def evaluate_session(messages: List[Dict[str, str]]):
         print(f"  Score: {result.score}/5")
         print(f"  Reason: {result.reason[:100]}...")
 
+    if not scores:
+        print("\nNo scores to aggregate.")
+        return
     # Aggregate scores
     avg_score = sum(scores) / len(scores)
     min_score = min(scores)

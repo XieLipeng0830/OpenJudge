@@ -196,7 +196,7 @@ class ResponseRepetitionGrader(LLMGrader):
     Args:
         model: BaseChatModel instance or dict config for OpenAIChatModel
         template: Custom evaluation template (default: DEFAULT_RESPONSE_REPETITION_TEMPLATE)
-        language: Prompt language - EN or ZH (default: LanguageEnum.ZH)
+        language: Prompt language - EN or ZH (default: LanguageEnum.EN)
         strategy: The evaluation strategy to use. Defaults to DirectEvaluationStrategy.
 
     Returns:
@@ -239,7 +239,7 @@ class ResponseRepetitionGrader(LLMGrader):
         Args:
             model: BaseChatModel instance or dict config for OpenAIChatModel.
             template: Custom PromptTemplate. Defaults to DEFAULT_RESPONSE_REPETITION_TEMPLATE.
-            language: Language for prompts (ZH or EN). Defaults to ZH.
+            language: Language for prompts (ZH or EN). Defaults to EN.
             strategy: The evaluation strategy to use. Defaults to DirectEvaluationStrategy.
             **kwargs: Additional arguments passed to LLMGrader.
         """
